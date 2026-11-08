@@ -1,0 +1,166 @@
+# Game Design Document — *Ramayana: The Journey of Rama*
+
+> Working title. Living document — update as design evolves.
+
+## 1. Vision
+
+A premium, stylized-3D action-adventure for mobile that lets players walk the path of **Shri Rama**
+through all seven kandas of the Valmiki Ramayana. Combat is built around Rama's identity as the
+greatest archer — the bow *Kodanda* and the divine **astras** — supported by the companions who
+stand beside him: Lakshmana, Sita, Hanuman, Sugriva, Jatayu, Vibhishana and the Vanara army.
+
+**Pillars**
+1. **Rama is the hero.** Every kanda is played as Rama. Others support, assist and are summoned —
+   they never replace him as the player character.
+2. **Archery-first combat.** Fluid, readable, one-thumb-friendly ranged combat with auto-aim,
+   charged shots and cinematic astras.
+3. **Dharma matters.** Protecting allies and showing restraint is mechanically rewarded.
+4. **Faithful and respectful.** Valmiki Ramayana as the primary source, reviewed by a cultural
+   consultant; divine characters are never trivialised.
+5. **Mobile-native quality.** 60 FPS on mid-range phones, short sessions (10–15 min missions),
+   offline play.
+
+**Audience:** 12+ (Story mode for younger players / families). Primary markets: India and the
+Indian diaspora, secondary: global mythology/action fans.
+
+**Business model:** Premium + chapter unlock. Bala Kanda is free; a single in-app purchase
+("The Full Journey") unlocks kandas 2–7. No consumables, no energy timers, no pay-to-win, no
+purchasable skins for divine characters.
+
+## 2. Core Loop
+
+```
+Explore region ─▶ Story beat / cutscene ─▶ Combat encounters ─▶ Boss
+      ▲                                                          │
+      └──── Skill tree upgrade ◀── Punya (XP) + new astra ◀──────┘
+```
+
+Each kanda is split into 4–8 **missions** (10–15 minutes each) with checkpoints and autosave.
+
+## 3. Controls (touch, landscape)
+
+| Input | Action |
+|---|---|
+| Left-thumb virtual joystick | Move Rama (camera-relative) |
+| Swipe on right half of screen | Rotate camera |
+| **Bow** button (tap) | Fire an arrow at the auto-aimed target |
+| **Bow** button (hold & release) | Charged piercing shot |
+| **Dodge** button | Dodge roll with brief invulnerability |
+| Astra buttons (2–3 slots) | Cast equipped astras (cooldowns) |
+| Companion button | Toggle companion command (Guard / Attack) |
+| Summon button | Call a summon when the Dharma meter allows |
+
+Gamepad and keyboard are supported as fallbacks (WASD / arrows, J = bow, K/Shift = dodge).
+
+### Auto-aim
+Targets are scored by distance and by how closely they align with Rama's facing direction,
+inside a configurable range and cone. The best-scoring enemy receives the shot; with no target
+the arrow flies straight ahead. (Implemented in `core/combat/auto_aim.gd`.)
+
+## 4. Rama's Kit
+
+- **Kodanda (bow):** primary weapon. Quick shots, charged piercing shots, later multi-shot.
+- **Close strike:** short-range bow strike that knocks back enemies who get close.
+- **Dodge roll:** invulnerability window (~0.35 s).
+- **Astras** (unlocked through the story):
+
+| Astra | Unlocked | Effect |
+|---|---|---|
+| Agneyastra | Bala (from Vishvamitra) | Fire cone, burn damage over time |
+| Varunastra | Bala | Water wave, knockback, extinguishes fire |
+| Vayavyastra | Bala (vs. Maricha) | Wind blast that hurls enemies far away |
+| Brahmastra | Aranya | Massive single-target strike, long cooldown |
+| Narayanastra | Yuddha | Ultimate area attack |
+
+- **Dharma meter:** fills when Rama protects allies, rescues civilians/sages and spares fleeing
+  enemies. Spent on summons and on Rama's ultimate.
+
+## 5. Support Characters
+
+| Character | Role | Kandas | Mechanic |
+|---|---|---|---|
+| Lakshmana | AI companion | 1–7 | Melee tank, draws aggro; Guard/Attack command |
+| Sita | Story ally | 1–3, 7 | Heals/blesses; later the emotional objective of the journey |
+| Vishvamitra | Mentor | 1 | Teaches astras (tutorials) |
+| Jatayu | Summon / story | 3 | Aerial dive attack |
+| Hanuman | Summon / vision missions | 4–7 | Summon: leap smash. Sundara Kanda "visions" |
+| Sugriva & Vanara army | Summon | 4–6 | Troop wave sweeping the battlefield |
+| Vibhishana | AI companion | 6 | Reveals boss weak points |
+
+Rama remains the playable hero throughout. In Sundara Kanda, Hanuman's mission is presented as
+short "vision" sequences framed by Rama's perspective, then returns to Rama.
+
+## 6. Chapters (Kandas)
+
+### 1. Bala Kanda — *vertical slice, free*
+- **Setting:** Ayodhya palace courtyards, Vishvamitra's Siddhashrama forest, Mithila.
+- **Missions:**
+  1. Ayodhya training grounds — movement & archery tutorial with Lakshmana.
+  2. Journey with Vishvamitra — receiving the astras (astra tutorials).
+  3. Forest of Tataka — exploration, first rakshasa enemies.
+  4. **Boss: Tataka** — large, charging, throws boulders; teaches dodge timing.
+  5. Protecting the yagna — wave defense; **Mini-bosses: Maricha & Subahu** (Vayavyastra sends
+     Maricha far over the sea, as in the epic).
+  6. Ahalya's hermitage — a quiet narrative/exploration interlude.
+  7. Mithila — **Shiva's bow (Pinaka)**: a cinematic rhythm/QTE finale; Sita's swayamvara.
+- **Unlocks:** Agneyastra, Varunastra, Vayavyastra, Lakshmana's Guard command.
+
+### 2. Ayodhya Kanda
+Palace intrigue and exile. Story-focused chapter with traversal (crossing the Ganga with Guha),
+Chitrakoot, Bharata's visit. Moral-choice dialogue that fills the Dharma meter. No boss.
+
+### 3. Aranya Kanda
+Dandaka forest and Panchavati. Rakshasa hordes, Khara & Dushana's army (14,000 → wave
+survival). The golden deer chase (Maricha). Jatayu's sacrifice. Bosses: Khara, Maricha (deer).
+
+### 4. Kishkindha Kanda
+Rocky Kishkindha. Meeting Hanuman and Sugriva. Boss: **Vali** — a timing-based duel framed by
+the story's moral complexity. Hanuman and Vanara summons unlocked.
+
+### 5. Sundara Kanda
+Hanuman vision missions: the ocean leap, Ashoka Vatika, the burning of Lanka. Boss (vision):
+Akshaya Kumara. Returns to Rama receiving Sita's chudamani.
+
+### 6. Yuddha Kanda
+Building the **Setu** (a construction/defense mission with the Vanara army), Vibhishana joins,
+large-scale battles. Bosses: Kumbhakarna, Indrajit (illusion fight), **Ravana** (multi-phase;
+ten heads that regenerate — the Brahmastra finale).
+
+### 7. Uttara Kanda
+Return to Ayodhya and coronation; epilogue told with care and respect. Unlocks boss rush and
+New Game+.
+
+## 7. Progression
+
+- **Punya (XP):** from missions, bosses, Dharma actions.
+- **Skill tree:** three branches — *Archery* (charge speed, multishot, pierce), *Astras*
+  (cooldown, power, new forms), *Dharma* (companion buffs, summon power).
+- **Lore codex:** collectible palm-leaf manuscripts unlock illustrated lore entries — an
+  optional educational layer.
+- **Difficulty:** Story / Normal / Hard; New Game+ after Uttara Kanda.
+
+## 8. Enemies (Bala Kanda set)
+
+| Enemy | Behaviour |
+|---|---|
+| Rakshasa grunt | Melee, telegraphed swing |
+| Rakshasa archer | Ranged, keeps distance |
+| Mayavi (illusionist) | Teleports, spawns decoys |
+| Tataka (boss) | Charge, ground slam, boulder throw; enrages at 50% |
+| Maricha & Subahu (mini-bosses) | Aerial attackers raining fire on the yagna |
+
+## 9. Cultural & Content Guidelines
+
+- Primary source: Valmiki Ramayana; regional variations noted in the lore codex.
+- A cultural consultant reviews script, character design and key scenes.
+- No comedic depiction of Rama, Sita or Hanuman; violence is stylised, not gory.
+- Launch languages: English, Hindi, Telugu, Tamil. Later: Kannada, Malayalam, Bengali, Marathi.
+
+## 10. Monetization
+
+| Product | Price (indicative) | Contents |
+|---|---|---|
+| Free download | — | Bala Kanda complete |
+| The Full Journey (IAP, non-consumable) | ₹499 / $6.99 | Kandas 2–7, all future story updates |
+
+Optional later: a soundtrack/art-book DLC. Never: loot boxes, energy, divine character skins.

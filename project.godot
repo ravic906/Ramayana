@@ -1,0 +1,48 @@
+; Engine configuration file.
+; Godot 4.3+
+
+config_version=5
+
+[application]
+
+config/name="Ramayana: The Journey of Rama"
+config/description="Stylized 3D action-adventure following Shri Rama through the seven kandas."
+run/main_scene="res://kandas/01_bala/greybox.tscn"
+config/features=PackedStringArray("4.3", "Mobile")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Controls="*res://autoload/controls.gd"
+Store="*res://autoload/store.gd"
+GameState="*res://autoload/game_state.gd"
+SaveSystem="*res://autoload/save_system.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="player"
+3d_physics/layer_3="enemies"
+3d_physics/layer_4="projectiles"
+3d_physics/layer_5="companions"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=1

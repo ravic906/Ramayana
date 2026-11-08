@@ -1,0 +1,88 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://characters/rama/rama.gd" id="1_rama"]
+[ext_resource type="Script" path="res://core/combat/health.gd" id="2_health"]
+[ext_resource type="Script" path="res://core/state_machine/state_machine.gd" id="3_fsm"]
+[ext_resource type="Script" path="res://characters/rama/states/idle.gd" id="4_idle"]
+[ext_resource type="Script" path="res://characters/rama/states/move.gd" id="5_move"]
+[ext_resource type="Script" path="res://characters/rama/states/dodge.gd" id="6_dodge"]
+[ext_resource type="PackedScene" path="res://characters/rama/arrow.tscn" id="7_arrow"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_body"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_blue"]
+albedo_color = Color(0.17, 0.3, 0.55, 1)
+
+[sub_resource type="CapsuleMesh" id="Mesh_body"]
+material = SubResource("Mat_blue")
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_gold"]
+albedo_color = Color(0.83, 0.65, 0.23, 1)
+metallic = 0.6
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="Mesh_bow"]
+material = SubResource("Mat_gold")
+size = Vector3(0.06, 1.5, 0.06)
+
+[sub_resource type="BoxMesh" id="Mesh_crown"]
+material = SubResource("Mat_gold")
+size = Vector3(0.3, 0.2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="Mat_saffron"]
+albedo_color = Color(0.95, 0.55, 0.16, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_sash"]
+material = SubResource("Mat_saffron")
+size = Vector3(0.72, 0.18, 0.3)
+
+[node name="Rama" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_rama")
+arrow_scene = ExtResource("7_arrow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_body")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_body")
+
+[node name="Crown" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85, 0)
+mesh = SubResource("Mesh_crown")
+
+[node name="Sash" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -0.12)
+mesh = SubResource("Mesh_sash")
+
+[node name="Bow" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.05, -0.2)
+mesh = SubResource("Mesh_bow")
+
+[node name="BowMuzzle" type="Marker3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.3, -0.6)
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_fsm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_idle")
+
+[node name="Move" type="Node" parent="StateMachine"]
+script = ExtResource("5_move")
+
+[node name="Dodge" type="Node" parent="StateMachine"]
+script = ExtResource("6_dodge")

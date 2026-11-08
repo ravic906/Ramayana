@@ -1,0 +1,110 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://core/input/virtual_joystick.gd" id="2_stick"]
+[ext_resource type="Script" path="res://core/input/action_button.gd" id="3_button"]
+
+[sub_resource type="StyleBoxFlat" id="Style_fill"]
+bg_color = Color(0.83, 0.65, 0.23, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HealthBar" type="ProgressBar" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 460.0
+offset_bottom = 70.0
+mouse_filter = 2
+theme_override_styles/fill = SubResource("Style_fill")
+value = 100.0
+show_percentage = false
+
+[node name="PunyaLabel" type="Label" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 80.0
+offset_right = 460.0
+offset_bottom = 120.0
+theme_override_colors/font_outline_color = Color(0.12, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Punya: 0"
+
+[node name="HintLabel" type="Label" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 36.0
+offset_right = 600.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0.12, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Bala Kanda - Training Grounds of Ayodhya
+Move with the left stick, swipe to look, tap Bow to fire at the targets."
+horizontal_alignment = 1
+
+[node name="Joystick" type="Control" parent="Root"]
+layout_mode = 1
+anchor_top = 0.35
+anchor_right = 0.45
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("2_stick")
+
+[node name="ShootButton" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -300.0
+offset_right = -80.0
+offset_bottom = -80.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("3_button")
+
+[node name="DodgeButton" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -200.0
+offset_right = -330.0
+offset_bottom = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("3_button")
+action = &"dodge"
+label = "Dodge"
+color = Color(0.17, 0.3, 0.55, 0.8)
+pressed_color = Color(0.35, 0.5, 0.8, 0.95)
