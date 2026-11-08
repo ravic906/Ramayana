@@ -40,6 +40,9 @@ every workflow run (Actions tab → run → Artifacts) as a zip.
 The build targets arm64 phones running Android 5.0+ and needs Vulkan, which most phones from 2018
 onward support.
 
+## Credits
+Rama's prototype body and animations are CC0 assets by Quaternius. See [assets/CREDITS.md](assets/CREDITS.md).
+
 ## Tests
 ```bash
 godot --headless --import                      # first time only: builds the class cache
@@ -55,6 +58,7 @@ core/         StateMachine, combat (Health, AutoAim, Arrow), touch input, camera
 characters/   rama/ (player and states), enemies/, companions/, bosses/
 kandas/       one folder per kanda (01_bala has the grey-box)
 ui/           HUD
+tools/        asset build scripts (e.g. build_rama.gd)
 docs/         design documents
 tests/        headless test runner and unit tests
 ```
@@ -63,7 +67,7 @@ tests/        headless test runner and unit tests
 | Phase | Deliverable |
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
-| 1. Prototype | Rama's movement, bow and auto-aim ✅ · one astra · Lakshmana AI · first rakshasa enemy |
+| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · one astra · Lakshmana AI · first rakshasa enemy |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
 | 4–5. Full journey | Kandas 2–7, ending with the Ravana finale and New Game+ |

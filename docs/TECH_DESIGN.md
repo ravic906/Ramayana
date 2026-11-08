@@ -49,6 +49,20 @@ tests/           Headless test runner + unit tests
 `Dodge`; later `Aim`, `Astra`, `Stagger`). Shooting is an overlay action that is allowed in
 `Idle` and `Move`. Movement is relative to the camera's yaw.
 
+### Character visuals
+`RamaModel` (`characters/rama/rama_model.gd`) wraps the rigged body built by
+`tools/build_rama.gd`.
+- **Ornaments** are authored in rest-pose space and parented to bones through `BoneAttachment3D`.
+- **The bow** follows the left hand's position, while code sets its orientation: carried at
+  rest, raised while shooting.
+- **The AnimationTree is built in code:**
+  - BlendSpace1D locomotion (idle / walk / run, driven by speed)
+  - upper-body `shoot` and `hit` one-shots
+  - a full-body `roll` one-shot, time-scaled to the dodge duration
+- **Outfit colours** are painted as 0/1 region masks in vertex colours and mapped to palette
+  uniforms in the toon shader, so they look the same under the Mobile and Compatibility
+  renderers.
+
 ### Combat
 - `Health` is a component node with `changed`, `damaged` and `died` signals and an
   `invulnerable` flag (used by Dodge).

@@ -12,6 +12,8 @@ func enter(_msg: Dictionary = {}) -> void:
 	_time_left = rama.dodge_duration
 	rama.health.invulnerable = true
 	rama.face_direction(_direction, 1.0)
+	if rama.model != null:
+		rama.model.play_roll(rama.dodge_duration)
 
 
 func exit() -> void:

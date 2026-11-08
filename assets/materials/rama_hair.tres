@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/toon_double.gdshader" id="1_toon"]
+[ext_resource type="Texture2D" path="res://characters/rama/model/textures/rama_hair_detail.png" id="2_detail"]
+
+[resource]
+shader = ExtResource("1_toon")
+shader_parameter/tint = Color(0.09, 0.06, 0.05, 1)
+shader_parameter/use_vertex_color = 0.0
+shader_parameter/detail_tex = ExtResource("2_detail")
+shader_parameter/detail_strength = 0.6
+shader_parameter/normal_strength = 0.0
+shader_parameter/rim_strength = 0.6
+shader_parameter/specular_strength = 0.0

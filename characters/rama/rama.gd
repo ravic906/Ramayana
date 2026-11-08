@@ -11,8 +11,8 @@ signal arrow_fired(arrow: Arrow, target: Node3D)
 @export var turn_speed := 12.0
 
 @export_group("Dodge")
-@export var dodge_speed := 14.0
-@export var dodge_duration := 0.35
+@export var dodge_speed := 9.5
+@export var dodge_duration := 0.55
 @export var dodge_cooldown := 0.5
 
 @export_group("Archery")
@@ -29,6 +29,8 @@ signal arrow_fired(arrow: Arrow, target: Node3D)
 @onready var bow_muzzle: Marker3D = $Visual/BowMuzzle
 @onready var health: Health = $Health
 @onready var state_machine: StateMachine = $StateMachine
+## Visual + animation. Optional so gameplay works with any placeholder visual.
+@onready var model: RamaModel = get_node_or_null("Visual/RamaModel") as RamaModel
 
 var camera_rig: Node3D
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
@@ -46,6 +48,8 @@ func _physics_process(delta: float) -> void:
 	_dodge_timer = maxf(_dodge_timer - delta, 0.0)
 	if Input.is_action_just_pressed(&"shoot") and can_shoot():
 		shoot()
+	if model != null:
+		model.set_locomotion(Vector2(velocity.x, velocity.z).length() / move_speed)
 
 
 # --- Movement helpers used by states -------------------------------------
@@ -120,5 +124,7 @@ func shoot() -> Arrow:
 	get_parent().add_child(arrow)
 	arrow.global_position = origin
 	arrow.launch(direction, self, arrow_damage)
+	if model != null:
+		model.play_shoot()
 	arrow_fired.emit(arrow, target)
 	return arrow

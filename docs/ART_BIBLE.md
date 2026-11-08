@@ -40,6 +40,13 @@ and black-gold) so players can tell chapters apart at a glance.
 | Hanuman | Mace (gada), tail, broad shoulders | Devotional and powerful |
 | Ravana | Ten heads, golden armour, Pushpaka motifs | Grand and intimidating, never cartoonish |
 
+**Prototype Rama (current build):**
+- Body and animations come from Quaternius' CC0 base character (about 14k triangles), restyled
+  in code: cloud-blue skin, pitambara, uttariya, kireeta, kundala, keyura, Kodanda and quiver.
+- It uses the shared toon shader (`assets/shaders/toon.gdshader`) with an ink outline.
+- Outfit colours are uniforms on `assets/materials/rama_body.tres`, so they're easy to tweak.
+- This stays in place until final hero art is commissioned.
+
 **Budgets:** hero characters about 15k triangles with one 2k texture set. Enemies about 5k
 triangles with a 1k texture set. Bosses up to 25k triangles.
 
