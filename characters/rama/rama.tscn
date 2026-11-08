@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://characters/rama/rama.gd" id="1_rama"]
 [ext_resource type="Script" path="res://core/combat/health.gd" id="2_health"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://characters/rama/states/dodge.gd" id="6_dodge"]
 [ext_resource type="PackedScene" path="res://characters/rama/arrow.tscn" id="7_arrow"]
 [ext_resource type="PackedScene" path="res://characters/rama/rama_model.tscn" id="8_model"]
+[ext_resource type="Script" path="res://characters/rama/states/aim.gd" id="9_aim"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_body"]
 radius = 0.35
@@ -45,3 +46,6 @@ script = ExtResource("5_move")
 
 [node name="Dodge" type="Node" parent="StateMachine"]
 script = ExtResource("6_dodge")
+
+[node name="Aim" type="Node" parent="StateMachine"]
+script = ExtResource("9_aim")

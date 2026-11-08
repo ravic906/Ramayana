@@ -29,4 +29,9 @@ Both packs are released under **CC0 1.0** (public domain) by Quaternius
    godot --headless -s res://tools/build_rama.gd -- "<…>/Universal Base Characters[Standard]" "<…>/Unreal-Godot/UAL1_Standard.glb"
    ```
 
+## Sound effects
+`assets/audio/sfx/*.wav` are synthesised from scratch by `tools/gen_sfx.py`, so there are no
+third-party sounds. The bowstring uses Karplus–Strong synthesis; the creak uses stick-slip
+clicks through wooden resonances.
+
 These are **prototype assets**. Final hero art will follow the Art Bible and replace them.

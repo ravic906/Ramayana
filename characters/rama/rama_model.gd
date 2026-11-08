@@ -24,20 +24,111 @@ const RUN_POINT := 1.0
 @onready var skeleton: Skeleton3D = $Body/Armature/Skeleton3D
 @onready var anim_player: AnimationPlayer = $Body/AnimationPlayer
 
+## Stance turn while aiming: the left shoulder swings toward the target.
+const AIM_STANCE_YAW := deg_to_rad(-70.0)
+const DRAW_LENGTH := 0.66
+const STRING_REST_X := -0.035
+const BOW_HALF := 0.71
+
 var anim_tree: AnimationTree
 var bow: Node3D
+var pose: ArcheryPose
+## 0..1, smoothed: how far Rama is into his archery stance.
+var aim_weight := 0.0
+## 0..1: how far the string is drawn.
+var draw := 0.0
+## World-space aim direction (set by Rama while aiming).
+var aim_dir := Vector3.FORWARD
+
+var _aiming := false
 var _attachments := {}
-var _bow_aim := 0.0
+var _bow_raise := 0.0
+var _bow_mat: ShaderMaterial
+var _string_top: MeshInstance3D
+var _string_bottom: MeshInstance3D
+var _nocked_arrow: Node3D
+var _nock_point := Vector3.ZERO
 
 
 func _ready() -> void:
 	_build_ornaments()
 	_build_bow()
 	_build_anim_tree()
+	pose = ArcheryPose.new()
+	pose.name = "ArcheryPose"
+	pose.influence = 0.0
+	skeleton.add_child(pose)
 
 
 func _process(delta: float) -> void:
-	_update_bow(delta)
+	var real_delta := delta / maxf(Engine.time_scale, 0.01)
+	aim_weight = move_toward(aim_weight, 1.0 if _aiming else 0.0, real_delta * 6.0)
+	var w := smoothstep(0.0, 1.0, aim_weight)
+	body.transform.basis = Basis(Vector3.UP, PI + AIM_STANCE_YAW * w)
+	if pose:
+		pose.influence = w
+		_update_pose_targets()
+	_update_bow(real_delta)
+
+
+# --- Archery API --------------------------------------------------------------
+
+func begin_aim() -> void:
+	_aiming = true
+
+
+func end_aim() -> void:
+	_aiming = false
+	draw = 0.0
+
+
+func is_aiming() -> bool:
+	return _aiming
+
+
+func set_draw(amount: float) -> void:
+	draw = clampf(amount, 0.0, 1.0)
+
+
+func set_aim_direction(dir: Vector3) -> void:
+	if dir.length_squared() > 0.0001:
+		aim_dir = dir.normalized()
+
+
+## Where the arrow sits on the string (world space).
+func get_nock_position() -> Vector3:
+	return _nock_point
+
+
+func get_bone_world(bone: String) -> Vector3:
+	return skeleton.global_transform * skeleton.get_bone_global_pose(skeleton.find_bone(bone)).origin
+
+
+## Hand position including the archery IK (blended by its influence).
+func get_hand_world(side: String) -> Vector3:
+	var animated := get_bone_world("hand_" + side)
+	if pose == null or pose.influence <= 0.0 or pose.solved_hand_l == Vector3.ZERO:
+		return animated
+	var solved := pose.solved_hand_l if side == "l" else pose.solved_hand_r
+	return animated.lerp(solved, pose.influence)
+
+
+## Distance from the drawing hand to where the IK wants it (for tests/debug).
+func string_hand_error() -> float:
+	return get_hand_world("r").distance_to(pose.string_target) if pose else INF
+
+
+func _update_pose_targets() -> void:
+	var right := aim_dir.cross(Vector3.UP).normalized()
+	var head := get_bone_world("Head")
+	var anchor := head + Vector3.DOWN * 0.07 + aim_dir * 0.07 + right * 0.03
+	var grip := anchor + aim_dir * DRAW_LENGTH
+	var pull := 1.0 - pow(1.0 - draw, 2.0)
+	pose.bow_target = grip
+	pose.bow_pole = get_bone_world("upperarm_l") + Vector3.DOWN * 0.5 - right * 0.3
+	pose.string_target = (grip - aim_dir * 0.1).lerp(anchor, pull)
+	pose.draw_pole = get_bone_world("upperarm_r") - aim_dir * 0.6 + Vector3.UP * 0.15 + right * 0.2
+	pose.look_target = anchor + aim_dir * 20.0
 
 
 # --- Public API used by Rama ------------------------------------------------
@@ -212,31 +303,93 @@ func _build_bow() -> void:
 	bow.top_level = true
 	var bow_mesh := MeshInstance3D.new()
 	bow_mesh.mesh = _bow_mesh()
-	bow_mesh.material_override = load(MAT + "bow.tres")
+	_bow_mat = (load(MAT + "bow.tres") as ShaderMaterial).duplicate()
+	bow_mesh.material_override = _bow_mat
 	bow.add_child(bow_mesh)
-	var string := MeshInstance3D.new()
-	string.mesh = _cyl(0.003, 0.003, 1.42, 4)
-	string.material_override = load(MAT + "string_mat.tres")
-	string.position = Vector3(-0.035, 0.0, 0.0)
-	bow.add_child(string)
 	add_child(bow)
+	var string_mat: Material = load(MAT + "string_mat.tres")
+	_string_top = _string_segment(string_mat)
+	_string_bottom = _string_segment(string_mat)
+	_nocked_arrow = _build_nocked_arrow()
 
 
-## The bow follows the left hand, but its orientation is set here: carried
-## upright at Rama's side, raised vertical facing forward while shooting.
+func _string_segment(material: Material) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.mesh = _cyl(0.0035, 0.0035, 1.0, 4)
+	mi.material_override = material
+	mi.top_level = true
+	add_child(mi)
+	return mi
+
+
+func _build_nocked_arrow() -> Node3D:
+	var arrow := Node3D.new()
+	arrow.name = "NockedArrow"
+	arrow.top_level = true
+	arrow.visible = false
+	var shaft := Basis(Vector3.RIGHT, PI / 2)
+	_add_to(arrow, _cyl(0.006, 0.006, 0.82, 6), load(MAT + "gold_plain.tres"), Transform3D(shaft, Vector3(0, 0, -0.41)))
+	_add_to(arrow, _cyl(0.0, 0.016, 0.06, 6), load(MAT + "gold.tres"), Transform3D(shaft.rotated(Vector3.RIGHT, PI), Vector3(0, 0, -0.85)))
+	for i in 3:
+		var fin := Basis(Vector3.BACK, TAU * i / 3.0)
+		_add_to(arrow, _box(Vector3(0.003, 0.03, 0.09)), load(MAT + "saffron.tres"), Transform3D(fin, Vector3(0, 0, -0.07) + fin * Vector3(0, 0.016, 0)))
+	add_child(arrow)
+	return arrow
+
+
+## The bow follows the left hand; its orientation is set here: carried upright
+## at Rama's side, raised for a snap shot, held vertical toward the target
+## while aiming. The string bends to the drawing hand and the limbs flex.
 func _update_bow(delta: float) -> void:
 	if bow == null or skeleton == null:
 		return
-	var target := 1.0 if is_playing(&"shoot") else 0.0
-	_bow_aim = move_toward(_bow_aim, target, delta * 8.0)
-	var hand := skeleton.global_transform * skeleton.get_bone_global_pose(skeleton.find_bone("hand_l"))
+	_bow_raise = move_toward(_bow_raise, 1.0 if is_playing(&"shoot") else 0.0, delta * 8.0)
+	var hand := get_hand_world("l")
 	var b := body.global_transform.basis.orthonormalized()
-	var axis := Vector3(0.05, 1.0, 0.2).lerp(Vector3(0.12, 1.0, 0.0), _bow_aim).normalized()
-	var belly := Vector3(1.0, 0.0, 0.2).lerp(Vector3(0.0, 0.0, 1.0), _bow_aim)
-	var y := axis
+	var axis := Vector3(0.05, 1.0, 0.2).lerp(Vector3(0.12, 1.0, 0.0), _bow_raise).normalized()
+	var belly := Vector3(1.0, 0.0, 0.2).lerp(Vector3(0.0, 0.0, 1.0), _bow_raise)
+	var carry := b * _frame(axis, belly)
+	var right := aim_dir.cross(Vector3.UP).normalized()
+	var aimed := _frame((Vector3.UP + right * 0.12).normalized(), aim_dir)
+	var w := smoothstep(0.0, 1.0, aim_weight)
+	var basis := Basis(carry.get_rotation_quaternion().slerp(aimed.get_rotation_quaternion(), w))
+	bow.global_transform = Transform3D(basis, hand + (b * Vector3(0.0, -0.02, 0.03)) * (1.0 - w))
+
+	var bend := draw * w
+	_bow_mat.set_shader_parameter(&"bend", bend)
+	var tip_x := STRING_REST_X - bend * 0.085
+	var tip_y := BOW_HALF * (1.0 - bend * 0.03)
+	var top := bow.global_transform * Vector3(tip_x, tip_y, 0.0)
+	var bottom := bow.global_transform * Vector3(tip_x, -tip_y, 0.0)
+	var rest_nock := bow.global_transform * Vector3(STRING_REST_X, 0.0, 0.0)
+	_nock_point = rest_nock.lerp(get_hand_world("r"), clampf(w * 1.5 - 0.5, 0.0, 1.0)) if _aiming or w > 0.0 else rest_nock
+	_place_segment(_string_top, top, _nock_point)
+	_place_segment(_string_bottom, bottom, _nock_point)
+
+	_nocked_arrow.visible = _aiming and w > 0.6
+	if _nocked_arrow.visible:
+		var forward := (bow.global_position - _nock_point)
+		if forward.length_squared() < 0.01:
+			forward = aim_dir
+		_nocked_arrow.global_transform = Transform3D(Basis.looking_at(forward.normalized(), Vector3.UP), _nock_point)
+
+
+func _frame(up: Vector3, belly: Vector3) -> Basis:
+	var y := up.normalized()
 	var x := (belly - y * belly.dot(y)).normalized()
-	var z := x.cross(y)
-	bow.global_transform = Transform3D(b * Basis(x, y, z), hand.origin + b * Vector3(0.0, -0.02, 0.03))
+	return Basis(x, y, x.cross(y))
+
+
+func _place_segment(mi: MeshInstance3D, from: Vector3, to: Vector3) -> void:
+	var d := to - from
+	var length := d.length()
+	if length < 0.001:
+		mi.visible = false
+		return
+	mi.visible = true
+	var y := d / length
+	var x := y.cross(Vector3.FORWARD if absf(y.z) < 0.9 else Vector3.RIGHT).normalized()
+	mi.global_transform = Transform3D(Basis(x, y * length, x.cross(y)), (from + to) * 0.5)
 
 
 func get_bow_tip_position() -> Vector3:

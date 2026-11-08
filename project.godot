@@ -17,6 +17,7 @@ Controls="*res://autoload/controls.gd"
 Store="*res://autoload/store.gd"
 GameState="*res://autoload/game_state.gd"
 SaveSystem="*res://autoload/save_system.gd"
+TimeFX="*res://autoload/time_fx.gd"
 
 [display]
 

@@ -43,14 +43,29 @@ Each kanda is split into 4–8 **missions** (10–15 minutes each) with checkpoi
 |---|---|
 | Left-thumb virtual joystick | Move Rama (camera-relative) |
 | Swipe on right half of screen | Rotate camera |
-| **Bow** button (tap) | Fire an arrow at the auto-aimed target |
-| **Bow** button (hold & release) | Charged piercing shot |
+| **Bow** button (tap) | Snap shot at the auto-aimed target |
+| **Bow** button (hold, drag, release) | Draw, aim over the shoulder, loose. A release in the golden window is a perfect shot. |
 | **Dodge** button | Dodge roll with brief invulnerability |
 | Astra buttons (2–3 slots) | Cast equipped astras (cooldowns) |
 | Companion button | Toggle companion command (Guard / Attack) |
 | Summon button | Call a summon when the Dharma meter allows |
 
 Gamepad and keyboard are supported as fallbacks (WASD / arrows, J = bow, K/Shift = dodge).
+
+### Draw, hold, release (implemented in the prototype)
+The bow is the heart of the game, so drawing it should feel physical:
+
+| Phase | Feel |
+|---|---|
+| Nock | Click of the arrow on the string |
+| Draw (0.65 s) | The camera blends over the right shoulder and zooms (FOV 50° → 36°). Time eases to 55%. The bow creaks louder and higher, its limbs flex, and the string bends to Rama's drawing hand at his cheek (arm IK). The phone ticks harder as tension rises. |
+| Full draw | A haptic thump, a heartbeat, and a gold reticle: the **perfect window** (0.45 s) |
+| Hold too long | After 2.2 s the aim trembles and the heartbeat quickens |
+| Release | Twang and whoosh, recoil, camera kick and a golden trail. Power scales damage and arrow speed. |
+| Perfect release | Double damage, a bell chime, a "PERFECT" banner, and the **arrow cam** in slow motion to the target |
+| Impact | Hit-stop (50–90 ms), sparks, a thud, haptics, and the arrow stays stuck in the target |
+
+A dodge cancels the draw. A quick tap is still a snap shot with generous auto-aim, for accessibility.
 
 ### Auto-aim
 Targets are scored by distance and by how closely they align with Rama's facing direction,

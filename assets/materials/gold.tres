@@ -14,11 +14,11 @@ shader_parameter/outline_width = 0.003
 [resource]
 next_pass = SubResource("Outline")
 shader = ExtResource("1_toon")
-shader_parameter/tint = Color(0.8, 0.58, 0.18, 1)
+shader_parameter/tint = Color(0.66, 0.46, 0.13, 1)
 shader_parameter/use_vertex_color = 0.0
 shader_parameter/detail_tex = ExtResource("2_detail")
 shader_parameter/detail_strength = 0.0
 shader_parameter/normal_tex = ExtResource("3_normal")
 shader_parameter/normal_strength = 0.0
-shader_parameter/rim_strength = 0.3
+shader_parameter/rim_strength = 0.2
 shader_parameter/specular_strength = 0.45

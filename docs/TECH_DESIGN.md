@@ -63,6 +63,23 @@ tests/           Headless test runner + unit tests
   uniforms in the toon shader, so they look the same under the Mobile and Compatibility
   renderers.
 
+### Archery feel
+- **State and draw logic:** the `Aim` state (`characters/rama/states/aim.gd`) drives the draw,
+  with logic in `Rama.begin_draw / update_draw / release_draw`. Draw timing uses real
+  (unscaled) seconds so slow motion doesn't change it.
+- **Slow motion:** the `TimeFX` autoload owns `Engine.time_scale` through named layers (`focus`,
+  `arrow_cam`, `hitstop`). The slowest layer wins, and every layer is cleared on release, dodge or
+  scene exit.
+- **Arm IK:** `ArcheryPose` is a `SkeletonModifier3D` doing analytic two-bone IK for both arms
+  plus a head look-at, blended by `influence`. Godot applies modifier output only for rendering,
+  so it publishes the solved hand positions, which the bow, string and nocked arrow follow.
+- **Bow flex:** `toon_bow.gdshader` bends the limbs on `bend`. The string is two segments from
+  the tips to the nock.
+- **Camera:** `FollowCamera` blends to an over-the-shoulder aim view, punches FOV with the draw,
+  shakes on trauma, adds depth of field on Vulkan renderers, and runs the arrow cam.
+- **Feedback:** haptics come from `Haptics.pulse` (Android `VIBRATE` permission is enabled).
+  Prototype sounds are synthesised by `tools/gen_sfx.py`.
+
 ### Combat
 - `Health` is a component node with `changed`, `damaged` and `died` signals and an
   `invulnerable` flag (used by Dodge).

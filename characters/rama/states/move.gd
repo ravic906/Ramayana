@@ -12,5 +12,7 @@ func physics_update(delta: float) -> void:
 	rama.move_and_slide()
 	if Input.is_action_just_pressed(&"dodge") and rama.can_dodge():
 		machine.transition_to(&"Dodge")
+	elif Input.is_action_just_pressed(&"shoot") and rama.can_shoot():
+		machine.transition_to(&"Aim")
 	elif input.length() <= 0.05:
 		machine.transition_to(&"Idle")

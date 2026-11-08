@@ -23,10 +23,20 @@ beside him as companions and summons.
 |---|---|---|
 | Move | Left-side stick (appears under the thumb) | WASD / arrow keys |
 | Look | Swipe on an empty part of the screen | Mouse drag (touch emulation) |
-| Fire bow (auto-aim) | **Bow** button | J / Space |
-| Dodge roll | **Dodge** button | K / Shift |
+| Snap shot (auto-aim) | Tap **Bow** | Tap J / Space |
+| Draw, aim, loose | Hold **Bow** (drag the same thumb to aim), then release | Hold J / Space, mouse-drag to aim |
+| Dodge roll (cancels a draw) | **Dodge** button | K / Shift |
 
 Hit the rakshasa training dummies to earn Punya.
+
+### The bow
+Holding Bow draws the Kodanda:
+- The camera moves over Rama's shoulder and zooms as the string tightens.
+- Time slows, the bow creaks and flexes, and the phone vibrates with rising tension.
+
+Release while the reticle glows **gold**, just after full draw, for a **perfect shot**. A perfect
+shot does double damage and the camera rides along with the arrow. Hold too long and Rama's aim
+starts to tremble.
 
 ## Try it on your Android phone
 Every push builds a debug APK through GitHub Actions (`.github/workflows/android.yml`).
@@ -67,7 +77,7 @@ tests/        headless test runner and unit tests
 | Phase | Deliverable |
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
-| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · one astra · Lakshmana AI · first rakshasa enemy |
+| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · one astra · Lakshmana AI · first rakshasa enemy |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
 | 4–5. Full journey | Kandas 2–7, ending with the Ravana finale and New Game+ |
