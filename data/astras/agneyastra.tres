@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="AstraResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/combat/astra_resource.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"agneyastra"
+display_name = "Agneyastra"
+cooldown = 12.0
+min_draw = 0.6
+impact_damage = 35.0
+radius = 4.5
+knockback = 7.0
+burn_dps = 6.0
+burn_duration = 4.0
+patch_duration = 3.0
+patch_dps = 8.0
+color = Color(1, 0.45, 0.1, 1)
+glow_color = Color(1, 0.8, 0.3, 1)

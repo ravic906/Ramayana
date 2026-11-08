@@ -1,0 +1,58 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/rakshasa.gd" id="1_r"]
+[ext_resource type="Resource" path="res://data/enemies/grunt.tres" id="2_data"]
+[ext_resource type="PackedScene" path="res://characters/rama/arrow.tscn" id="3_arrow"]
+[ext_resource type="PackedScene" path="res://characters/enemies/rakshasa/rakshasa_model.tscn" id="4_model"]
+[ext_resource type="Script" path="res://core/combat/health.gd" id="5_health"]
+[ext_resource type="Script" path="res://core/state_machine/state_machine.gd" id="6_fsm"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/idle.gd" id="7_idle"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/chase.gd" id="8_chase"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/telegraph.gd" id="9_tele"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/recover.gd" id="10_rec"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/stagger.gd" id="11_stag"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/dead.gd" id="12_dead"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_body"]
+radius = 0.4
+height = 2.0
+
+[node name="Rakshasa" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+platform_floor_layers = 1
+script = ExtResource("1_r")
+data = ExtResource("2_data")
+arrow_scene = ExtResource("3_arrow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("Shape_body")
+
+[node name="RakshasaModel" parent="." instance=ExtResource("4_model")]
+weapon = 0
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("5_health")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("6_fsm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("7_idle")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("8_chase")
+
+[node name="Telegraph" type="Node" parent="StateMachine"]
+script = ExtResource("9_tele")
+
+[node name="Recover" type="Node" parent="StateMachine"]
+script = ExtResource("10_rec")
+
+[node name="Stagger" type="Node" parent="StateMachine"]
+script = ExtResource("11_stag")
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource("12_dead")

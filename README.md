@@ -26,8 +26,19 @@ beside him as companions and summons.
 | Snap shot (auto-aim) | Tap **Bow** | Tap J / Space |
 | Draw, aim, loose | Hold **Bow** (drag the same thumb to aim), then release | Hold J / Space, mouse-drag to aim |
 | Dodge roll (cancels a draw) | **Dodge** button | K / Shift |
+| Arm Agneyastra (next drawn shot) | **Agni** button | L / 1 |
 
-Hit the rakshasa training dummies to earn Punya.
+Survive three waves of rakshasas in Vishvamitra's training arena:
+- **Grunts** charge with spiked clubs. Each glows red and growls before it swings, so dodge through
+  the blow for a *perfect dodge*.
+- **Archers** keep their distance and strafe.
+
+The red dummies remain for target practice. If Rama falls, he rises again and the wave restarts.
+
+### Agneyastra
+Tap **Agni** to set the bow aflame, then loose a drawn arrow (at least 60% draw). It explodes in
+fire, hurling back and burning every rakshasa nearby, and leaves the ground burning. It then needs
+12 seconds before it can be invoked again; the ring on the button shows the cooldown.
 
 ### The bow
 Holding Bow draws the Kodanda:
@@ -77,7 +88,7 @@ tests/        headless test runner and unit tests
 | Phase | Deliverable |
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
-| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · one astra · Lakshmana AI · first rakshasa enemy |
+| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
 | 4–5. Full journey | Kandas 2–7, ending with the Ravana finale and New Game+ |

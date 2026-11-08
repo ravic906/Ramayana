@@ -117,6 +117,52 @@ def main():
         hb[s:s + len(beat)] += beat
     write("heartbeat", hb, 0.8)
 
+    # --- Combat ---------------------------------------------------------
+    # Growl: low rough voice for a rakshasa wind-up.
+    tt = t(0.7)
+    base = np.sin(2 * np.pi * (70 + 25 * np.sin(2 * np.pi * 3 * tt)) * tt)
+    rough = resonator(rng.normal(0, 1, len(tt)), 140, 4) * (0.6 + 0.4 * np.sin(2 * np.pi * 23 * tt))
+    write("growl", (base * 0.7 + rough) * np.sin(np.pi * np.linspace(0, 1, len(tt))) ** 0.7, 0.75)
+
+    # Club hit: heavy whump with a crack.
+    whump = np.sin(2 * np.pi * 60 * t(0.35)) * env(0.35, 0.001, 0.07)
+    crack2 = resonator(rng.normal(0, 1, len(t(0.35))) * env(0.35, 0.0005, 0.02), 900, 4)
+    write("club_hit", whump + 0.8 * crack2)
+
+    # Enemy bow: duller, lower twang.
+    write("enemy_bow", karplus(73.0, 0.6, 0.995, 0.35) * np.exp(-t(0.6) / 0.2))
+
+    # Rama hurt: short breathy grunt.
+    tt = t(0.3)
+    breath = resonator(rng.normal(0, 1, len(tt)), 520, 3) * env(0.3, 0.01, 0.09)
+    voice = np.sin(2 * np.pi * (180 - 60 * tt) * tt) * env(0.3, 0.01, 0.08)
+    write("rama_hurt", breath + 0.6 * voice, 0.7)
+
+    # Ignite: rising whoosh with a crackle (arming Agneyastra).
+    tt = t(0.9)
+    noise = rng.normal(0, 1, len(tt))
+    rise = np.linspace(0, 1, len(tt)) ** 1.5
+    crackle = (rng.random(len(tt)) > 0.995) * rng.uniform(-1, 1, len(tt))
+    ign = resonator(noise, 400, 1.5) * rise * (1 - np.linspace(0, 1, len(tt)) ** 6)
+    write("ignite", ign + resonator(crackle, 3000, 6) * 0.8, 0.8)
+
+    # Fire explosion: deep boom, roar and crackle tail.
+    tt = t(1.6)
+    boom = np.sin(2 * np.pi * 45 * tt * (1 - 0.25 * tt)) * env(1.6, 0.002, 0.25)
+    roar = lowpass(rng.normal(0, 1, len(tt)), 0.08) * env(1.6, 0.01, 0.5) * 3
+    crk = (rng.random(len(tt)) > 0.993) * rng.uniform(-1, 1, len(tt)) * np.exp(-tt / 0.8)
+    write("fire_explosion", boom + roar + resonator(crk, 2500, 5))
+
+    # Burn loop: soft crackling fire (seamless 1.5 s loop).
+    tt = t(1.5)
+    bed = lowpass(rng.normal(0, 1, len(tt)), 0.05) * 2
+    crk = (rng.random(len(tt)) > 0.996) * rng.uniform(-1, 1, len(tt))
+    burn = bed + resonator(crk, 2200, 5)
+    f = int(SR * 0.05)
+    burn[:f] *= np.linspace(0, 1, f)
+    burn[-f:] *= np.linspace(1, 0, f)
+    write("burn_loop", burn, 0.5)
+
 
 if __name__ == "__main__":
     main()

@@ -19,6 +19,11 @@ var direction := Vector3.FORWARD
 var shooter: Node = null
 ## A perfect release: brighter trail, bigger impact.
 var perfect := false
+## Leave the arrow stuck in what it hits (off for arrows aimed at Rama).
+var stick := true
+## Divine payload released on impact (e.g. Agneyastra).
+var astra: AstraResource
+var _flames: CPUParticles3D
 var _age := 0.0
 var _trail: MeshInstance3D
 
@@ -50,6 +55,40 @@ func launch(dir: Vector3, from: Node, dmg: float = damage, arrow_speed: float = 
 		_trail.scale = Vector3(1.6, 1.6, 1.0)
 
 
+func set_trail_color(color: Color) -> void:
+	if _trail:
+		(_trail.material_override as StandardMaterial3D).albedo_color = color
+
+
+## Turns this arrow into an astra: fiery trail and flames in flight.
+func set_astra(a: AstraResource) -> void:
+	astra = a
+	if a == null:
+		return
+	set_trail_color(Color(a.color, 1.0))
+	_trail.scale = Vector3(3.0, 3.0, 1.6)
+	_flames = CPUParticles3D.new()
+	_flames.amount = 40
+	_flames.lifetime = 0.35
+	_flames.local_coords = false
+	_flames.direction = Vector3(0, 0, 1)
+	_flames.spread = 25.0
+	_flames.initial_velocity_min = 1.0
+	_flames.initial_velocity_max = 3.0
+	_flames.gravity = Vector3(0, 2.0, 0)
+	_flames.mesh = FX.glow_quad(a.color, 0.16)
+	var curve := Curve.new()
+	curve.add_point(Vector2(0, 1))
+	curve.add_point(Vector2(1, 0))
+	_flames.scale_amount_curve = curve
+	add_child(_flames)
+	var light := OmniLight3D.new()
+	light.light_color = a.color
+	light.light_energy = 2.0
+	light.omni_range = 4.0
+	add_child(light)
+
+
 func _physics_process(delta: float) -> void:
 	var from := global_position
 	var to := from + direction * speed * delta
@@ -66,6 +105,9 @@ func _physics_process(delta: float) -> void:
 	_age += delta
 	_update_trail(minf(_age * 6.0, 1.0))
 	if _age >= lifetime:
+		if astra != null:
+			Explosion.detonate(get_parent(), global_position, astra, shooter)
+			impacted.emit(global_position, null, false)
 		queue_free()
 
 
@@ -86,12 +128,15 @@ func _on_hit(other: Object, at: Vector3) -> void:
 		var was_alive := not health.is_dead()
 		health.take_damage(damage, shooter)
 		killed = was_alive and health.is_dead()
-		_leave_stuck_arrow(other as Node3D, at)
+		if stick:
+			_leave_stuck_arrow(other as Node3D, at)
 		var tfx := get_node_or_null("/root/TimeFX")
 		if tfx:
 			tfx.hitstop(0.09 if (perfect or killed) else 0.05)
 		Haptics.pulse(45, 0.9 if killed else 0.6)
 	var parent := get_parent()
+	if astra != null:
+		Explosion.detonate(parent, at - direction * 0.2, astra, shooter)
 	FX.sparks(parent, at, Color(1.0, 0.8, 0.35) if health else Color(0.8, 0.7, 0.55), 40 if perfect else 22, 7.0 if perfect else 5.0)
 	_play_at(parent, SFX_IMPACT, at, 0.0 if health else -6.0)
 	impacted.emit(at, other, killed)

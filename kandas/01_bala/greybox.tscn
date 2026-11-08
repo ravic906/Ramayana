@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://characters/rama/rama.tscn" id="1_rama"]
 [ext_resource type="PackedScene" path="res://core/camera/follow_camera.tscn" id="2_cam"]
 [ext_resource type="PackedScene" path="res://characters/enemies/target_dummy.tscn" id="3_dummy"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="4_hud"]
+[ext_resource type="Script" path="res://kandas/01_bala/greybox.gd" id="5_level"]
+[ext_resource type="Script" path="res://kandas/01_bala/wave_spawner.gd" id="6_spawner"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.45, 0.62, 0.82, 1)
@@ -43,6 +45,7 @@ material = SubResource("Mat_stone")
 size = Vector3(1.2, 5, 1.2)
 
 [node name="Greybox" type="Node3D"]
+script = ExtResource("5_level")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
@@ -51,6 +54,8 @@ environment = SubResource("Env")
 transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 10, 0)
 light_color = Color(1, 0.95, 0.85, 1)
 shadow_enabled = true
+directional_shadow_mode = 1
+directional_shadow_max_distance = 45.0
 
 [node name="Ground" type="StaticBody3D" parent="."]
 
@@ -95,5 +100,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -16)
 [node name="Dummy3" parent="." instance=ExtResource("3_dummy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -15)
 
+[node name="WaveSpawner" type="Node3D" parent="."]
+script = ExtResource("6_spawner")
+
+[node name="North" type="Marker3D" parent="WaveSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
+
+[node name="NorthWest" type="Marker3D" parent="WaveSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, -24)
+
+[node name="NorthEast" type="Marker3D" parent="WaveSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, -24)
+
+[node name="West" type="Marker3D" parent="WaveSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -6)
+
+[node name="East" type="Marker3D" parent="WaveSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -6)
+
 [node name="HUD" parent="." instance=ExtResource("4_hud")]
 player_path = NodePath("../Rama")
+spawner_path = NodePath("../WaveSpawner")

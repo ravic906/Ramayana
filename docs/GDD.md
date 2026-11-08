@@ -156,6 +156,16 @@ New Game+.
 
 ## 8. Enemies (Bala Kanda set)
 
+**In the prototype:**
+- Grunts and archers (`data/enemies/*.tres`) with a readable attack cycle: chase → telegraph
+  (red glow and growl, ~0.75 s) → strike → recover.
+- At most two rakshasas wind up at once, so fights stay readable on a phone.
+- Big hits (≥ the enemy's stagger threshold) interrupt the attack.
+- Three waves run in the training arena (`kandas/01_bala/wave_spawner.gd`).
+- Agneyastra is implemented: it arms the next drawn shot, explodes for 35 damage in a 4.5 m
+  radius with falloff, adds knockback, burns for 6 dps over 4 s, leaves burning ground for 3 s,
+  and has a 12 s cooldown.
+
 | Enemy | Behaviour |
 |---|---|
 | Rakshasa grunt | Melee, telegraphed swing |

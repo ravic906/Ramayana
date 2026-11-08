@@ -15,6 +15,13 @@ signal aim_started
 signal aim_ended
 signal released(arrow: Arrow, power: float, perfect: bool)
 signal aim_target_changed(target: Node3D)
+signal hurt(amount: float)
+signal perfect_dodge
+signal rama_died
+signal respawned
+## Emitted with the armed astra, or null when disarmed.
+signal astra_armed_changed(astra: AstraResource)
+signal astra_detonated(position: Vector3)
 
 @export_group("Movement")
 @export var move_speed := 6.0
@@ -55,6 +62,11 @@ signal aim_target_changed(target: Node3D)
 @export var assist_cone_degrees := 16.0
 @export var arrow_cam_time_scale := 0.2
 
+@export_group("Astras")
+## Astra slots (slot 0 = the Agni button / astra_1 action).
+@export var astras: Array[AstraResource] = []
+@export var respawn_delay := 3.0
+
 ## Node whose yaw defines "forward" for the joystick (usually the camera rig).
 @export var camera_rig_path: NodePath
 
@@ -71,6 +83,8 @@ const SFX_WHOOSH := preload("res://assets/audio/sfx/whoosh.wav")
 const SFX_PERFECT := preload("res://assets/audio/sfx/perfect.wav")
 const SFX_CREAK := preload("res://assets/audio/sfx/creak_loop.wav")
 const SFX_HEARTBEAT := preload("res://assets/audio/sfx/heartbeat.wav")
+const SFX_HURT := preload("res://assets/audio/sfx/rama_hurt.wav")
+const SFX_IGNITE := preload("res://assets/audio/sfx/ignite.wav")
 
 var camera_rig: Node3D
 var cam: FollowCamera
@@ -84,6 +98,10 @@ var hold_time := 0.0
 var full_draw_time := -1.0
 var aim_target: Node3D
 var aim_point := Vector3.ZERO
+var armed_astra: AstraResource
+## Astra id -> real seconds of cooldown left.
+var astra_cooldowns := {}
+var spawn_point := Vector3.ZERO
 
 var _shoot_timer := 0.0
 var _dodge_timer := 0.0
@@ -101,6 +119,9 @@ func _ready() -> void:
 		cam.arrow_cam_finished.connect(_on_arrow_cam_finished)
 	_creak = _loop_player(SFX_CREAK)
 	_heartbeat = _loop_player(SFX_HEARTBEAT)
+	spawn_point = global_position
+	health.damaged.connect(_on_hurt)
+	health.died.connect(_on_died)
 
 
 func _exit_tree() -> void:
@@ -110,6 +131,11 @@ func _exit_tree() -> void:
 func _physics_process(delta: float) -> void:
 	_shoot_timer = maxf(_shoot_timer - delta, 0.0)
 	_dodge_timer = maxf(_dodge_timer - delta, 0.0)
+	var real_delta := TimeFX.unscaled(delta)
+	for id in astra_cooldowns.keys():
+		astra_cooldowns[id] = maxf(astra_cooldowns[id] - real_delta, 0.0)
+	if Input.is_action_just_pressed(&"astra_1") and not health.is_dead():
+		toggle_astra(0)
 	if model != null:
 		model.set_locomotion(Vector2(velocity.x, velocity.z).length() / move_speed)
 
@@ -275,6 +301,13 @@ func release_draw() -> Arrow:
 	arrow = _spawn_arrow(origin, direction, damage, lerpf(min_arrow_speed, max_arrow_speed, power), perfect)
 	var target := aim_target
 	_shoot_timer = shoot_cooldown
+	if armed_astra != null and draw_amount >= armed_astra.min_draw:
+		var astra := armed_astra
+		arrow.set_astra(astra)
+		astra_cooldowns[astra.id] = astra.cooldown
+		_set_armed(null)
+		_sfx(SFX_IGNITE, -2.0, 1.3)
+		arrow.impacted.connect(func(at: Vector3, _c: Object, _k: bool) -> void: astra_detonated.emit(at))
 
 	_sfx(SFX_TWANG, lerpf(-8.0, 0.0, power), 0.9 + 0.2 * power)
 	_sfx(SFX_WHOOSH, lerpf(-14.0, -4.0, power), 1.0)
@@ -350,6 +383,100 @@ func _update_aim() -> void:
 		visual.rotation.y = lerp_angle(visual.rotation.y, atan2(-flat.x, -flat.z), 0.35)
 	if model:
 		model.set_aim_direction(to_aim.normalized())
+
+
+# --- Astras -----------------------------------------------------------------
+
+## Arms (or disarms) the astra in `slot`; the next drawn shot carries it.
+func toggle_astra(slot: int) -> bool:
+	if slot < 0 or slot >= astras.size():
+		return false
+	var astra := astras[slot]
+	if armed_astra == astra:
+		_set_armed(null)
+		return true
+	if not is_astra_ready(astra):
+		return false
+	_set_armed(astra)
+	_sfx(SFX_IGNITE, -4.0, 1.0)
+	Haptics.pulse(60, 0.7)
+	return true
+
+
+func is_astra_unlocked(astra: AstraResource) -> bool:
+	return astra.id in GameState.unlocked_astras
+
+
+func is_astra_ready(astra: AstraResource) -> bool:
+	return is_astra_unlocked(astra) and astra_cooldown_left(astra) <= 0.0 and not health.is_dead()
+
+
+func astra_cooldown_left(astra: AstraResource) -> float:
+	return astra_cooldowns.get(astra.id, 0.0)
+
+
+func _set_armed(astra: AstraResource) -> void:
+	armed_astra = astra
+	if model:
+		model.set_astra_glow(astra)
+	astra_armed_changed.emit(astra)
+
+
+# --- Taking damage ------------------------------------------------------------
+
+## Called by enemy melee attacks. Returns whether the blow connected.
+func on_attacked(damage: float, source: Node) -> bool:
+	if health.is_dead():
+		return false
+	if health.invulnerable:
+		# The blow whiffed through a dodge roll: reward the timing.
+		FX.sparks(get_parent(), global_position + Vector3.UP * 1.0, Color(1.0, 0.85, 0.4), 30, 4.0)
+		_sfx(SFX_PERFECT, -6.0, 1.5)
+		TimeFX.hitstop(0.12, 0.3)
+		perfect_dodge.emit()
+		return false
+	health.take_damage(damage, source)
+	return true
+
+
+func _on_hurt(amount: float, _source: Node) -> void:
+	if model:
+		model.play_hit()
+	if cam:
+		cam.shake(0.45)
+	Haptics.pulse(120, 1.0)
+	_sfx(SFX_HURT, -2.0, randf_range(0.9, 1.1))
+	hurt.emit(amount)
+	if is_drawing and amount >= 20.0 and not health.is_dead():
+		state_machine.transition_to(&"Idle")
+
+
+func _on_died() -> void:
+	state_machine.transition_to(&"Dead")
+
+
+## Called by the Dead state on entry.
+func die() -> void:
+	cancel_draw()
+	_set_armed(null)
+	velocity = Vector3.ZERO
+	if model:
+		model.play_death()
+	rama_died.emit()
+
+
+## Called by the Dead state after the respawn delay.
+func respawn() -> void:
+	global_position = spawn_point
+	velocity = Vector3.ZERO
+	health.revive()
+	if model:
+		model.revive()
+	respawned.emit()
+
+
+func get_aim_point() -> Vector3:
+	return global_position + Vector3.UP * 1.2
 
 
 func _spawn_arrow(origin: Vector3, direction: Vector3, damage: float, arrow_speed: float, perfect: bool) -> Arrow:

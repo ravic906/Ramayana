@@ -42,12 +42,14 @@ var aim_dir := Vector3.FORWARD
 
 var _aiming := false
 var _attachments := {}
+var _batch: PropBatch
 var _bow_raise := 0.0
 var _bow_mat: ShaderMaterial
 var _string_top: MeshInstance3D
 var _string_bottom: MeshInstance3D
 var _nocked_arrow: Node3D
 var _nock_point := Vector3.ZERO
+var _astra_fx: Node3D
 
 
 func _ready() -> void:
@@ -160,6 +162,57 @@ func play_hit() -> void:
 	_fire(&"hit")
 
 
+func play_death() -> void:
+	if anim_tree:
+		anim_tree.active = false
+	anim_player.play(&"death", 0.1)
+
+
+func revive() -> void:
+	anim_player.stop()
+	if anim_tree:
+		anim_tree.active = true
+
+
+## Flames on the bow (and on the nocked arrow while drawing) while an astra is armed.
+func set_astra_glow(astra: AstraResource) -> void:
+	if _astra_fx == null:
+		_astra_fx = Node3D.new()
+		_astra_fx.name = "AstraFX"
+		_astra_fx.top_level = true
+		var flames := CPUParticles3D.new()
+		flames.name = "Flames"
+		flames.amount = 30
+		flames.lifetime = 0.45
+		flames.local_coords = false
+		flames.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+		flames.emission_sphere_radius = 0.05
+		flames.direction = Vector3.UP
+		flames.spread = 15.0
+		flames.initial_velocity_min = 0.4
+		flames.initial_velocity_max = 1.2
+		flames.gravity = Vector3(0, 1.0, 0)
+		var curve := Curve.new()
+		curve.add_point(Vector2(0, 1))
+		curve.add_point(Vector2(1, 0))
+		flames.scale_amount_curve = curve
+		_astra_fx.add_child(flames)
+		var light := OmniLight3D.new()
+		light.name = "Light"
+		light.light_energy = 1.5
+		light.omni_range = 3.0
+		_astra_fx.add_child(light)
+		add_child(_astra_fx)
+	_astra_fx.visible = astra != null
+	var flames := _astra_fx.get_node("Flames") as CPUParticles3D
+	flames.emitting = false
+	if astra != null:
+		_astra_fx.global_position = get_hand_world("l")
+		flames.mesh = FX.glow_quad(astra.color, 0.14)
+		flames.restart()
+		(_astra_fx.get_node("Light") as OmniLight3D).light_color = astra.color
+
+
 func is_playing(one_shot: StringName) -> bool:
 	return anim_tree != null and bool(anim_tree.get("parameters/%s/active" % one_shot))
 
@@ -242,6 +295,7 @@ func _upper_body_paths() -> Array:
 # --- Ornaments --------------------------------------------------------------
 
 func _build_ornaments() -> void:
+	_batch = PropBatch.new(skeleton)
 	var gold: Material = load(MAT + "gold.tres")
 	var gold_plain: Material = load(MAT + "gold_plain.tres")
 	var ruby: Material = load(MAT + "ruby.tres")
@@ -280,21 +334,19 @@ func _build_ornaments() -> void:
 	# Kamarbandh (waistband) and the pleated front of the dhoti.
 	_add("pelvis", _torus(0.15, 0.172, 24), gold,
 		Transform3D(Basis().scaled(Vector3(1.04, 1.0, 0.8)), Vector3(0, 1.0, -0.025)))
-	_add("pelvis", _pleats(), load(MAT + "pitambara.tres"), _at(0, 0.985, 0.108))
+	_add("pelvis", _pleats(), load(MAT + "pitambara.tres"), _at(0, 0.985, 0.108), true)
 
 	# Quiver on the back, its top over the right shoulder.
-	var quiver := Node3D.new()
-	quiver.name = "Quiver"
 	var q_axis := Vector3(-0.42, 1.0, 0.0).normalized()
-	var q_basis := Basis(Vector3.BACK, Vector3.UP.signed_angle_to(q_axis, Vector3.BACK))
-	_add_to(quiver, _cyl(0.045, 0.038, 0.5, 14), load(MAT + "wood.tres"), Transform3D.IDENTITY)
+	var q := Transform3D(Basis(Vector3.BACK, Vector3.UP.signed_angle_to(q_axis, Vector3.BACK)), Vector3(0.02, 1.3, -0.21))
+	_add("spine_03", _cyl(0.045, 0.038, 0.5, 14), load(MAT + "wood.tres"), q, true)
 	for y in [-0.21, 0.0, 0.22]:
-		_add_to(quiver, _torus(0.04, 0.052, 14), gold_plain, _at(0, y, 0))
+		_add("spine_03", _torus(0.04, 0.052, 14), gold_plain, q * _at(0, y, 0))
 	for i in 5:
 		var off := Vector3(cos(i * 1.3) * 0.02, 0.3, sin(i * 1.3) * 0.02)
-		_add_to(quiver, _cyl(0.005, 0.005, 0.16, 6), gold_plain, Transform3D(Basis(), off))
-		_add_to(quiver, _box(Vector3(0.004, 0.07, 0.03)), load(MAT + "saffron.tres"), Transform3D(Basis(), off + Vector3(0, 0.09, 0)))
-	_attach_node("spine_03", quiver, Transform3D(q_basis, Vector3(0.02, 1.3, -0.21)))
+		_add("spine_03", _cyl(0.005, 0.005, 0.16, 6), gold_plain, q * Transform3D(Basis(), off))
+		_add("spine_03", _box(Vector3(0.004, 0.07, 0.03)), load(MAT + "saffron.tres"), q * Transform3D(Basis(), off + Vector3(0, 0.09, 0)))
+	_batch.commit()
 
 
 func _build_bow() -> void:
@@ -366,6 +418,8 @@ func _update_bow(delta: float) -> void:
 	_place_segment(_string_top, top, _nock_point)
 	_place_segment(_string_bottom, bottom, _nock_point)
 
+	if _astra_fx and _astra_fx.visible:
+		_astra_fx.global_position = (_nocked_arrow.global_transform * Vector3(0, 0, -0.85)) if _nocked_arrow.visible else hand
 	_nocked_arrow.visible = _aiming and w > 0.6
 	if _nocked_arrow.visible:
 		var forward := (bow.global_position - _nock_point)
@@ -398,12 +452,9 @@ func get_bow_tip_position() -> Vector3:
 
 # --- Mesh helpers -----------------------------------------------------------
 
-func _add(bone: String, mesh: Mesh, material: Material, rest_xf: Transform3D) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	mi.mesh = mesh
-	mi.material_override = material
-	_attach_node(bone, mi, rest_xf)
-	return mi
+## Queues a prop for merging (see PropBatch); committed at the end of _build_ornaments.
+func _add(bone: String, mesh: Mesh, material: Material, rest_xf: Transform3D, casts_shadow: bool = false) -> void:
+	_batch.add(bone, mesh, material, rest_xf, casts_shadow)
 
 
 func _add_to(parent: Node3D, mesh: Mesh, material: Material, xf: Transform3D) -> void:

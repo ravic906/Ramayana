@@ -22,6 +22,9 @@ uniform vec4 rim_color : source_color = vec4(1.0, 0.92, 0.75, 1.0);
 uniform float rim_strength : hint_range(0.0, 2.0) = 0.35;
 uniform float rim_power : hint_range(1.0, 8.0) = 3.0;
 uniform float specular_strength : hint_range(0.0, 2.0) = 0.0;
+// Additive flash (hit feedback, attack wind-up glow). 0 = off.
+uniform vec4 flash_color : source_color = vec4(1.0, 0.2, 0.1, 1.0);
+uniform float flash : hint_range(0.0, 4.0) = 0.0;
 uniform float specular_size : hint_range(0.0, 1.0) = 0.94;
 
 void fragment() {
@@ -45,7 +48,7 @@ void fragment() {
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.0;
 	float rim = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), rim_power);
-	EMISSION = rim_color.rgb * base * rim * rim_strength;
+	EMISSION = rim_color.rgb * base * rim * rim_strength + flash_color.rgb * flash * (0.35 + rim);
 }
 
 void light() {

@@ -1,15 +1,18 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
 [ext_resource type="Script" path="res://core/input/virtual_joystick.gd" id="2_stick"]
 [ext_resource type="Script" path="res://core/input/action_button.gd" id="3_button"]
 [ext_resource type="Script" path="res://ui/reticle.gd" id="4_reticle"]
+[ext_resource type="Script" path="res://ui/enemy_bars.gd" id="6_bars"]
 [ext_resource type="Shader" path="res://assets/shaders/vignette.gdshader" id="5_vignette"]
 
 [sub_resource type="ShaderMaterial" id="Mat_vignette"]
 shader = ExtResource("5_vignette")
 shader_parameter/strength = 0.0
 shader_parameter/glow = 0.0
+shader_parameter/hurt = 0.0
+shader_parameter/fire = 0.0
 
 [sub_resource type="StyleBoxFlat" id="Style_fill"]
 bg_color = Color(0.83, 0.65, 0.23, 1)
@@ -41,6 +44,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="EnemyBars" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_bars")
+
 [node name="Reticle" type="Control" parent="Root"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -71,6 +84,23 @@ theme_override_colors/font_outline_color = Color(0.3, 0.12, 0.02, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 56
 text = "PERFECT"
+horizontal_alignment = 1
+
+[node name="Banner" type="Label" parent="Root"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 180.0
+offset_right = 600.0
+offset_bottom = 320.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0.2, 0.08, 0.02, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 52
 horizontal_alignment = 1
 
 [node name="HealthBar" type="ProgressBar" parent="Root"]
@@ -112,8 +142,8 @@ theme_override_colors/font_outline_color = Color(0.12, 0.08, 0.05, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
 text = "Bala Kanda - Training Grounds of Ayodhya
-Tap Bow for a snap shot. Hold to draw, drag to aim, release to loose.
-Release when the ring turns gold for a perfect shot."
+Tap Bow for a snap shot. Hold to draw, drag to aim, release when the ring turns gold.
+Tap Agni, then loose a drawn arrow to unleash the Agneyastra."
 horizontal_alignment = 1
 
 [node name="Joystick" type="Control" parent="Root"]
@@ -160,3 +190,24 @@ action = &"dodge"
 label = "Dodge"
 color = Color(0.17, 0.3, 0.55, 0.8)
 pressed_color = Color(0.35, 0.5, 0.8, 0.95)
+
+[node name="AgniButton" type="Control" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -265.0
+offset_top = -500.0
+offset_right = -115.0
+offset_bottom = -350.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("3_button")
+action = &"astra_1"
+label = "Agni"
+color = Color(0.85, 0.3, 0.08, 0.85)
+pressed_color = Color(1, 0.6, 0.2, 0.95)

@@ -80,6 +80,32 @@ tests/           Headless test runner + unit tests
 - **Feedback:** haptics come from `Haptics.pulse` (Android `VIBRATE` permission is enabled).
   Prototype sounds are synthesised by `tools/gen_sfx.py`.
 
+### Enemies and astras
+- **`Rakshasa`** (`characters/enemies/rakshasa/`) is a CharacterBody3D driven by the shared
+  StateMachine (Idle, Chase, Telegraph, Recover, Stagger, Dead).
+  - Data comes from `EnemyResource`.
+  - A static attack-token pool caps simultaneous attackers.
+  - Melee blows call `Rama.on_attacked()`, which detects perfect dodges.
+- **`RakshasaModel`** reuses the rigged body with a different palette material (region uniforms)
+  and plays clips directly on the AnimationPlayer.
+- **Astras** are `AstraResource` data.
+  - The arrow carries the payload (`Arrow.set_astra`).
+  - `Explosion.detonate()` applies falloff damage, `Burn`, knockback and a `FirePatch`, plus the
+    VFX and feedback.
+- **Spawning:** `WaveSpawner` places enemies before they enter the tree. Characters only treat
+  world geometry (layer 1) as moving platforms (`platform_floor_layers = 1`), so nobody rides on
+  anyone's head.
+
+### Performance work (measured with 7 characters on screen)
+| Change | Draw calls | Triangles |
+|---|---|---|
+| Before | 859 | 830k |
+| `PropBatch` merges props per bone and material; tiny props don't cast shadows | 195 | 434k |
+| Generated LODs (`tools/build_rama.gd`) + LOD threshold 2 px + PSSM 2 splits | ~225 | ~127k |
+
+Draw calls are still above the 150 target. The next step is merging the body and hair into one
+draw, and rendering outlines only on LOD0.
+
 ### Combat
 - `Health` is a component node with `changed`, `damaged` and `died` signals and an
   `invulnerable` flag (used by Dodge).

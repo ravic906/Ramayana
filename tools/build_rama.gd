@@ -61,8 +61,7 @@ func _initialize() -> void:
 	# --- Body: paint outfit + toon material ---------------------------------
 	var body_mi: MeshInstance3D = skeleton.get_node("SuperHero_Male")
 	body_mi.name = "Body"
-	body_mi.mesh = _paint_outfit(body_mi.mesh as ArrayMesh, skeleton)
-	body_mi.mesh.surface_set_material(0, load(MAT_DIR + "rama_body.tres"))
+	body_mi.mesh = _with_lods(_paint_outfit(body_mi.mesh as ArrayMesh, skeleton), load(MAT_DIR + "rama_body.tres"))
 
 	var eyes: MeshInstance3D = skeleton.get_node("Eyes")
 	eyes.mesh.surface_set_material(0, load(MAT_DIR + "rama_eyes.tres"))
@@ -77,9 +76,7 @@ func _initialize() -> void:
 	var hair_mi: MeshInstance3D = hair_src.find_children("*", "MeshInstance3D", true, false)[0]
 	var hair := MeshInstance3D.new()
 	hair.name = "Hair"
-	hair.mesh = hair_mi.mesh
-	for s in hair.mesh.get_surface_count():
-		hair.mesh.surface_set_material(s, load(MAT_DIR + "rama_hair.tres"))
+	hair.mesh = _with_lods(hair_mi.mesh as ArrayMesh, load(MAT_DIR + "rama_hair.tres"))
 	# The hair is modelled in place (origin at 0), so undo the head's rest transform.
 	hair.transform = skeleton.get_bone_global_rest(skeleton.find_bone("Head")).affine_inverse()
 	head_att.add_child(hair)
@@ -103,7 +100,8 @@ func _initialize() -> void:
 	var err := packed.pack(root)
 	if err == OK:
 		err = ResourceSaver.save(packed, OUT_SCENE, ResourceSaver.FLAG_COMPRESS)
-	print("Saved %s: %s (body tris: %d)" % [OUT_SCENE, error_string(err), _tri_count(body_mi.mesh)])
+	print("Saved %s: %s (body tris: %d, LOD levels: %d)" % [OUT_SCENE, error_string(err),
+		_tri_count(body_mi.mesh), _lod_count(body_mi.mesh)])
 	quit(0 if err == OK else 1)
 
 
@@ -154,6 +152,21 @@ func _paint_outfit(src: ArrayMesh, skeleton: Skeleton3D) -> ArrayMesh:
 	var out := ArrayMesh.new()
 	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, st.commit_to_arrays())
 	return out
+
+
+## Rebuilds `src` with automatically generated LODs so distant characters are
+## cheap on phones. Every surface gets `material`.
+func _with_lods(src: ArrayMesh, material: Material) -> ArrayMesh:
+	var im := ImporterMesh.new()
+	for s in src.get_surface_count():
+		im.add_surface(Mesh.PRIMITIVE_TRIANGLES, src.surface_get_arrays(s), [], {}, material)
+	im.generate_lods(25.0, 60.0, [])
+	return im.get_mesh()
+
+
+func _lod_count(mesh: ArrayMesh) -> int:
+	var rs := RenderingServer.mesh_get_surface(mesh.get_rid(), 0)
+	return (rs.get("lods", []) as Array).size()
 
 
 func _dist_to_segment(p: Vector2, a: Vector2, b: Vector2) -> float:

@@ -144,8 +144,10 @@ func follow_arrow(arrow: Node3D) -> void:
 	_arrow = arrow
 	_arrow_hold = 0.0
 	arrow_cam_active = true
-	spring_arm.spring_length = 2.6
-	camera.fov = 50.0
+	# Astra shots end in a big blast: watch from further back.
+	var astra_shot: bool = arrow is Arrow and (arrow as Arrow).astra != null
+	spring_arm.spring_length = 6.0 if astra_shot else 2.6
+	camera.fov = 55.0 if astra_shot else 50.0
 	arrow.tree_exiting.connect(_on_arrow_gone, CONNECT_ONE_SHOT)
 
 

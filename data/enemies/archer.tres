@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/combat/enemy_resource.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Rakshasa Archer"
+attack_kind = 1
+max_health = 40.0
+move_speed = 3.0
+damage = 10.0
+attack_range = 22.0
+keep_distance = 12.0
+telegraph_time = 0.9
+recover_time = 0.7
+attack_cooldown = 2.6
+stagger_threshold = 20.0
+punya_reward = 20
+model_scale = 1.05
