@@ -28,6 +28,18 @@ beside him as companions and summons.
 
 Hit the rakshasa training dummies to earn Punya.
 
+## Try it on your Android phone
+Every push builds a debug APK through GitHub Actions (`.github/workflows/android.yml`).
+1. On your phone, open **https://github.com/ravic906/Ramayana/releases/tag/android-dev**.
+2. Download `ramayana-debug.apk` and open it.
+3. If Android asks, allow your browser or file manager to install unknown apps.
+
+Each build replaces the previous one; install over the top to update. The APK is also attached to
+every workflow run (Actions tab → run → Artifacts) as a zip.
+
+The build targets arm64 phones running Android 5.0+ and needs Vulkan, which most phones from 2018
+onward support.
+
 ## Tests
 ```bash
 godot --headless --import                      # first time only: builds the class cache
