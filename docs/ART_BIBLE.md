@@ -56,6 +56,21 @@ triangles with a 1k texture set. Bosses up to 25k triangles.
 - Baked lightmaps. Use vertex-colour variation rather than unique textures.
 - Foliage drawn with MultiMesh and wind animated in the shader.
 
+### Prototype environment: Ayodhya training grounds (golden hour)
+- **Courtyard:** sandstone paving with a rangoli medallion, made procedurally in `paving.gdshader`.
+- **Architecture:**
+  - Red-sandstone colonnades with marble trim and gold kalasha finials
+  - A five-tier gopuram with kudu shrine rows and guardian statues
+  - Torana arches, chhatri pavilions, a palace skyline, and a stepped kalyani tank
+- **Light and atmosphere:**
+  - Sun about 14° above the west-north-west horizon, warm `#FFB566`
+  - Sky shader running saffron → rose → indigo
+  - Warm fog, violet hills, glow and long shadows
+- **Life:** waving Suryavansha banners, flickering diyas, swaying trees and grass, circling birds,
+  and dust in the light.
+- **Stone palette:** one merged `arch` material with region masks: sandstone, red sandstone,
+  marble and dark stone.
+
 ## UI
 
 - Palm-leaf and parchment textures with gold filigree frames.

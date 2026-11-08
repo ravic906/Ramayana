@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Ramayana: The Journey of Rama"
 config/description="Stylized 3D action-adventure following Shri Rama through the seven kandas."
-run/main_scene="res://kandas/01_bala/greybox.tscn"
+run/main_scene="res://kandas/01_bala/training_grounds.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
@@ -18,6 +18,7 @@ Store="*res://autoload/store.gd"
 GameState="*res://autoload/game_state.gd"
 SaveSystem="*res://autoload/save_system.gd"
 TimeFX="*res://autoload/time_fx.gd"
+Settings="*res://autoload/settings.gd"
 
 [display]
 

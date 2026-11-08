@@ -1,6 +1,6 @@
 class_name TargetDummy
 extends StaticBody3D
-## Training target for the grey-box: flashes when hit, topples on "death"
+## Straw archery butt: flashes when hit, topples on "death"
 ## and respawns after a short delay.
 
 @export var respawn_delay := 2.0
@@ -23,7 +23,7 @@ func _ready() -> void:
 
 
 func get_aim_point() -> Vector3:
-	return global_position + Vector3.UP * 1.0
+	return global_position + Vector3.UP * 1.15
 
 
 func _on_damaged(_amount: float, _source: Node) -> void:

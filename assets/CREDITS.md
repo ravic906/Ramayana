@@ -29,6 +29,16 @@ Both packs are released under **CC0 1.0** (public domain) by Quaternius
    godot --headless -s res://tools/build_rama.gd -- "<…>/Universal Base Characters[Standard]" "<…>/Unreal-Godot/UAL1_Standard.glb"
    ```
 
+## Environment: Quaternius Stylized Nature MegaKit [Standard] (CC0)
+- https://quaternius.itch.io/stylized-nature-megakit (CC0 1.0, by Quaternius)
+- Used: `CommonTree_3`, `CommonTree_5`, `Bush_Common`, `Bush_Common_Flowers`, `Flower_3_Group`,
+  `Flower_4_Group`, `Grass_Common_Short`, `Plant_1_Big`, `Rock_Medium_1`, in `assets/env/nature/`.
+- Textures were downscaled (≤ 512 px) for mobile. The meshes are re-shaded with our toon foliage
+  shader.
+
+All Ayodhya architecture is procedural, made by `tools/build_ayodhya.gd`: the gopuram,
+colonnades, toranas, chhatris, kalyani tank and palace skyline. It contains no third-party art.
+
 ## Sound effects
 `assets/audio/sfx/*.wav` are synthesised from scratch by `tools/gen_sfx.py`, so there are no
 third-party sounds. The bowstring uses Karplus–Strong synthesis; the creak uses stick-slip

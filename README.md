@@ -13,11 +13,12 @@ beside him as companions and summons.
 - [Game Design Document](docs/GDD.md): pillars, controls, Rama's kit, companions, all seven kandas
 - [Art Bible](docs/ART_BIBLE.md): visual direction, palette, budgets, UI, audio
 - [Technical Design](docs/TECH_DESIGN.md): architecture, systems, performance budgets, testing
+- [Story Bible](docs/STORY.md): framing, Bala Kanda beat sheet, character arcs, sensitive moments, open decisions
 
 ## Running the prototype
 1. Install [Godot 4.3+](https://godotengine.org/download) (the standard build, not .NET).
 2. Open `project.godot` in the editor and press **F5**. The main scene is
-   `kandas/01_bala/greybox.tscn`, the Ayodhya training grounds.
+   `kandas/01_bala/training_grounds.tscn`: the royal training grounds of Ayodhya at golden hour.
 
 | Action | Touch | Keyboard |
 |---|---|---|
@@ -28,7 +29,8 @@ beside him as companions and summons.
 | Dodge roll (cancels a draw) | **Dodge** button | K / Shift |
 | Arm Agneyastra (next drawn shot) | **Agni** button | L / 1 |
 
-Survive three waves of rakshasas in Vishvamitra's training arena:
+Survive Guru Vasishtha's three *maya* trials: waves of illusory rakshasas summoned into the royal
+training grounds of Ayodhya:
 - **Grunts** charge with spiked clubs. Each glows red and growls before it swings, so dodge through
   the blow for a *perfect dodge*.
 - **Archers** keep their distance and strafe.
@@ -89,6 +91,7 @@ tests/        headless test runner and unit tests
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
 | 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI |
+| 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky) |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
 | 4–5. Full journey | Kandas 2–7, ending with the Ravana finale and New Game+ |

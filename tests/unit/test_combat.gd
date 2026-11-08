@@ -7,7 +7,7 @@ var spawner: WaveSpawner
 
 
 func before_each() -> void:
-	level = load("res://kandas/01_bala/greybox.tscn").instantiate()
+	level = load("res://kandas/01_bala/training_grounds.tscn").instantiate()
 	level.get_node("WaveSpawner").auto_start = false
 	add_child(level)
 	rama = level.get_node("Rama")

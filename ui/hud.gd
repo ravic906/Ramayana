@@ -36,9 +36,9 @@ func _ready() -> void:
 	var spawner := get_node_or_null(spawner_path) as WaveSpawner
 	if spawner:
 		spawner.wave_started.connect(func(i: int, n: int) -> void:
-			show_banner("Wave %d of %d" % [i + 1, n], Color(1, 0.9, 0.7), 2.0))
+			show_banner("Maya trial %d of %d" % [i + 1, n], Color(1, 0.9, 0.7), 2.0))
 		spawner.all_cleared.connect(func() -> void:
-			show_banner("The rakshasas are vanquished!\nVishvamitra is pleased.", Color(1, 0.85, 0.35), 4.0))
+			show_banner("The illusions are vanquished!\nGuru Vasishtha is pleased.", Color(1, 0.85, 0.35), 4.0))
 	if player != null:
 		var health := player.get_node_or_null("Health") as Health
 		if health != null:

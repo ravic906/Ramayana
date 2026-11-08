@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/toon_foliage.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://assets/env/nature/Leaves.png" id="2_tex"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/albedo_tex = ExtResource("2_tex")
+shader_parameter/tint = Color(1.0, 0.95, 0.8, 1)
+shader_parameter/alpha_cut = 0.45
+shader_parameter/wind_strength = 0.05
+shader_parameter/sway_height = 1.0

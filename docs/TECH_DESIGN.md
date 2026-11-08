@@ -27,7 +27,7 @@ characters/
   enemies/       Enemy base + variants (TargetDummy for now)
   bosses/        Boss folders (future)
 data/            Resource (.tres) definitions: astras, enemies, kandas
-kandas/          Per-kanda scenes; 01_bala/greybox.tscn is the prototype level
+kandas/          Per-kanda scenes; 01_bala/training_grounds.tscn is the prototype level
 ui/              HUD, menus
 assets/          glTF models, textures, audio, shaders
 tests/           Headless test runner + unit tests
@@ -105,6 +105,27 @@ tests/           Headless test runner + unit tests
 
 Draw calls are still above the 150 target. The next step is merging the body and hair into one
 draw, and rendering outlines only on LOD0.
+
+### Environment (Ayodhya training grounds)
+- **Build tool:** `tools/build_ayodhya.gd` deterministically builds
+  `kandas/01_bala/env/ayodhya_grounds.scn`. It must run with a real renderer, e.g.
+  `xvfb-run godot --rendering-driver opengl3 -s res://tools/build_ayodhya.gd`, because MultiMesh
+  instance data lives in the RenderingServer.
+- **Static geometry:** merged per region and material. Stone materials share one `arch` draw
+  through 0/1 vertex-colour masks.
+- **Repeated pieces** are MultiMeshes: pillars, finials, lamps, banners and foliage. Trees outside
+  the walls are chunked per side and cast no shadows.
+- **Collision:** simple boxes and cylinders on layer 1, plus an invisible wall inside each
+  colonnade.
+- **Runtime extras:** `kandas/01_bala/env/ambience.gd` (birds, dust). The `Settings` autoload has a
+  `low_quality` hook (no ambience or shadows).
+- **No lightmaps:** baking needs a GPU, so lighting is real-time with a warm sun, sky ambient and
+  fog.
+- **Measured** with Rama and six rakshasas in the courtyard (Compatibility renderer, LOD
+  threshold 2 px, PSSM2 shadows to 32 m): about 296k triangles and 286 draw calls.
+  - Triangles are within mid-range targets; draw calls are high.
+  - Next steps: occlusion culling, impostors for the distant tree rows, an atlas for the remaining
+    environment materials, and fewer separate character prop draws.
 
 ### Combat
 - `Health` is a component node with `changed`, `damaged` and `died` signals and an
