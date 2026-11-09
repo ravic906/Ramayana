@@ -19,14 +19,43 @@ func story_enabled() -> bool:
 ## Plays a dialogue and waits for it to finish. Actions go to _on_story_action().
 func cutscene(path: String) -> void:
 	var dialogue := load(path) as DialogueResource
+	if dialogue == null or dialogue.line_count() == 0:
+		push_error("Cutscene %s has no lines; skipping it." % path)
+		return
 	hud.set_cinematic(true)
 	rama.controls_locked = true
+	_cinematic = true
 	var c := Cutscene.play(self, dialogue, shots)
 	c.action.connect(_on_story_action)
-	await c.finished
+	if not c.is_done():
+		await c.finished
 	if is_inside_tree():
-		hud.set_cinematic(false)
-		rama.controls_locked = false
+		_end_cinematic()
+
+
+var _cinematic := false
+var _orphan_time := 0.0
+
+
+func _end_cinematic() -> void:
+	_cinematic = false
+	_orphan_time = 0.0
+	hud.set_cinematic(false)
+	rama.controls_locked = false
+
+
+## Failsafe: never leave the player locked out with no cutscene on screen.
+func _process(delta: float) -> void:
+	if not _cinematic:
+		return
+	for child in get_children():
+		if child is Cutscene and not (child as Cutscene).is_done():
+			_orphan_time = 0.0
+			return
+	_orphan_time += delta
+	if _orphan_time > 1.0:
+		push_warning("Cinematic mode with no cutscene; restoring controls.")
+		_end_cinematic()
 
 
 func _on_story_action(_name: StringName) -> void:

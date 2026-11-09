@@ -63,7 +63,69 @@ func test_cutscene_advances_and_skip_fires_actions() -> void:
 	assert_eq(c.index, 2)
 	c.skip()
 	assert_eq(actions, [&"first_action", &"second_action"], "skip still fires remaining actions")
-	assert_true(done[0])
+	await get_tree().process_frame
+	assert_true(done[0], "finished arrives (deferred) after skip")
+
+
+func test_exported_dialogues_have_lines() -> void:
+	# Dialogue text is a plain String so it survives export (PackedStringArray didn't).
+	for f in DirAccess.get_files_at("res://data/dialogue/part01"):
+		if f.ends_with(".tres"):
+			var d := load("res://data/dialogue/part01/" + f) as DialogueResource
+			assert_true(d.line_count() > 0, f + " has lines")
+	var d2 := DialogueResource.new()
+	d2.text = "Rama|||One.\n\n  Lakshmana|||Two.  \n"
+	assert_eq(d2.line_count(), 2, "blank rows are ignored")
+	assert_eq(d2.get_line(1)["speaker"], "Lakshmana")
+
+
+func test_cutscene_that_finishes_at_once_does_not_lock_the_game() -> void:
+	GameState.story_session = false
+	level = load("res://kandas/01_bala/forest.tscn").instantiate()
+	add_child(level)
+	await _frames(2)
+	var d := DialogueResource.new()
+	d.lines = PackedStringArray(["|x|only_an_action|"])
+	var path := "user://test_instant_dialogue.tres"
+	ResourceSaver.save(d, path)
+	await level.cutscene(path)
+	assert_false(level.rama.controls_locked, "controls come back")
+	assert_true(level.hud.get_node("Root/Joystick").visible, "joystick is shown again")
+	await level.cutscene("res://does/not/exist.tres")
+	assert_false(level.rama.controls_locked, "a missing dialogue never locks the game")
+	DirAccess.remove_absolute(path)
+
+
+func test_failsafe_restores_controls_without_a_cutscene() -> void:
+	level = load("res://kandas/01_bala/forest.tscn").instantiate()
+	add_child(level)
+	await _frames(2)
+	level.hud.set_cinematic(true)
+	level.rama.controls_locked = true
+	level._cinematic = true
+	await get_tree().create_timer(1.4).timeout
+	assert_false(level.rama.controls_locked)
+	assert_true(level.hud.get_node("Root/Joystick").visible)
+
+
+func test_one_touch_advances_one_line() -> void:
+	var d := DialogueResource.new()
+	d.lines = PackedStringArray(["Rama|||One.", "Lakshmana|||Two.", "Rama|||Three."])
+	var c := Cutscene.play(self, d)
+	await get_tree().process_frame
+	c._text.visible_ratio = 1.0
+	if c._typing:
+		c._typing.kill()
+	var touch := InputEventScreenTouch.new()
+	touch.pressed = true
+	c._unhandled_input(touch)
+	var mouse := InputEventMouseButton.new()
+	mouse.pressed = true
+	mouse.button_index = MOUSE_BUTTON_LEFT
+	mouse.device = InputEvent.DEVICE_ID_EMULATION
+	c._unhandled_input(mouse)
+	assert_eq(c.index, 1, "the emulated mouse click of the same tap is ignored")
+	c.skip()
 
 
 func test_part_flow_resumes_missions() -> void:

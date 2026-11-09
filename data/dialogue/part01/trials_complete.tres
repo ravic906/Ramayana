@@ -4,4 +4,6 @@
 
 [resource]
 script = ExtResource("1_d")
-lines = PackedStringArray("Rama|rama||It burned without touching me, Guru-ji. Is that what power is?", "Vasishtha|vasishtha||That is what restraint is. Remember the feeling.", "Herald|gate||My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line.")
+text = "Rama|rama||It burned without touching me, Guru-ji. Is that what power is?
+Vasishtha|vasishtha||That is what restraint is. Remember the feeling.
+Herald|gate||My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line."

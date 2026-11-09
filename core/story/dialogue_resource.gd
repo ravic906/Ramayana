@@ -7,7 +7,19 @@ extends Resource
 ##   action   optional event emitted when the line starts (e.g. grant_astras,
 ##            bloom, wait:1.5). Lines with an action and no text run instantly.
 
-@export var lines: PackedStringArray = []
+##
+## Stored as one multiline String, one line per row: Godot 4.3's export step
+## (text resources converted to binary) drops PackedStringArray contents.
+@export_multiline var text := "":
+	set(value):
+		text = value
+		lines = PackedStringArray()
+		for row in value.split("\n"):
+			if not row.strip_edges().is_empty():
+				lines.append(row.strip_edges())
+
+## The parsed lines (filled from `text`; tests may also set them directly).
+var lines: PackedStringArray = []
 
 
 func line_count() -> int:

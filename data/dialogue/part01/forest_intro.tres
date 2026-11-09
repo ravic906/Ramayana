@@ -4,4 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
-lines = PackedStringArray("Narration|||They walked into lands where no bird sang: the lands of Malada and Karusha.", "Vishvamitra|sage||No bird sings here. Listen to what silence costs a land.", "Vishvamitra|sage||Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.", "Lakshmana|brothers||Stay close, brother. The trees themselves are watching.")
+text = "Narration|||They walked into lands where no bird sang: the lands of Malada and Karusha.
+Vishvamitra|sage||No bird sings here. Listen to what silence costs a land.
+Vishvamitra|sage||Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.
+Lakshmana|brothers||Stay close, brother. The trees themselves are watching."

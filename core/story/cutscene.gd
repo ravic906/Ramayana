@@ -63,14 +63,16 @@ func _ready() -> void:
 		var bar := _bars[i]
 		var t := create_tween()
 		t.tween_property(bar, "custom_minimum_size:y", 110.0, 0.4)
-	advance()
+	advance.call_deferred()
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if _done:
 		return
+	# On phones each touch also arrives as an emulated mouse click: count it once.
 	var tapped: bool = (event is InputEventScreenTouch and event.pressed) \
-		or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) \
+		or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT \
+			and event.device != InputEvent.DEVICE_ID_EMULATION) \
 		or event.is_action_pressed(&"ui_accept")
 	if tapped:
 		get_viewport().set_input_as_handled()
@@ -170,8 +172,9 @@ func _finish() -> void:
 		if is_instance_valid(_prev_cam):
 			_prev_cam.current = true
 		_cam.queue_free()
-	finished.emit()
-	queue_free()
+	# Deferred, so a listener that starts awaiting right after play() still hears it.
+	finished.emit.call_deferred()
+	queue_free.call_deferred()
 
 
 func _build_ui() -> void:
@@ -238,10 +241,10 @@ func _build_ui() -> void:
 	skip_btn.text = "Skip"
 	skip_btn.add_theme_font_size_override(&"font_size", 30)
 	skip_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	skip_btn.offset_left = -190
-	skip_btn.offset_top = 24
-	skip_btn.offset_right = -40
-	skip_btn.offset_bottom = 96
+	skip_btn.offset_left = -220
+	skip_btn.offset_top = 20
+	skip_btn.offset_right = -36
+	skip_btn.offset_bottom = 110  # >= 64 px touch target on phones
 	skip_btn.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.15, 0.1, 0.08, 0.7), PartCard.GOLD, 2, 14))
 	skip_btn.pressed.connect(skip)
 	root.add_child(skip_btn)

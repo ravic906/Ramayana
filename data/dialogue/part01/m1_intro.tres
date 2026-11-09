@@ -4,4 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
-lines = PackedStringArray("Narration|||Golden Ayodhya, on the banks of the Sarayu. The princes trained beneath their guru's eye...", "Vasishtha|vasishtha||An arrow obeys the hand. The hand must obey something higher.", "Lakshmana|brothers||Brother, leave one for me. Just one.", "Vasishtha|vasishtha||Then let us see what you have learned. These are only shadows of my making. Face them as if they were not.")
+text = "Narration|||Golden Ayodhya, on the banks of the Sarayu. The princes trained beneath their guru's eye...
+Vasishtha|vasishtha||An arrow obeys the hand. The hand must obey something higher.
+Lakshmana|brothers||Brother, leave one for me. Just one.
+Vasishtha|vasishtha||Then let us see what you have learned. These are only shadows of my making. Face them as if they were not."

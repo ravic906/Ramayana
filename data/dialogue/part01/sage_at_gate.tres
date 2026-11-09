@@ -4,4 +4,11 @@
 
 [resource]
 script = ExtResource("1_d")
-lines = PackedStringArray("Narration|||Then came a sage to the palace gate, and with him the first step of a long road.", "Vishvamitra|gate||King of Ayodhya. Rakshasas defile my sacrifice in the forest. I ask for Rama.", "Dasharatha|king||He is not yet sixteen. Take my army, take me. Not my son.", "Vishvamitra|sage||A king who promises and then bargains has forgotten whose son he is.", "Vasishtha|vasishtha||Let him go, my king. With this sage, no harm can reach him.", "Rama|rama||Father, I will return. Bless the bow, not only the boy.", "Lakshmana|brothers||Where my brother walks, I walk.", "Dasharatha|king||Go then, both of you. And come back to me.")
+text = "Narration|||Then came a sage to the palace gate, and with him the first step of a long road.
+Vishvamitra|gate||King of Ayodhya. Rakshasas defile my sacrifice in the forest. I ask for Rama.
+Dasharatha|king||He is not yet sixteen. Take my army, take me. Not my son.
+Vishvamitra|sage||A king who promises and then bargains has forgotten whose son he is.
+Vasishtha|vasishtha||Let him go, my king. With this sage, no harm can reach him.
+Rama|rama||Father, I will return. Bless the bow, not only the boy.
+Lakshmana|brothers||Where my brother walks, I walk.
+Dasharatha|king||Go then, both of you. And come back to me."
