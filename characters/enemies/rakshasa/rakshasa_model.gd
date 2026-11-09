@@ -22,8 +22,8 @@ var _current := &""
 
 
 func _ready() -> void:
-	_body_mat = (load(MAT + "rakshasa_body.tres") as ShaderMaterial).duplicate()
-	(skeleton.get_node("Body") as MeshInstance3D).material_override = _body_mat
+	_apply_style()
+	Settings.style_changed.connect(func(_s: int) -> void: _apply_style())
 	(skeleton.get_node("Eyes") as MeshInstance3D).material_override = load(MAT + "rakshasa_eyes.tres")
 	var hair_mat: Material = load(MAT + "rakshasa_hair.tres")
 	(skeleton.get_node("Eyebrows") as MeshInstance3D).material_override = hair_mat
@@ -32,6 +32,13 @@ func _ready() -> void:
 		hair.material_override = hair_mat
 	_build_props()
 	play(&"idle")
+
+
+## Body material for the current visual style (duplicated: flashes are per rakshasa).
+func _apply_style() -> void:
+	var path := "res://assets/materials/env_real/rakshasa_body_pbr.tres" if Settings.is_realistic() else MAT + "rakshasa_body.tres"
+	_body_mat = (load(path) as ShaderMaterial).duplicate()
+	(skeleton.get_node("Body") as MeshInstance3D).material_override = _body_mat
 
 
 func _process(delta: float) -> void:

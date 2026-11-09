@@ -33,14 +33,15 @@ beside him as companions and summons.
 | Arm Agneyastra (next drawn shot) | **Agni** button | L / 1 |
 
 Survive Guru Vasishtha's three *maya* trials: waves of illusory rakshasas summoned into the royal
-training grounds of Ayodhya:
+training grounds of Ayodhya. In the final trial, Vasishtha grants a brief *glimpse* of the
+Agneyastra; Rama truly receives the astras from Vishvamitra later in Part 1.
 - **Grunts** charge with spiked clubs. Each glows red and growls before it swings, so dodge through
   the blow for a *perfect dodge*.
 - **Archers** keep their distance and strafe.
 
 The red dummies remain for target practice. If Rama falls, he rises again and the wave restarts.
 
-### Agneyastra
+### Agneyastra (final trial only, for now)
 Tap **Agni** to set the bow aflame, then loose a drawn arrow (at least 60% draw). It explodes in
 fire, hurling back and burning every rakshasa nearby, and leaves the ground burning. It then needs
 12 seconds before it can be invoked again; the ring on the button shows the cooldown.
@@ -94,7 +95,7 @@ tests/        headless test runner and unit tests
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
 | 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI |
-| 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky) |
+| 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky); Stylised / Realistic looks ✅ |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
 | 4–5. Parts 2–8 | Released one by one as downloadable Parts, ending with the Ravana finale and The Return |

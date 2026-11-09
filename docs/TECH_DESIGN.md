@@ -154,6 +154,30 @@ raw payload string, so float/int round-tripping can't break verification. A save
 checksum is rejected. Autosave runs at checkpoints. There are three manual slots. Cloud save will go
 through Play Games Services and iCloud later.
 
+### Visual styles (Stylised / Realistic)
+- **Settings:** `Settings.visual_style` is saved in `user://settings.cfg` and can be toggled from
+  the Journey menu and the pause menu. `--realistic` / `--stylised` override it for testing.
+- **`StyleSwitcher`** (in the level) swaps materials by resource path using a stylised → realistic
+  map. It covers material overrides, mesh surface materials and MultiMesh surface materials, and
+  catches nodes that spawn later. It also swaps the WorldEnvironment and sun, and adds a
+  ReflectionProbe. Rakshasas pick their body material per style.
+- **Realistic materials:**
+  - `stone_pbr` samples texture arrays (sandstone / red sandstone / marble / dark stone) chosen
+    by the same 0/1 vertex masks as the toon `arch` material. It uses a world-space
+    dominant-axis projection, so each map is one sample.
+  - `paving_pbr` keeps the rangoli as an inlay.
+  - `character_pbr` reuses the toon palette uniforms.
+  - `foliage_pbr` keeps the wind sway.
+- **Realistic lighting:**
+  - Photographed sunset sky (PanoramaSky with energy multiplier 0.45) rotated so its sun matches
+    the directional light
+  - Colour ambient for consistent shadow fill on every renderer
+  - Filmic tonemap, warm fog
+  - No SSAO: unsupported on the Mobile renderer, and it crushed the shadows
+- **Cost** (full fight, 7 characters): Realistic is about 261 draw calls and 269k triangles,
+  against 286 and 296k for Stylised, because it has no outline passes. It does use more texture
+  memory, mostly the 2K HDR sky (~16 MB as RGBA16F).
+
 ### Parts (episodic content)
 - **Data:** `PartResource` (`core/progress/part_resource.gd`) in `data/parts/*.tres`, listed in
   order by `PartCatalog`.

@@ -81,11 +81,11 @@ the arrow flies straight ahead. (Implemented in `core/combat/auto_aim.gd`.)
 
 | Astra | Unlocked | Effect |
 |---|---|---|
-| Agneyastra | Bala (from Vishvamitra) | Fire cone, burn damage over time |
-| Varunastra | Bala | Water wave, knockback, extinguishes fire |
-| Vayavyastra | Bala (vs. Maricha) | Wind blast that hurls enemies far away |
-| Brahmastra | Aranya | Massive single-target strike, long cooldown |
-| Narayanastra | Yuddha | Ultimate area attack |
+| Agneyastra | Bala, from Vishvamitra after Tataka (glimpsed in the prologue) | Fire burst, burn damage over time |
+| Varunastra | Bala, from Vishvamitra after Tataka | Water wave, knockback, extinguishes fire |
+| Vayavyastra | Bala, from Vishvamitra after Tataka | Wind blast that hurls enemies far away |
+| Manavastra | Bala, scripted once vs. Maricha | Non-lethal: casts Maricha far over the sea |
+| Brahmastra | Yuddha, from Agastya | The finale against Ravana |
 
 - **Dharma meter:** fills when Rama protects allies, rescues civilians/sages and spares fleeing
   enemies. Spent on summons and on Rama's ultimate.
@@ -114,11 +114,15 @@ short "vision" sequences framed by Rama's perspective, then returns to Rama.
   2. Journey with Vishvamitra — receiving the astras (astra tutorials).
   3. Forest of Tataka — exploration, first rakshasa enemies.
   4. **Boss: Tataka** — large, charging, throws boulders; teaches dodge timing.
-  5. Protecting the yagna — wave defense; **Mini-bosses: Maricha & Subahu** (Vayavyastra sends
-     Maricha far over the sea, as in the epic).
+  5. Protecting the yagna: wave defence. **Mini-bosses: Maricha & Subahu.** Subahu falls to the
+     Agneyastra; the scripted **Manavastra** casts Maricha far over the sea, as in Valmiki.
   6. Ahalya's hermitage — a quiet narrative/exploration interlude.
-  7. Mithila — **Shiva's bow (Pinaka)**: a cinematic rhythm/QTE finale; Sita's swayamvara.
-- **Unlocks:** Agneyastra, Varunastra, Vayavyastra, Lakshmana's Guard command.
+  7. Mithila: **Shiva's bow (Pinaka)**, Valmiki's test of strength, as a cinematic
+     draw-and-hold finale. Epilogue: the **Parashurama** cutscene teases the later Parts.
+- **Prologue (playable now):** Guru Vasishtha's maya trials in the Ayodhya training grounds. The
+  final trial grants a temporary *glimpse* of the Agneyastra.
+- **Unlocks:** Agneyastra, Varunastra and Vayavyastra (from Vishvamitra after Tataka), and
+  Lakshmana's Guard command.
 
 ### 2. Ayodhya Kanda
 Palace intrigue and exile. Story-focused chapter with traversal (crossing the Ganga with Guha),

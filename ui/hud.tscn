@@ -143,7 +143,7 @@ theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 30
 text = "Bala Kanda - Ayodhya: Guru Vasishtha's Maya Trials
 Tap Bow for a snap shot. Hold to draw, drag to aim, release when the ring turns gold.
-Tap Agni, then loose a drawn arrow to unleash the Agneyastra."
+Survive Guru Vasishtha's maya trials."
 horizontal_alignment = 1
 
 [node name="Joystick" type="Control" parent="Root"]

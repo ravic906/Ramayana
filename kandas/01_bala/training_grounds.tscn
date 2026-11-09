@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://characters/rama/rama.tscn" id="1_rama"]
 [ext_resource type="PackedScene" path="res://core/camera/follow_camera.tscn" id="2_cam"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://kandas/01_bala/env/ayodhya_grounds.scn" id="7_env"]
 [ext_resource type="Script" path="res://kandas/01_bala/env/ambience.gd" id="8_ambience"]
 [ext_resource type="Material" path="res://assets/materials/env/sky.tres" id="9_sky"]
+[ext_resource type="Script" path="res://core/visual/style_switcher.gd" id="10_style"]
 
 [sub_resource type="Sky" id="Sky_res"]
 sky_material = ExtResource("9_sky")
@@ -51,6 +52,11 @@ directional_shadow_mode = 1
 directional_shadow_max_distance = 32.0
 
 [node name="Environment" parent="." instance=ExtResource("7_env")]
+
+[node name="StyleSwitcher" type="Node" parent="."]
+script = ExtResource("10_style")
+world_environment_path = NodePath("../WorldEnvironment")
+sun_path = NodePath("../Sun")
 
 [node name="Ambience" type="Node3D" parent="."]
 script = ExtResource("8_ambience")

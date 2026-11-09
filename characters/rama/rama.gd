@@ -101,6 +101,9 @@ var aim_point := Vector3.ZERO
 var armed_astra: AstraResource
 ## Astra id -> real seconds of cooldown left.
 var astra_cooldowns := {}
+## Astras lent for a moment (e.g. the Agneyastra glimpse in Vasishtha's final
+## trial); never saved, unlike GameState.unlocked_astras.
+var temporary_astras: Array[StringName] = []
 var spawn_point := Vector3.ZERO
 
 var _shoot_timer := 0.0
@@ -404,7 +407,19 @@ func toggle_astra(slot: int) -> bool:
 
 
 func is_astra_unlocked(astra: AstraResource) -> bool:
-	return astra.id in GameState.unlocked_astras
+	return astra.id in GameState.unlocked_astras or astra.id in temporary_astras
+
+
+## Lends the astra in `slot` until revoke_temporary_astras().
+func grant_temporary_astra(slot: int) -> void:
+	if slot >= 0 and slot < astras.size() and not astras[slot].id in temporary_astras:
+		temporary_astras.append(astras[slot].id)
+
+
+func revoke_temporary_astras() -> void:
+	if armed_astra != null and armed_astra.id in temporary_astras and not armed_astra.id in GameState.unlocked_astras:
+		_set_armed(null)
+	temporary_astras.clear()
 
 
 func is_astra_ready(astra: AstraResource) -> bool:

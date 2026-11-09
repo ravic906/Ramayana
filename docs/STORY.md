@@ -249,7 +249,21 @@ rush and New Game+ unlocked. Handle the later events as in §5.
 
 ---
 
-## 6. Open Decisions for the Game Owner
+## 6. Decisions (approved by the game owner)
+
+All six recommendations below were approved. The original options are kept here for the record.
+
+| # | Decision | Chosen |
+|---|---|---|
+| 1 | Framing device | **Lava and Kusha sing the epic** at Valmiki's ashram; Valmiki voices the codex; the finale shows them singing before Rama. |
+| 2 | Agneyastra in the prologue | **A temporary "glimpse"** during Guru Vasishtha's final maya trial ("This is not yet yours."). The real astras come from Vishvamitra after Tataka. *Implemented in the prototype.* |
+| 3 | Banishing Maricha | **Manavastra**, as in Valmiki: a scripted, one-time astra. Vayavyastra clears the other rakshasas. |
+| 4 | Shiva's bow | **Valmiki's test of strength**: Janaka shows the bow to Rama alone. The swayamvara version goes in the codex. |
+| 5 | Parashurama | **Cutscene epilogue** to Part 1, teasing the later Parts. |
+| 6 | Uttara Kanda scope | **Coronation plus the Lava–Kusha reveal.** Later events are told only in their song or the codex. |
+
+### Options as originally proposed
+
 
 1. **Framing device.**
    (a) Lava and Kusha singing, (b) Narada telling Valmiki, (c) no narrator.

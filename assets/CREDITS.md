@@ -39,6 +39,15 @@ Both packs are released under **CC0 1.0** (public domain) by Quaternius
 All Ayodhya architecture is procedural, made by `tools/build_ayodhya.gd`: the gopuram,
 colonnades, toranas, chhatris, kalyani tank and palace skyline. It contains no third-party art.
 
+## Realistic visual style: Poly Haven (CC0)
+Textures and sky from https://polyhaven.com (CC0 1.0), downscaled and packed for mobile by
+`tools/prep_real_textures.py`:
+- `sandstone_blocks_08`, also used for the courtyard paving (Rob Tuytel)
+- `red_sandstone_wall` (Amal Kumar)
+- `marble_01` (Rob Tuytel)
+- `stone_tiles_02` (Charlotte Baglioni)
+- `belfast_sunset_puresky` HDRI (Poly Haven)
+
 ## Sound effects
 `assets/audio/sfx/*.wav` are synthesised from scratch by `tools/gen_sfx.py`, so there are no
 third-party sounds. The bowstring uses Karplus–Strong synthesis; the creak uses stick-slip

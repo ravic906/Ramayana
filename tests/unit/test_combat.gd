@@ -97,7 +97,8 @@ func test_waves_advance_when_cleared() -> void:
 func test_agneyastra_burns_a_group() -> void:
 	await _frames(3)
 	var agni: AstraResource = rama.astras[0]
-	assert_true(rama.is_astra_unlocked(agni), "unlocked by the level")
+	rama.grant_temporary_astra(0)  # the glimpse in Vasishtha's final trial
+	assert_true(rama.is_astra_unlocked(agni), "available during the glimpse")
 	var group := []
 	for x in [-1.2, 0.0, 1.2]:
 		var g := spawner.spawn_enemy("grunt", Vector3(x, 0, -14))
@@ -137,3 +138,22 @@ func test_rama_falls_and_rises() -> void:
 	assert_true(await _until(func(): return rama.state_machine.is_in(&"Idle"), 120), "rises again")
 	assert_almost(rama.health.current, rama.health.max_health, 0.01)
 	assert_true(rama.global_position.distance_to(start) < 0.5, "back at the start")
+
+
+func test_agneyastra_is_only_a_glimpse() -> void:
+	await _frames(2)
+	var agni: AstraResource = rama.astras[0]
+	assert_false(rama.is_astra_unlocked(agni), "no astra before the final trial")
+	assert_false(rama.toggle_astra(0), "can't arm it yet")
+	spawner.break_time = 0.05
+	spawner.spawn_wave(spawner.waves.size() - 1)
+	assert_true(rama.is_astra_unlocked(agni), "granted for the final trial")
+	assert_true(rama.toggle_astra(0), "armed")
+	for r in spawner.alive.duplicate():
+		r.health.take_damage(10000.0)
+	assert_true(await _until(func(): return spawner.finished, 120), "trial complete")
+	assert_false(rama.is_astra_unlocked(agni), "glimpse revoked")
+	assert_null(rama.armed_astra, "disarmed")
+	assert_false(agni.id in GameState.unlocked_astras, "never permanently unlocked")
+	SaveSystem.delete_save(SaveSystem.AUTOSAVE_SLOT)
+	GameState.completed_parts.clear()

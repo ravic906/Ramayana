@@ -163,8 +163,8 @@ func _build_pause() -> void:
 	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_pause_panel.offset_left = -260
 	_pause_panel.offset_right = 260
-	_pause_panel.offset_top = -170
-	_pause_panel.offset_bottom = 170
+	_pause_panel.offset_top = -220
+	_pause_panel.offset_bottom = 220
 	_pause_panel.visible = false
 	$Root.add_child(_pause_panel)
 	var box := VBoxContainer.new()
@@ -173,14 +173,20 @@ func _build_pause() -> void:
 	_pause_panel.add_child(box)
 	var part := PartCatalog.by_number(GameState.current_part)
 	box.add_child(PartCard._label("Part %d: %s" % [part.number, part.title] if part else "Paused", 30, PartCard.INK, true))
-	for entry in [["Resume", set_paused.bind(false)], ["Back to the Journey", back_to_journey]]:
+	var look := ["Look: %s" % Settings.style_name(), func() -> void: pass]
+	for entry in [["Resume", set_paused.bind(false)], look, ["Back to the Journey", back_to_journey]]:
 		var b := Button.new()
 		b.text = entry[0]
 		b.custom_minimum_size = Vector2(0, 80)
 		b.add_theme_font_size_override(&"font_size", 30)
 		b.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.85, 0.42, 0.1), PartCard.GOLD, 3, 14))
 		b.add_theme_color_override(&"font_color", Color(1, 0.97, 0.9))
-		b.pressed.connect(entry[1])
+		if entry == look:
+			b.pressed.connect(func() -> void:
+				Settings.toggle_visual_style()
+				b.text = "Look: %s" % Settings.style_name())
+		else:
+			b.pressed.connect(entry[1])
 		box.add_child(b)
 
 

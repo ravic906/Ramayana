@@ -151,6 +151,17 @@ func _build() -> void:
 	_bundle_button.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
 	_bundle_button.pressed.connect(func() -> void: Store.purchase(Store.FULL_JOURNEY_PRODUCT_ID))
 	bottom.add_child(_bundle_button)
+	var look := Button.new()
+	look.text = "Look: %s" % Settings.style_name()
+	look.custom_minimum_size = Vector2(0, 72)
+	look.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		look.add_theme_stylebox_override(s, PartCard._style(Color(0.2, 0.22, 0.45), PartCard.GOLD, 4, 16))
+	look.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	look.pressed.connect(func() -> void:
+		Settings.toggle_visual_style()
+		look.text = "Look: %s" % Settings.style_name())
+	bottom.add_child(look)
 	_message = _title("", 24, Color(1, 0.97, 0.9))
 	_message.modulate.a = 0.0
 	root.add_child(_message)

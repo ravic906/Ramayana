@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/paving_pbr.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://assets/env/real/paving_albedo.jpg" id="2_alb"]
+[ext_resource type="Texture2D" path="res://assets/env/real/paving_normal.jpg" id="3_nor"]
+[ext_resource type="Texture2D" path="res://assets/env/real/paving_arm.jpg" id="4_arm"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/albedo_tex = ExtResource("2_alb")
+shader_parameter/normal_tex = ExtResource("3_nor")
+shader_parameter/arm_tex = ExtResource("4_arm")
