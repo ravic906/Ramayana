@@ -19,6 +19,10 @@ func _ready() -> void:
 	spawner.wave_started.connect(_on_wave_started)
 	rama.respawned.connect(spawner.restart_wave)
 	spawner.all_cleared.connect(_on_trials_complete)
+	Music.play("ayodhya")
+	spawner.wave_started.connect(func(_i: int, _n: int) -> void: Music.set_intensity(1.0))
+	spawner.wave_cleared.connect(func(_i: int) -> void: Music.set_intensity(0.35))
+	spawner.all_cleared.connect(func() -> void: Music.set_intensity(0.0))
 	Settings.apply_to_sun(sun)
 	shots = {
 		&"vasishtha": [Vector3(-4.0, 1.9, -3.0), Vector3(-7.5, 1.6, -9.0)],

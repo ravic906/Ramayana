@@ -35,8 +35,14 @@ func _ready() -> void:
 		(t[0] as Area3D).body_entered.connect(_on_encounter_trigger.bind(t[1]))
 	encounter1.all_cleared.connect(func() -> void: lakshmana.say("The forest grows quiet again. Too quiet."))
 	encounter2.enemy_spawned.connect(_on_encounter2_spawned)
+	for e: WaveSpawner in [encounter1, encounter2]:
+		e.wave_started.connect(func(_i: int, _n: int) -> void: Music.set_intensity(1.0))
+		e.all_cleared.connect(func() -> void: Music.set_intensity(0.0))
+	if GameState.current_mission < 4:
+		Music.play("forest")
 	$BossTrigger.body_entered.connect(_on_boss_trigger)
 	tataka.defeated.connect(_on_tataka_defeated)
+	tataka.phase_changed.connect(func(_p: int) -> void: Music.set_layer("maya", true))
 	tataka.phase_changed.connect(func(_p: int) -> void:
 		hud.show_banner("Tataka weaves her maya!\nWatch for the dust.", Color(0.85, 0.55, 0.95), 2.5))
 	tataka.staggered.connect(func() -> void: lakshmana.say("She's down, brother! Now!", 2.0))
@@ -96,6 +102,7 @@ func _start_boss() -> void:
 	if boss_started:
 		return
 	boss_started = true
+	Music.play("tataka")
 	PartFlow.advance_to(4)
 	rama.spawn_point = rama.global_position
 	var gate := env.get_node("GroveGate") as StaticBody3D
@@ -117,6 +124,7 @@ func _start_boss() -> void:
 
 func _on_tataka_defeated() -> void:
 	boss_defeated = true
+	Music.stop()  # a moment of silence before the forest blooms
 	hud.show_boss("", null)
 	await get_tree().create_timer(2.5).timeout
 	if not is_inside_tree():
@@ -137,6 +145,7 @@ func _on_tataka_defeated() -> void:
 func _on_story_action(action_name: StringName) -> void:
 	match action_name:
 		&"bloom":
+			Music.play("bloom")
 			bloom()
 		&"astra_ceremony":
 			_astra_ceremony()

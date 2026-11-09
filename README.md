@@ -56,6 +56,18 @@ Play from the Journey menu to get the story:
 
 Cutscenes can be skipped. Missions resume from where you left off.
 
+### Music
+Adaptive music, generated in code by `tools/gen_music.py` (placeholder until the real score):
+| Scene | Raga | What you hear |
+|---|---|---|
+| Journey menu | Yaman | tanpura and a slow bansuri alaap |
+| Ayodhya trials | Yaman | flute and santoor; tabla teental comes in when a trial starts |
+| Silent Forest | Malkauns | low drone, breathy flute and wind; mridangam and dhol in ambushes |
+| Tataka | Malkauns | barrel drums and dhol; an eerie choir joins in her maya phase |
+| The bloom | Bhupali | choir, santoor and flute |
+
+Music dips under dialogue. The pause menu has **Music** and **Sound** volume sliders.
+
 ### Agneyastra (a glimpse in the prologue)
 Tap **Agni** to set the bow aflame, then loose a drawn arrow (at least 60% draw). It explodes in
 fire, hurling back and burning every rakshasa nearby, and leaves the ground burning. It then needs

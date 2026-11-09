@@ -82,4 +82,7 @@ triangles with a 1k texture set. Bosses up to 25k triangles.
 
 - Instruments: bansuri, veena, sitar, mridangam, tabla and chorus.
 - Music is adaptive, with an exploration layer and a combat layer.
+- Ragas by mood: Yaman for Ayodhya (golden, devotional), Malkauns for Tataka's forest (dark,
+  grave), Bhupali for the bloom and the astra blessing (luminous). The prototype score is
+  generated in code (`tools/gen_music.py`) until a composer records the real one.
 - Voice over is in each launch language. Rama's voice is measured and calm.

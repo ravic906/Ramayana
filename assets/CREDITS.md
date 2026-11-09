@@ -50,6 +50,12 @@ Textures and sky from https://polyhaven.com (CC0 1.0), downscaled and packed for
 - `belfast_sunset_puresky` HDRI (Poly Haven)
 - `forest_leaves_02` (Rob Tuytel) and `dirt_floor` (eye-candy.xyz): the forest floor and path
 
+## Music
+`assets/audio/music/*.ogg` are generated from scratch by `tools/gen_music.py` (numpy, encoded
+with ffmpeg/libvorbis), so there is no third-party music. Instruments are simple synthesis
+models (tanpura, bansuri, santoor, veena, tabla, mridangam, dhol, an "aah" choir). They are
+placeholders until the soundtrack is composed and recorded.
+
 ## Sound effects
 `assets/audio/sfx/*.wav` are synthesised from scratch by `tools/gen_sfx.py`, so there are no
 third-party sounds. The bowstring uses Karplus–Strong synthesis; the creak uses stick-slip

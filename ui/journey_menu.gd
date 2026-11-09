@@ -26,6 +26,7 @@ func _ready() -> void:
 	Store.purchase_failed.connect(func(_id: String, reason: String) -> void: show_message(reason))
 	_build()
 	refresh()
+	Music.play("menu")
 
 
 ## What a card should offer, given ownership and installation.

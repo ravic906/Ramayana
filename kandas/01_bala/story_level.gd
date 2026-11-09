@@ -25,6 +25,7 @@ func cutscene(path: String) -> void:
 	hud.set_cinematic(true)
 	rama.controls_locked = true
 	_cinematic = true
+	Music.duck(true)
 	var c := Cutscene.play(self, dialogue, shots)
 	c.action.connect(_on_story_action)
 	if not c.is_done():
@@ -39,6 +40,7 @@ var _orphan_time := 0.0
 
 func _end_cinematic() -> void:
 	_cinematic = false
+	Music.duck(false)
 	_orphan_time = 0.0
 	hud.set_cinematic(false)
 	rama.controls_locked = false

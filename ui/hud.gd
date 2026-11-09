@@ -196,8 +196,8 @@ func _build_pause() -> void:
 	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_pause_panel.offset_left = -260
 	_pause_panel.offset_right = 260
-	_pause_panel.offset_top = -220
-	_pause_panel.offset_bottom = 220
+	_pause_panel.offset_top = -300
+	_pause_panel.offset_bottom = 300
 	_pause_panel.visible = false
 	$Root.add_child(_pause_panel)
 	var box := VBoxContainer.new()
@@ -221,6 +221,27 @@ func _build_pause() -> void:
 		else:
 			b.pressed.connect(entry[1])
 		box.add_child(b)
+	box.add_child(_volume_row("Music", Settings.music_volume, Settings.set_music_volume))
+	box.add_child(_volume_row("Sound", Settings.sfx_volume, Settings.set_sfx_volume))
+
+
+func _volume_row(label: String, value: float, setter: Callable) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.name = label + "Volume"
+	row.add_theme_constant_override(&"separation", 16)
+	var l := PartCard._label(label, 28, PartCard.INK, false)
+	l.custom_minimum_size = Vector2(110, 0)
+	row.add_child(l)
+	var slider := HSlider.new()
+	slider.min_value = 0.0
+	slider.max_value = 1.0
+	slider.step = 0.05
+	slider.value = value
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.custom_minimum_size = Vector2(0, 64)  # thumb-sized
+	slider.value_changed.connect(setter)
+	row.add_child(slider)
+	return row
 
 
 func set_paused(paused: bool) -> void:

@@ -41,6 +41,8 @@ tests/           Headless test runner + unit tests
 | `GameState` | `autoload/game_state.gd` | Current kanda, punya, unlocked astras, story flags; (de)serialisation |
 | `SaveSystem` | `autoload/save_system.gd` | Slot-based JSON saves with a SHA-256 checksum |
 | `Store` | `autoload/store.gd` | IAP wrapper: entitlement for "The Full Journey" (stubbed) |
+| `Settings` | `autoload/settings.gd` | Look, quality, story mode and Music/SFX volumes (`user://settings.cfg`); creates the Music and SFX buses |
+| `Music` | `autoload/music.gd` | Adaptive music: synced stems, crossfades, intensity, layers, ducking; routes other players to SFX |
 
 ## Key Systems
 
@@ -79,6 +81,21 @@ tests/           Headless test runner + unit tests
   shakes on trauma, adds depth of field on Vulkan renderers, and runs the arrow cam.
 - **Feedback:** haptics come from `Haptics.pulse` (Android `VIBRATE` permission is enabled).
   Prototype sounds are synthesised by `tools/gen_sfx.py`.
+
+### Music
+- **Generation:** `tools/gen_music.py` writes `assets/audio/music/<track>_<stem>.ogg`.
+  - Every stem is exactly 48 s and loop-exact: decays past the end wrap onto the start.
+  - Stems of one track share tempo and key, so they can be layered.
+  - Loudness is normalized on the band phone speakers reproduce (above ~200 Hz), with sub-bass
+    cut, so every track sounds equally loud on a phone.
+  - About 3.4 MB in total (Vorbis q4, 32 kHz stereo).
+- **Playback:** `Music` starts all stems of a track together and blends them by volume:
+  - `set_intensity(0..1)` raises "combat" over "explore" (explore steps back 4 dB);
+  - `set_layer("maya", on)` adds a layer;
+  - `duck(true)` dips 8 dB under cutscenes (`StoryLevel.cutscene`).
+- **Hooks:** `WaveSpawner` wave signals drive intensity. The forest switches to "tataka" in
+  `_start_boss`, falls silent when she falls, and plays "bloom" with the bloom action.
+- **Buses:** Master ← Music, SFX. Any other `AudioStreamPlayer*` added on Master is moved to SFX.
 
 ### Enemies and astras
 - **`Rakshasa`** (`characters/enemies/rakshasa/`) is a CharacterBody3D driven by the shared
