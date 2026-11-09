@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_02"
+number = 2
+title = "The Exile"
+kanda = "Ayodhya Kanda"
+synopsis = "On the eve of his coronation, Rama keeps his father's word and leaves for fourteen years of exile with Sita and Lakshmana, crossing the Ganga to Chitrakoot."
+scene_path = "res://kandas/02_ayodhya/part.tscn"
+pack_file = "part_02.pck"
+product_id = "ramayana_part_02"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.9, 0.75, 0.35, 1)

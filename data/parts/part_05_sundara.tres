@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_05"
+number = 5
+title = "The Leap"
+kanda = "Sundara Kanda"
+synopsis = "Through Hanuman's visions, leap the ocean to Lanka, find Sita in the Ashoka grove, and set the golden city ablaze."
+scene_path = "res://kandas/05_sundara/part.tscn"
+pack_file = "part_05.pck"
+product_id = "ramayana_part_05"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.3, 0.55, 0.8, 1)

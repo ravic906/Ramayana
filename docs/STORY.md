@@ -7,6 +7,12 @@
 
 ---
 
+> **Release structure:** the game ships as 8 episodic Parts (see GDD §10).
+> - Parts 1–5 follow Bala, Ayodhya, Aranya, Kishkindha and Sundara Kanda.
+> - Yuddha Kanda is split into Part 6 (*The Bridge to Lanka*: Setu, Kumbhakarna) and Part 7
+>   (*The War for Dharma*: Indrajit, Ravana).
+> - Part 8 (*The Return*) is the Uttara Kanda finale.
+
 ## 1. Narrative Pillars, Tone and Framing
 
 ### Pillars

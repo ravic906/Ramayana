@@ -2,6 +2,8 @@ extends Node
 ## Global, serialisable progress for the current playthrough.
 
 signal kanda_changed(index: int)
+signal part_changed(number: int)
+signal part_completed(id: StringName)
 signal punya_changed(total: int)
 signal astra_unlocked(astra_id: StringName)
 
@@ -15,11 +17,15 @@ const KANDAS: Array[String] = [
 	"Uttara Kanda",
 ]
 
-## Number of kandas playable without the "Full Journey" purchase.
+## Number of kandas playable without any purchase (legacy helper; the game is
+## organised in Parts, see PartCatalog).
 const FREE_KANDAS := 1
 
-const SAVE_VERSION := 1
+## v2: progress is tracked per Part (current_part, completed_parts).
+const SAVE_VERSION := 2
 
+var current_part := 1
+var completed_parts: Array[StringName] = []
 var current_kanda := 0
 var current_mission := 0
 var punya := 0
@@ -28,6 +34,8 @@ var flags: Dictionary = {}
 
 
 func reset() -> void:
+	current_part = 1
+	completed_parts.clear()
 	current_kanda = 0
 	current_mission = 0
 	punya = 0
@@ -39,6 +47,37 @@ func is_kanda_playable(index: int, owns_full_game: bool = _store_owns_full_game(
 	if index < 0 or index >= KANDAS.size():
 		return false
 	return index < FREE_KANDAS or owns_full_game
+
+
+# --- Parts ------------------------------------------------------------------
+
+## A Part is unlocked when it is free, bought on its own, or covered by the
+## Full Journey bundle.
+func is_part_unlocked(part: PartResource, store: Node = null) -> bool:
+	if part == null:
+		return false
+	if part.free:
+		return true
+	if store == null:
+		store = get_node_or_null("/root/Store")
+	return store != null and (store.owns_full_journey() or store.owns_product(part.product_id))
+
+
+func set_part(number: int) -> void:
+	current_part = clampi(number, 1, maxi(PartCatalog.all().size(), 1))
+	current_mission = 0
+	part_changed.emit(current_part)
+
+
+func complete_part(id: StringName) -> void:
+	if id in completed_parts:
+		return
+	completed_parts.append(id)
+	part_completed.emit(id)
+
+
+func is_part_completed(id: StringName) -> bool:
+	return id in completed_parts
 
 
 func set_kanda(index: int) -> void:
@@ -71,8 +110,13 @@ func to_dict() -> Dictionary:
 	var astras: Array[String] = []
 	for a in unlocked_astras:
 		astras.append(String(a))
+	var completed: Array[String] = []
+	for c in completed_parts:
+		completed.append(String(c))
 	return {
 		"version": SAVE_VERSION,
+		"current_part": current_part,
+		"completed_parts": completed,
 		"current_kanda": current_kanda,
 		"current_mission": current_mission,
 		"punya": punya,
@@ -89,8 +133,19 @@ func from_dict(data: Dictionary) -> void:
 	for a in data.get("unlocked_astras", []):
 		unlocked_astras.append(StringName(a))
 	flags = (data.get("flags", {}) as Dictionary).duplicate(true)
+	if int(data.get("version", 1)) < 2 or not data.has("current_part"):
+		# v1 saves tracked kandas only.
+		current_part = PartCatalog.part_number_for_kanda(current_kanda)
+	else:
+		current_part = int(data.get("current_part", 1))
+		for c in data.get("completed_parts", []):
+			completed_parts.append(StringName(c))
 
 
 func _store_owns_full_game() -> bool:
+	return _store_owns_full_journey()
+
+
+func _store_owns_full_journey() -> bool:
 	var store := get_node_or_null("/root/Store")
-	return store != null and store.owns_full_game()
+	return store != null and store.owns_full_journey()

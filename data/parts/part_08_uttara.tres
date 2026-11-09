@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_08"
+number = 8
+title = "The Return"
+kanda = "Uttara Kanda"
+synopsis = "Rama returns to Ayodhya and is crowned. Years later, two young singers, Lava and Kusha, tell the tale of the journey."
+scene_path = "res://kandas/07_uttara/part.tscn"
+pack_file = "part_08.pck"
+product_id = "ramayana_part_08"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.95, 0.8, 0.45, 1)

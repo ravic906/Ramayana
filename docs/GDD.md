@@ -181,11 +181,27 @@ New Game+.
 - No comedic depiction of Rama, Sita or Hanuman; violence is stylised, not gory.
 - Launch languages: English, Hindi, Telugu, Tamil. Later: Kannada, Malayalam, Bengali, Marathi.
 
-## 10. Monetization
+## 10. Parts and monetization
+
+The game is **one app** in which the journey unfolds as **episodic Parts**, released as downloadable
+updates. One save carries Rama's skills, astras, Dharma and Punya from Part to Part. Each Part
+roughly follows one kanda; Yuddha Kanda is split in two.
+
+| Part | Title | Kanda | Climax |
+|---|---|---|---|
+| 1 | The Prince of Ayodhya | Bala | Tataka; Shiva's bow |
+| 2 | The Exile | Ayodhya | Crossing the Ganga; Chitrakoot (drama plus one action set piece) |
+| 3 | The Forest of Trials | Aranya | Khara; the golden deer; Jatayu |
+| 4 | The Monkey Kingdom | Kishkindha | Vali |
+| 5 | The Leap | Sundara | Hanuman's vision missions; burning Lanka |
+| 6 | The Bridge to Lanka | Yuddha I | Setu; Kumbhakarna |
+| 7 | The War for Dharma | Yuddha II | Indrajit; Ravana |
+| 8 | The Return | Uttara | Coronation; Lava and Kusha (short finale) |
 
 | Product | Price (indicative) | Contents |
 |---|---|---|
-| Free download | — | Bala Kanda complete |
-| The Full Journey (IAP, non-consumable) | ₹499 / $6.99 | Kandas 2–7, all future story updates |
+| Free download | — | Part 1 (Bala Kanda) complete |
+| Single Part (non-consumable, `ramayana_part_NN`) | ₹149 / $1.99 | That Part |
+| The Full Journey (non-consumable, `ramayana_full_journey`) | ₹699 / $8.99 | All current and future Parts |
 
 Optional later: a soundtrack/art-book DLC. Never: loot boxes, energy, divine character skins.

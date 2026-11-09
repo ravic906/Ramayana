@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_06"
+number = 6
+title = "The Bridge to Lanka"
+kanda = "Yuddha Kanda I"
+synopsis = "The Vanara army builds the Setu across the sea. Vibhishana seeks refuge, and the siege of Lanka begins against the giant Kumbhakarna."
+scene_path = "res://kandas/06_yuddha/bridge.tscn"
+pack_file = "part_06.pck"
+product_id = "ramayana_part_06"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.75, 0.25, 0.2, 1)

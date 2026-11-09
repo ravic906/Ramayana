@@ -154,8 +154,25 @@ raw payload string, so float/int round-tripping can't break verification. A save
 checksum is rejected. Autosave runs at checkpoints. There are three manual slots. Cloud save will go
 through Play Games Services and iCloud later.
 
+### Parts (episodic content)
+- **Data:** `PartResource` (`core/progress/part_resource.gd`) in `data/parts/*.tres`, listed in
+  order by `PartCatalog`.
+- **Title screen:** `ui/journey_menu.tscn` is the main scene. It shows one `PartCard` per Part
+  with these states: Play/Replay, Buy, Download (with progress), Coming soon.
+- **Content packs:** Part 1 is built into the APK. Later Parts ship as `.pck` packs
+  (`PartLoader`):
+  - downloaded from `ramayana/parts/base_url` into `user://parts/`
+  - checked against the size and SHA-256 declared in the `PartResource`
+  - mounted with `ProjectSettings.load_resource_pack()`
+  - On the stores this maps to Play Asset Delivery and iOS On-Demand Resources.
+  - Export a pack with the `Part pack (template)` preset: set its file list to the Part's
+    folder, then run `godot --headless --export-pack "Part pack (template)" build/part_NN.pck`.
+- **Saves:** version 2 stores `current_part` and `completed_parts`. Version 1 saves migrate from
+  `current_kanda` (Yuddha maps to Part 6).
+
 ### Chapter gating & IAP
-`Store.owns_full_game()` gates kandas 2–7 through `GameState.is_kanda_playable()`.
+`GameState.is_part_unlocked(part)` checks, in order: the Part is free; the Part's own product
+(`Store.owns_product("ramayana_part_NN")`); the Full Journey (`Store.owns_full_journey()`).
 - Android uses the official Godot Google Play Billing plugin.
 - iOS uses the Godot iOS `InAppStore` plugin.
 - Entitlement is restored on launch from the store, not trusted from the local save.

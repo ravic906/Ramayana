@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_01"
+number = 1
+title = "The Prince of Ayodhya"
+kanda = "Bala Kanda"
+synopsis = "Young Rama trains under Guru Vasishtha, then follows the sage Vishvamitra into the forest to face Tataka, protect the sacred yagna, and lift Shiva's bow in Mithila."
+scene_path = "res://kandas/01_bala/training_grounds.tscn"
+pack_file = ""
+product_id = ""
+price_label = ""
+free = true
+released = true
+cover_color = Color(0.95, 0.6, 0.2, 1)

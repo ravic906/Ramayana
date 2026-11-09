@@ -5,8 +5,11 @@ A stylized 3D action-adventure for mobile (Android and iOS), built with **Godot 
 the divine astras. Lakshmana, Sita, Hanuman, Sugriva, Jatayu, Vibhishana and the Vanara army fight
 beside him as companions and summons.
 
-- **Business model:** Bala Kanda is free; one purchase ("The Full Journey") unlocks kandas 2–7.
-  No pay-to-win.
+- **Structure:** one app. The journey is told in 8 episodic **Parts**, roughly one per kanda,
+  with Yuddha Kanda split in two. They're released as downloadable updates, and one save carries
+  Rama's progress through all of them.
+- **Business model:** Part 1 (Bala Kanda) is free. Each later Part can be unlocked on its own,
+  or the **Full Journey** unlocks them all. No pay-to-win.
 - **Current milestone:** Phase 0/1. Design docs and a playable grey-box prototype.
 
 ## Documents
@@ -17,8 +20,8 @@ beside him as companions and summons.
 
 ## Running the prototype
 1. Install [Godot 4.3+](https://godotengine.org/download) (the standard build, not .NET).
-2. Open `project.godot` in the editor and press **F5**. The main scene is
-   `kandas/01_bala/training_grounds.tscn`: the royal training grounds of Ayodhya at golden hour.
+2. Open `project.godot` in the editor and press **F5**. The game opens on the **Journey menu**
+   (`ui/journey_menu.tscn`). Part 1 starts the royal training grounds of Ayodhya at golden hour.
 
 | Action | Touch | Keyboard |
 |---|---|---|
@@ -94,4 +97,5 @@ tests/        headless test runner and unit tests
 | 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky) |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |
-| 4–5. Full journey | Kandas 2–7, ending with the Ravana finale and New Game+ |
+| 4–5. Parts 2–8 | Released one by one as downloadable Parts, ending with the Ravana finale and The Return |
+| — | Parts structure: Journey menu, per-Part unlocks, downloadable Part packs ✅ |

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_03"
+number = 3
+title = "The Forest of Trials"
+kanda = "Aranya Kanda"
+synopsis = "In the Dandaka forest Rama defends the sages, defeats Khara's army, and is lured away by a golden deer while Ravana carries Sita off. Brave Jatayu falls."
+scene_path = "res://kandas/03_aranya/part.tscn"
+pack_file = "part_03.pck"
+product_id = "ramayana_part_03"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.35, 0.6, 0.35, 1)

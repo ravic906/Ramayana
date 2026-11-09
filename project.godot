@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Ramayana: The Journey of Rama"
 config/description="Stylized 3D action-adventure following Shri Rama through the seven kandas."
-run/main_scene="res://kandas/01_bala/training_grounds.tscn"
+run/main_scene="res://ui/journey_menu.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
@@ -49,3 +49,8 @@ renderer/rendering_method.mobile="mobile"
 textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/msaa_3d=1
 mesh_lod/lod_change/threshold_pixels=2.0
+
+[ramayana]
+
+; Host for downloadable Part packs (empty = downloads unavailable).
+parts/base_url=""

@@ -45,6 +45,8 @@ func _ready() -> void:
 			health.changed.connect(_on_health_changed)
 			health_bar.max_value = health.max_health
 			health_bar.value = health.max_health
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_build_pause()
 	GameState.punya_changed.connect(_on_punya_changed)
 	_on_punya_changed(GameState.punya)
 	var tween := create_tween()
@@ -134,3 +136,61 @@ func _on_health_changed(current: float, maximum: float) -> void:
 
 func _on_punya_changed(total: int) -> void:
 	punya_label.text = "Punya: %d" % total
+
+
+# --- Pause ------------------------------------------------------------------
+
+var _pause_panel: Control
+
+
+func _build_pause() -> void:
+	var button := Button.new()
+	button.name = "PauseButton"
+	button.text = "II"
+	button.add_theme_font_size_override(&"font_size", 34)
+	button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	button.offset_left = -130
+	button.offset_top = 30
+	button.offset_right = -40
+	button.offset_bottom = 120
+	button.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.2, 0.12, 0.08, 0.6), PartCard.GOLD, 3, 45))
+	button.pressed.connect(set_paused.bind(true))
+	$Root.add_child(button)
+
+	_pause_panel = PanelContainer.new()
+	_pause_panel.name = "PausePanel"
+	_pause_panel.add_theme_stylebox_override(&"panel", PartCard._style(Color(0.97, 0.91, 0.77), PartCard.GOLD, 6, 18))
+	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
+	_pause_panel.offset_left = -260
+	_pause_panel.offset_right = 260
+	_pause_panel.offset_top = -170
+	_pause_panel.offset_bottom = 170
+	_pause_panel.visible = false
+	$Root.add_child(_pause_panel)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override(&"separation", 18)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	_pause_panel.add_child(box)
+	var part := PartCatalog.by_number(GameState.current_part)
+	box.add_child(PartCard._label("Part %d: %s" % [part.number, part.title] if part else "Paused", 30, PartCard.INK, true))
+	for entry in [["Resume", set_paused.bind(false)], ["Back to the Journey", back_to_journey]]:
+		var b := Button.new()
+		b.text = entry[0]
+		b.custom_minimum_size = Vector2(0, 80)
+		b.add_theme_font_size_override(&"font_size", 30)
+		b.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.85, 0.42, 0.1), PartCard.GOLD, 3, 14))
+		b.add_theme_color_override(&"font_color", Color(1, 0.97, 0.9))
+		b.pressed.connect(entry[1])
+		box.add_child(b)
+
+
+func set_paused(paused: bool) -> void:
+	get_tree().paused = paused
+	_pause_panel.visible = paused
+
+
+func back_to_journey() -> void:
+	get_tree().paused = false
+	TimeFX.clear_all()
+	SaveSystem.save_game()
+	get_tree().change_scene_to_file("res://ui/journey_menu.tscn")

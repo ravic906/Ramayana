@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PartResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/part_resource.gd" id="1_part"]
+
+[resource]
+script = ExtResource("1_part")
+id = &"part_07"
+number = 7
+title = "The War for Dharma"
+kanda = "Yuddha Kanda II"
+synopsis = "Indrajit's illusions, Lakshmana's peril and Hanuman's flight for the healing herb lead to the final battle with ten-headed Ravana."
+scene_path = "res://kandas/06_yuddha/war.tscn"
+pack_file = "part_07.pck"
+product_id = "ramayana_part_07"
+price_label = "₹149"
+free = false
+released = false
+cover_color = Color(0.55, 0.12, 0.15, 1)
