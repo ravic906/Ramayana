@@ -4,11 +4,15 @@ extends Node3D
 ## glowing eyes, horns, tusks and a weapon. Animation is played directly on
 ## the body's AnimationPlayer with crossfades (cheaper than an AnimationTree).
 
-enum Weapon { CLUB, BOW }
+enum Weapon { CLUB, BOW, NONE }
 
 const MAT := "res://assets/materials/"
 
 @export var weapon := Weapon.CLUB
+@export var horns := true
+@export var body_material := "res://assets/materials/rakshasa_body.tres"
+@export var body_material_realistic := "res://assets/materials/env_real/rakshasa_body_pbr.tres"
+@export var hair_material := "res://assets/materials/rakshasa_hair.tres"
 
 @onready var body: Node3D = $Body
 @onready var skeleton: Skeleton3D = $Body/Armature/Skeleton3D
@@ -25,7 +29,7 @@ func _ready() -> void:
 	_apply_style()
 	Settings.style_changed.connect(func(_s: int) -> void: _apply_style())
 	(skeleton.get_node("Eyes") as MeshInstance3D).material_override = load(MAT + "rakshasa_eyes.tres")
-	var hair_mat: Material = load(MAT + "rakshasa_hair.tres")
+	var hair_mat: Material = load(hair_material)
 	(skeleton.get_node("Eyebrows") as MeshInstance3D).material_override = hair_mat
 	var hair := skeleton.find_child("Hair", true, false) as MeshInstance3D
 	if hair:
@@ -36,7 +40,7 @@ func _ready() -> void:
 
 ## Body material for the current visual style (duplicated: flashes are per rakshasa).
 func _apply_style() -> void:
-	var path := "res://assets/materials/env_real/rakshasa_body_pbr.tres" if Settings.is_realistic() else MAT + "rakshasa_body.tres"
+	var path := body_material_realistic if Settings.is_realistic() else body_material
 	_body_mat = (load(path) as ShaderMaterial).duplicate()
 	(skeleton.get_node("Body") as MeshInstance3D).material_override = _body_mat
 
@@ -76,7 +80,8 @@ func _build_props() -> void:
 	var bone: Material = load(MAT + "bone.tres")
 	# Horns sweep up and outward from the temples; tusks from the lower jaw.
 	for side in [-1.0, 1.0]:
-		batch.add("Head", MeshKit.cyl(0.0, 0.03, 0.2, 8), bone, Transform3D(
+		if horns:
+			batch.add("Head", MeshKit.cyl(0.0, 0.03, 0.2, 8), bone, Transform3D(
 			MeshKit.basis_along(Vector3(0.55 * side, 1.0, -0.15)), Vector3(0.06 * side, 1.79, 0.0)))
 		batch.add("Head", MeshKit.cyl(0.0, 0.009, 0.05, 6), bone, Transform3D(
 			MeshKit.basis_along(Vector3(0.2 * side, 1.0, 0.25)), Vector3(0.025 * side, 1.635, 0.085)))
@@ -92,7 +97,7 @@ func _build_props() -> void:
 		Transform3D(Basis().scaled(Vector3(1.05, 1.6, 0.82)), Vector3(0, 0.99, -0.025)), true)
 	if weapon == Weapon.CLUB:
 		_build_club(batch, bone)
-	else:
+	elif weapon == Weapon.BOW:
 		_build_bow(batch)
 	batch.commit()
 

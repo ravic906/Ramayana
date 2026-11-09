@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://characters/rama/rama.gd" id="1_rama"]
 [ext_resource type="Script" path="res://core/combat/health.gd" id="2_health"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://characters/rama/states/aim.gd" id="9_aim"]
 [ext_resource type="Script" path="res://characters/rama/states/dead.gd" id="10_dead"]
 [ext_resource type="Resource" path="res://data/astras/agneyastra.tres" id="11_agni"]
+[ext_resource type="Resource" path="res://data/astras/varunastra.tres" id="12_varuna"]
+[ext_resource type="Resource" path="res://data/astras/vayavyastra.tres" id="13_vayu"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_body"]
 radius = 0.35
@@ -22,7 +24,7 @@ collision_mask = 5
 platform_floor_layers = 1
 script = ExtResource("1_rama")
 arrow_scene = ExtResource("7_arrow")
-astras = Array[Resource]([ExtResource("11_agni")])
+astras = Array[Resource]([ExtResource("11_agni"), ExtResource("12_varuna"), ExtResource("13_vayu")])
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)

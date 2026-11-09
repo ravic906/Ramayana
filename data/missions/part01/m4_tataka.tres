@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MissionResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/mission_resource.gd" id="1_m"]
+
+[resource]
+script = ExtResource("1_m")
+number = 4
+id = &"tataka"
+title = "Tataka"
+narration = "In a ruined grove waited the one who had emptied the land."
+scene_path = "res://kandas/01_bala/forest.tscn"
+checkpoint = &"grove"
+available = true

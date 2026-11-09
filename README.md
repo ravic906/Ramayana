@@ -41,7 +41,22 @@ Agneyastra; Rama truly receives the astras from Vishvamitra later in Part 1.
 
 The red dummies remain for target practice. If Rama falls, he rises again and the wave restarts.
 
-### Agneyastra (final trial only, for now)
+### Part 1 so far
+Play from the Journey menu to get the story:
+1. **Golden Hour:** Guru Vasishtha's maya trials in Ayodhya.
+2. **The Sage at the Gate:** Vishvamitra asks Dasharatha for Rama.
+3. **The Silent Forest:** a cursed forest walk with Lakshmana, two ambushes, and a wounded
+   rakshasa who flees. Let him go and Rama's **Dharma** rises.
+4. **Tataka:** the first boss.
+   - She charges (trees stun her), slams the ground (roll through the shockwave) and hurls
+     boulders (shoot them down).
+   - Below half health she vanishes into maya, and only the dust shows where she is.
+   - Afterwards the forest blooms, and Vishvamitra grants **Agneyastra, Varunastra and
+     Vayavyastra** for good.
+
+Cutscenes can be skipped. Missions resume from where you left off.
+
+### Agneyastra (a glimpse in the prologue)
 Tap **Agni** to set the bow aflame, then loose a drawn arrow (at least 60% draw). It explodes in
 fire, hurling back and burning every rakshasa nearby, and leaves the ground burning. It then needs
 12 seconds before it can be invoked again; the ring on the button shows the cooldown.
@@ -95,6 +110,7 @@ tests/        headless test runner and unit tests
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
 | 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI |
+| 1c. Part 1 story | Missions 1–4: trials, Vishvamitra, the Silent Forest, the Tataka boss, astra ceremony ✅ |
 | 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky); Stylised / Realistic looks ✅ |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |

@@ -4,6 +4,7 @@ extends Node
 signal kanda_changed(index: int)
 signal part_changed(number: int)
 signal part_completed(id: StringName)
+signal dharma_changed(value: int)
 signal punya_changed(total: int)
 signal astra_unlocked(astra_id: StringName)
 
@@ -24,11 +25,17 @@ const FREE_KANDAS := 1
 ## v2: progress is tracked per Part (current_part, completed_parts).
 const SAVE_VERSION := 2
 
+## Runtime only (not saved): true when a Part was launched from the Journey
+## menu, so levels play their story (narration, cutscenes, mission hand-off).
+var story_session := false
+
 var current_part := 1
 var completed_parts: Array[StringName] = []
 var current_kanda := 0
 var current_mission := 0
 var punya := 0
+## 0..100: rises with acts of restraint and protection (sparing the fleeing, ...).
+var dharma := 0
 var unlocked_astras: Array[StringName] = []
 var flags: Dictionary = {}
 
@@ -39,6 +46,7 @@ func reset() -> void:
 	current_kanda = 0
 	current_mission = 0
 	punya = 0
+	dharma = 0
 	unlocked_astras.clear()
 	flags.clear()
 
@@ -64,9 +72,16 @@ func is_part_unlocked(part: PartResource, store: Node = null) -> bool:
 
 
 func set_part(number: int) -> void:
-	current_part = clampi(number, 1, maxi(PartCatalog.all().size(), 1))
-	current_mission = 0
+	var n := clampi(number, 1, maxi(PartCatalog.all().size(), 1))
+	if n != current_part:
+		current_mission = 0
+	current_part = n
 	part_changed.emit(current_part)
+
+
+func add_dharma(amount: int) -> void:
+	dharma = clampi(dharma + amount, 0, 100)
+	dharma_changed.emit(dharma)
 
 
 func complete_part(id: StringName) -> void:
@@ -120,6 +135,7 @@ func to_dict() -> Dictionary:
 		"current_kanda": current_kanda,
 		"current_mission": current_mission,
 		"punya": punya,
+		"dharma": dharma,
 		"unlocked_astras": astras,
 		"flags": flags.duplicate(true),
 	}
@@ -130,6 +146,7 @@ func from_dict(data: Dictionary) -> void:
 	current_kanda = int(data.get("current_kanda", 0))
 	current_mission = int(data.get("current_mission", 0))
 	punya = int(data.get("punya", 0))
+	dharma = int(data.get("dharma", 0))
 	for a in data.get("unlocked_astras", []):
 		unlocked_astras.append(StringName(a))
 	flags = (data.get("flags", {}) as Dictionary).duplicate(true)

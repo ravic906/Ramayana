@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+lines = PackedStringArray("|grove_wide|bloom|", "|grove_wide|wait:3.0|", "Lakshmana|brothers||Brother... look. The forest is breathing again.", "Vishvamitra|sage||The curse is lifted from this land. You did not strike in anger, Rama. That is why you may now receive what I carry.", "|astras|astra_ceremony|", "The Astras|astras||Command us, and we will come.", "Vishvamitra|astras||Agneyastra, the fire that burns only what must burn. Varunastra, the water that cleanses. Vayavyastra, the wind that clears the field.", "|astras|grant_astras|", "Rama|rama||I will call on them only for dharma, Guru-dev.", "Narration|||And so the princes walked on toward Siddhashrama, where six nights of fire awaited them...")

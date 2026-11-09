@@ -6,6 +6,7 @@ extends Node3D
 signal wave_started(index: int, total: int)
 signal wave_cleared(index: int)
 signal all_cleared
+signal enemy_spawned(rakshasa: Rakshasa)
 
 ## Loaded on demand (not preloaded) so enemy data resources always resolve
 ## their script class first.
@@ -40,6 +41,11 @@ func start() -> void:
 	_queue_wave(0, start_delay)
 
 
+## Cancels any wave queued to start (e.g. while an intro cutscene plays).
+func hold() -> void:
+	_generation += 1
+
+
 func restart_wave() -> void:
 	_clear_alive()
 	_queue_wave(maxi(current_wave, 0), 2.0)
@@ -72,9 +78,11 @@ func spawn_enemy(kind: String, at: Vector3) -> Rakshasa:
 	r.position = parent.to_local(at) if parent else at
 	get_parent().add_child(r)
 	r.died.connect(_on_enemy_died)
+	r.spared.connect(_on_enemy_died)
 	alive.append(r)
 	# Summoned in a burst of dark smoke.
 	FX.burst(get_parent(), at + Vector3.UP * 0.8, Color(0.15, 0.05, 0.1, 0.8), 24, 3.0, 1.2, 1.0, 0.5, true)
+	enemy_spawned.emit(r)
 	return r
 
 

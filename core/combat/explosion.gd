@@ -24,7 +24,10 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 		var h := e.get_node_or_null("Health") as Health
 		if h:
 			h.take_damage(astra.impact_damage * lerpf(0.4, 1.0, falloff), source)
-		Burn.apply(e, astra.burn_dps, astra.burn_duration, source)
+		if astra.effect == AstraResource.Effect.FIRE:
+			Burn.apply(e, astra.burn_dps, astra.burn_duration, source)
+		elif astra.effect == AstraResource.Effect.WATER and e.has_node("Burn"):
+			e.get_node("Burn").queue_free()
 		if e.has_method("apply_knockback"):
 			var away := e.global_position - at
 			away.y = 0.0
@@ -33,6 +36,14 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 
 	var ground := _ground_point(parent, at)
 	_spectacle(parent, at, ground, astra)
+	if astra.effect == AstraResource.Effect.WATER:
+		# Varunastra quenches burning ground nearby.
+		for node in parent.get_children():
+			if node is FirePatch and (node as Node3D).global_position.distance_to(ground) < astra.radius + (node as FirePatch).radius:
+				node.queue_free()
+	if astra.effect != AstraResource.Effect.FIRE:
+		_feedback(parent, 0.08, 120, 0.7)
+		return hit
 	var patch := FirePatch.new()
 	patch.radius = astra.radius * 0.6
 	patch.dps = astra.patch_dps
@@ -51,6 +62,17 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 	if rig:
 		rig.shake(0.9)
 	return hit
+
+
+static func _feedback(parent: Node, hitstop: float, haptic_ms: int, shake: float) -> void:
+	var tfx := parent.get_node_or_null("/root/TimeFX")
+	if tfx:
+		tfx.hitstop(hitstop, 0.08)
+	Haptics.pulse(haptic_ms, 0.9)
+	var cam := parent.get_viewport().get_camera_3d()
+	var rig := cam.get_parent().get_parent() as FollowCamera if cam and cam.get_parent() else null
+	if rig:
+		rig.shake(shake)
 
 
 static func _ground_point(parent: Node, at: Vector3) -> Vector3:
@@ -105,6 +127,18 @@ static func _spectacle(parent: Node, at: Vector3, ground: Vector3, astra: AstraR
 	lt.tween_property(light, "light_energy", 0.0, 0.7)
 	lt.tween_callback(light.queue_free)
 
+	if astra.effect == AstraResource.Effect.WATER:
+		FX.burst(parent, at, astra.color, 80, 10.0, 0.35, 0.9, -9.0)
+		FX.burst(parent, ground + Vector3.UP * 0.3, astra.glow_color, 40, 6.0, 0.6, 0.6, -4.0)
+		_sound(parent, at, preload("res://assets/audio/sfx/impact.wav"), 0.6)
+		_sound(parent, at, preload("res://assets/audio/sfx/whoosh.wav"), 0.5)
+		return
+	if astra.effect == AstraResource.Effect.WIND:
+		FX.burst(parent, ground + Vector3.UP * 0.6, astra.color, 70, 14.0, 0.5, 0.8, 1.5)
+		FX.burst(parent, ground + Vector3.UP * 0.3, Color(0.75, 0.65, 0.5, 0.6), 24, 8.0, 1.0, 1.0, 0.5, true)
+		_sound(parent, at, preload("res://assets/audio/sfx/whoosh.wav"), 0.4)
+		_sound(parent, at, preload("res://assets/audio/sfx/whoosh.wav"), 0.7)
+		return
 	# Flames, embers and smoke.
 	FX.burst(parent, at, astra.color, 70, 9.0, 0.6, 0.7, 2.5)
 	FX.burst(parent, at, astra.glow_color, 30, 5.0, 0.5, 0.5, 1.0)
@@ -113,6 +147,18 @@ static func _spectacle(parent: Node, at: Vector3, ground: Vector3, astra: AstraR
 
 	var sfx := AudioStreamPlayer3D.new()
 	sfx.stream = SFX_EXPLOSION
+	sfx.volume_db = 4.0
+	sfx.unit_size = 20.0
+	parent.add_child(sfx)
+	sfx.global_position = at
+	sfx.play()
+	sfx.finished.connect(sfx.queue_free)
+
+
+static func _sound(parent: Node, at: Vector3, stream: AudioStream, pitch: float) -> void:
+	var sfx := AudioStreamPlayer3D.new()
+	sfx.stream = stream
+	sfx.pitch_scale = pitch
 	sfx.volume_db = 4.0
 	sfx.unit_size = 20.0
 	parent.add_child(sfx)

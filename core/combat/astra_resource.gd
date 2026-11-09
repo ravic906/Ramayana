@@ -2,7 +2,14 @@ class_name AstraResource
 extends Resource
 ## A divine weapon Rama can invoke onto a drawn arrow (see data/astras/*.tres).
 
+enum Effect { FIRE, WATER, WIND }
+
 @export var id := &"agneyastra"
+@export var effect := Effect.FIRE
+## Short label for the HUD button.
+@export var short_name := "Agni"
+## The mantra shown when Vishvamitra teaches it.
+@export var mantra := ""
 @export var display_name := "Agneyastra"
 @export var cooldown := 12.0
 ## Minimum draw (0..1) for the astra to be released; weaker shots keep it armed.

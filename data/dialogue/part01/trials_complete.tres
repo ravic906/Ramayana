@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+lines = PackedStringArray("Rama|rama||It burned without touching me, Guru-ji. Is that what power is?", "Vasishtha|vasishtha||That is what restraint is. Remember the feeling.", "Herald|gate||My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line.")

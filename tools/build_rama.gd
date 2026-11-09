@@ -80,6 +80,16 @@ func _initialize() -> void:
 	# The hair is modelled in place (origin at 0), so undo the head's rest transform.
 	hair.transform = skeleton.get_bone_global_rest(skeleton.find_bone("Head")).affine_inverse()
 	head_att.add_child(hair)
+	# Beard (hidden; sages and kings in cutscenes show it via NpcModel).
+	var beard_src := _load_gltf(ubc.path_join("Hairstyles/Origin at 0/glTF (Godot)/Hair_Beard.gltf"))
+	if beard_src:
+		var beard_mi: MeshInstance3D = beard_src.find_children("*", "MeshInstance3D", true, false)[0]
+		var beard := MeshInstance3D.new()
+		beard.name = "Beard"
+		beard.mesh = _with_lods(beard_mi.mesh as ArrayMesh, load(MAT_DIR + "rama_hair.tres"))
+		beard.transform = hair.transform
+		beard.visible = false
+		head_att.add_child(beard)
 
 	# --- Animations -------------------------------------------------------------
 	var src_player: AnimationPlayer = anims_src.get_node("AnimationPlayer")

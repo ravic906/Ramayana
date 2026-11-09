@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MissionResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/mission_resource.gd" id="1_m"]
+
+[resource]
+script = ExtResource("1_m")
+number = 3
+id = &"silent_forest"
+title = "The Silent Forest"
+narration = "They walked into lands where no bird sang, the lands of Malada and Karusha."
+scene_path = "res://kandas/01_bala/forest.tscn"
+checkpoint = &""
+available = true

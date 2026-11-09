@@ -10,12 +10,16 @@ const ACTIONS := {
 	"shoot": [KEY_J, KEY_SPACE],
 	"dodge": [KEY_K, KEY_SHIFT],
 	"astra_1": [KEY_L, KEY_1],
+	"astra_2": [KEY_2],
+	"astra_3": [KEY_3],
 }
 
 const PAD_BUTTONS := {
 	"shoot": JOY_BUTTON_RIGHT_SHOULDER,
 	"dodge": JOY_BUTTON_A,
 	"astra_1": JOY_BUTTON_Y,
+	"astra_2": JOY_BUTTON_X,
+	"astra_3": JOY_BUTTON_LEFT_SHOULDER,
 }
 
 const PAD_AXES := {

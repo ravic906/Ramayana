@@ -46,7 +46,9 @@ func _ready() -> void:
 			health_bar.max_value = health.max_health
 			health_bar.value = health.max_health
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group(&"hud")
 	_build_pause()
+	_build_subtitle()
 	GameState.punya_changed.connect(_on_punya_changed)
 	_on_punya_changed(GameState.punya)
 	var tween := create_tween()
@@ -81,26 +83,57 @@ func _process(delta: float) -> void:
 	shoot_button.progress_color = Color(1.0, 0.95, 0.6) if _perfect else Color(1.0, 0.82, 0.3)
 
 
+## One button per astra slot (Agni is in the scene; the others are created here).
+var _astra_buttons: Array[ActionButton] = []
+
+
+func _ensure_astra_buttons(count: int) -> void:
+	if _astra_buttons.is_empty():
+		_astra_buttons.append(agni_button)
+	var spots := [Rect2(-430, -462, 140, 140), Rect2(-575, -352, 130, 130)]
+	while _astra_buttons.size() < count:
+		var i := _astra_buttons.size()
+		var b := ActionButton.new()
+		b.name = "AstraButton%d" % (i + 1)
+		b.action = StringName("astra_%d" % (i + 1))
+		var r: Rect2 = spots[mini(i - 1, spots.size() - 1)]
+		b.anchor_left = 1.0
+		b.anchor_top = 1.0
+		b.anchor_right = 1.0
+		b.anchor_bottom = 1.0
+		b.offset_left = r.position.x
+		b.offset_top = r.position.y
+		b.offset_right = r.position.x + r.size.x
+		b.offset_bottom = r.position.y + r.size.y
+		$Root.add_child(b)
+		_astra_buttons.append(b)
+
+
 func _update_agni(real_delta: float) -> void:
 	if not (_player is Rama) or _player.astras.is_empty():
 		agni_button.visible = false
 		return
 	var rama := _player as Rama
-	var astra: AstraResource = rama.astras[0]
+	_ensure_astra_buttons(rama.astras.size())
 	_pulse += real_delta
-	agni_button.visible = rama.is_astra_unlocked(astra)
-	var left := rama.astra_cooldown_left(astra)
-	if rama.armed_astra == astra:
-		agni_button.color = Color(1.0, 0.45 + 0.15 * sin(_pulse * 10.0), 0.1, 0.95)
-		agni_button.progress = 1.0
-		agni_button.progress_color = Color(1.0, 0.85, 0.35)
-	elif left > 0.0:
-		agni_button.color = Color(0.35, 0.25, 0.2, 0.7)
-		agni_button.progress = 1.0 - left / astra.cooldown
-		agni_button.progress_color = Color(1.0, 0.5, 0.15, 0.8)
-	else:
-		agni_button.color = Color(0.85, 0.3, 0.08, 0.85)
-		agni_button.progress = 0.0
+	for slot in rama.astras.size():
+		var astra: AstraResource = rama.astras[slot]
+		var button := _astra_buttons[slot]
+		button.label = astra.short_name
+		button.visible = rama.is_astra_unlocked(astra) and not rama.controls_locked
+		var base := astra.color.darkened(0.15)
+		var left := rama.astra_cooldown_left(astra)
+		if rama.armed_astra == astra:
+			button.color = Color(astra.color.lightened(0.15 * sin(_pulse * 10.0)), 0.95)
+			button.progress = 1.0
+			button.progress_color = Color(astra.glow_color, 1.0)
+		elif left > 0.0:
+			button.color = Color(0.3, 0.26, 0.24, 0.7)
+			button.progress = 1.0 - left / astra.cooldown
+			button.progress_color = Color(astra.color, 0.8)
+		else:
+			button.color = Color(base, 0.85)
+			button.progress = 0.0
 
 
 func show_banner(text: String, color: Color = Color.WHITE, hold: float = 2.0) -> void:
@@ -200,3 +233,98 @@ func back_to_journey() -> void:
 	TimeFX.clear_all()
 	SaveSystem.save_game()
 	get_tree().change_scene_to_file("res://ui/journey_menu.tscn")
+
+
+# --- In-game subtitles and boss bar ----------------------------------------------
+
+var _subtitle: PanelContainer
+var _subtitle_speaker: Label
+var _subtitle_text: Label
+var _subtitle_tween: Tween
+var _boss_box: VBoxContainer
+var _boss_bar: ProgressBar
+var _boss_name: Label
+var _boss_health: Health
+
+
+func _build_subtitle() -> void:
+	_subtitle = PanelContainer.new()
+	_subtitle.add_theme_stylebox_override(&"panel", PartCard._style(Color(0.08, 0.05, 0.04, 0.7), PartCard.GOLD, 2, 14))
+	_subtitle.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_subtitle.offset_left = -520
+	_subtitle.offset_right = 520
+	_subtitle.offset_top = -250
+	_subtitle.offset_bottom = -150
+	_subtitle.modulate.a = 0.0
+	_subtitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Root.add_child(_subtitle)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override(&"separation", 16)
+	_subtitle.add_child(row)
+	_subtitle_speaker = PartCard._label("", 28, Color.WHITE, false)
+	row.add_child(_subtitle_speaker)
+	_subtitle_text = PartCard._label("", 28, Color(1, 0.97, 0.9), false)
+	_subtitle_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_subtitle_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(_subtitle_text)
+
+	_boss_box = VBoxContainer.new()
+	_boss_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	# A slim strip along the top edge, clear of the arena where the boss stands.
+	_boss_box.offset_left = -420
+	_boss_box.offset_right = 420
+	_boss_box.offset_top = 14
+	_boss_box.offset_bottom = 80
+	_boss_box.add_theme_constant_override(&"separation", 2)
+	_boss_box.visible = false
+	_boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Root.add_child(_boss_box)
+	_boss_name = PartCard._label("", 28, Color(1, 0.85, 0.8), true)
+	_boss_name.add_theme_color_override(&"font_outline_color", Color(0.15, 0.03, 0.05))
+	_boss_name.add_theme_constant_override(&"outline_size", 10)
+	_boss_box.add_child(_boss_name)
+	_boss_bar = ProgressBar.new()
+	_boss_bar.custom_minimum_size = Vector2(0, 16)
+	_boss_bar.show_percentage = false
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.7, 0.12, 0.2)
+	fill.set_corner_radius_all(6)
+	_boss_bar.add_theme_stylebox_override(&"fill", fill)
+	_boss_box.add_child(_boss_bar)
+
+
+func show_subtitle(speaker: String, text: String, seconds := 3.5) -> void:
+	_subtitle_speaker.text = speaker
+	_subtitle_speaker.add_theme_color_override(&"font_color", Cutscene.SPEAKER_COLORS.get(speaker, Color.WHITE))
+	_subtitle_text.text = text
+	if _subtitle_tween:
+		_subtitle_tween.kill()
+	_subtitle_tween = create_tween()
+	_subtitle_tween.tween_property(_subtitle, "modulate:a", 1.0, 0.2)
+	_subtitle_tween.tween_interval(seconds)
+	_subtitle_tween.tween_property(_subtitle, "modulate:a", 0.0, 0.5)
+
+
+## Shows a boss health bar bound to `health` (null hides it).
+func show_boss(boss_name: String, health: Health) -> void:
+	_boss_health = health
+	_boss_box.visible = health != null
+	if health:
+		_boss_name.text = boss_name
+		_boss_bar.max_value = health.max_health
+		_boss_bar.value = health.current
+		health.changed.connect(func(c: float, m: float) -> void:
+			_boss_bar.max_value = m
+			_boss_bar.value = c)
+
+
+## Hides gameplay controls during cutscenes.
+func set_cinematic(on: bool) -> void:
+	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel"]:
+		var c := $Root.get_node_or_null(n) as CanvasItem
+		if c:
+			c.visible = not on
+	for b in _astra_buttons:
+		b.visible = false if on else b.visible
+	if on:
+		_boss_box.visible = false

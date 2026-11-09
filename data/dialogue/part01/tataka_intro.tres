@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+lines = PackedStringArray("|grove_wide|wait:0.6|", "Tataka|tataka||Princes of men, in my forest? I will grind your bones to dust as I did the others.", "Rama|rama||Guru-dev, she is a woman. Is there no other way?", "Vishvamitra|sage||Ask instead: how many have no other way while she lives? A protector's duty does not look away.", "Rama|rama||Then I will try to turn her back first. If she will not turn, I will not look away.")

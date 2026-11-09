@@ -24,8 +24,16 @@ const MAP := {
 	"res://assets/materials/env/flowers.tres": "res://assets/materials/env_real/flowers_pbr.tres",
 	"res://assets/materials/env/grass.tres": "res://assets/materials/env_real/grass_pbr.tres",
 	"res://assets/materials/env/rock.tres": "res://assets/materials/env_real/rock_pbr.tres",
+	"res://assets/materials/env/bark_twisted.tres": "res://assets/materials/env_real/bark_twisted_pbr.tres",
+	"res://assets/materials/env/bark_dead.tres": "res://assets/materials/env_real/bark_dead_pbr.tres",
+	"res://assets/materials/env/leaves_dark.tres": "res://assets/materials/env_real/leaves_dark_pbr.tres",
+	"res://assets/materials/env/leaves_jungle.tres": "res://assets/materials/env_real/leaves_jungle_pbr.tres",
+	"res://assets/materials/env/mushrooms.tres": "res://assets/materials/env_real/mushrooms_pbr.tres",
+	"res://assets/materials/env/pathrocks.tres": "res://assets/materials/env_real/pathrocks_pbr.tres",
+	"res://assets/materials/env/forest_floor.tres": "res://assets/materials/env_real/forest_floor_pbr.tres",
+	"res://assets/materials/env/forest_path.tres": "res://assets/materials/env_real/forest_path_pbr.tres",
 }
-const REALISTIC_ENV := "res://assets/env/real/realistic_environment.tres"
+@export_file("*.tres") var realistic_environment := "res://assets/env/real/realistic_environment.tres"
 
 @export var world_environment_path: NodePath
 @export var sun_path: NodePath
@@ -64,7 +72,7 @@ func apply(new_style: int) -> void:
 	var realistic := style == Settings.VisualStyle.REALISTIC
 	_apply_materials(get_tree().current_scene if get_tree().current_scene else get_parent(), realistic)
 	if _world_env:
-		_world_env.environment = load(REALISTIC_ENV) if realistic else _stylised_env
+		_world_env.environment = load(realistic_environment) if realistic else _stylised_env
 	if _sun:
 		if realistic:
 			_sun.rotation = Vector3(deg_to_rad(realistic_sun_pitch_deg), _stylised_sun["rotation"].y, 0.0)

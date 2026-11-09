@@ -95,8 +95,9 @@ func test_part_progress_round_trip() -> void:
 	assert_false(copy.is_part_completed(&"part_02"))
 
 
-func test_final_trial_completes_part_one() -> void:
+func test_final_trial_advances_to_the_sage() -> void:
 	GameState.completed_parts.clear()
+	GameState.current_mission = 1
 	var level: Node = load("res://kandas/01_bala/training_grounds.tscn").instantiate()
 	var spawner: WaveSpawner = level.get_node("WaveSpawner")
 	spawner.auto_start = false
@@ -107,8 +108,10 @@ func test_final_trial_completes_part_one() -> void:
 	for r in spawner.alive.duplicate():
 		r.health.take_damage(10000.0)
 	await get_tree().physics_frame
-	assert_true(GameState.is_part_completed(&"part_01"))
+	assert_eq(GameState.current_mission, 2, "on to The Sage at the Gate")
+	assert_false(GameState.is_part_completed(&"part_01"), "Part 1 continues past the trials")
 	level.queue_free()
+	GameState.current_mission = 0
 	SaveSystem.delete_save(SaveSystem.AUTOSAVE_SLOT)
 	GameState.completed_parts.clear()
 

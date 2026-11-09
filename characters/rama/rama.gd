@@ -105,6 +105,8 @@ var astra_cooldowns := {}
 ## trial); never saved, unlike GameState.unlocked_astras.
 var temporary_astras: Array[StringName] = []
 var spawn_point := Vector3.ZERO
+## True during cutscenes: Rama ignores player input.
+var controls_locked := false
 
 var _shoot_timer := 0.0
 var _dodge_timer := 0.0
@@ -137,8 +139,10 @@ func _physics_process(delta: float) -> void:
 	var real_delta := TimeFX.unscaled(delta)
 	for id in astra_cooldowns.keys():
 		astra_cooldowns[id] = maxf(astra_cooldowns[id] - real_delta, 0.0)
-	if Input.is_action_just_pressed(&"astra_1") and not health.is_dead():
-		toggle_astra(0)
+	if not health.is_dead() and not controls_locked:
+		for slot in astras.size():
+			if Input.is_action_just_pressed(StringName("astra_%d" % (slot + 1))):
+				toggle_astra(slot)
 	if model != null:
 		model.set_locomotion(Vector2(velocity.x, velocity.z).length() / move_speed)
 
@@ -146,7 +150,18 @@ func _physics_process(delta: float) -> void:
 # --- Movement helpers used by states -------------------------------------
 
 func get_move_input() -> Vector2:
+	if controls_locked:
+		return Vector2.ZERO
 	return Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
+
+
+## Input helpers that respect controls_locked (used by the states).
+func action_just_pressed(action: StringName) -> bool:
+	return not controls_locked and Input.is_action_just_pressed(action)
+
+
+func action_held(action: StringName) -> bool:
+	return not controls_locked and Input.is_action_pressed(action)
 
 
 ## Converts 2D stick input to a world-space direction relative to the camera yaw.

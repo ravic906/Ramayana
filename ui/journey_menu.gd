@@ -63,8 +63,12 @@ func play(part: PartResource) -> void:
 		show_message("%s could not be loaded." % part.title)
 		return
 	GameState.set_part(part.number)
+	GameState.story_session = true
+	var mission := PartFlow.current(part)
+	if mission:
+		GameState.current_mission = mission.number
 	SaveSystem.save_game()
-	get_tree().change_scene_to_file(part.scene_path)
+	get_tree().change_scene_to_file(mission.scene_path if mission else part.scene_path)
 
 
 func _on_card_action(part: PartResource, state: int) -> void:

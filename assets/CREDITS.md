@@ -31,7 +31,8 @@ Both packs are released under **CC0 1.0** (public domain) by Quaternius
 
 ## Environment: Quaternius Stylized Nature MegaKit [Standard] (CC0)
 - https://quaternius.itch.io/stylized-nature-megakit (CC0 1.0, by Quaternius)
-- Used: `CommonTree_3`, `CommonTree_5`, `Bush_Common`, `Bush_Common_Flowers`, `Flower_3_Group`,
+- Used: `CommonTree_3`, `CommonTree_5`, `TwistedTree_1/3`, `DeadTree_1/3`, `Fern_1`,
+  `Mushroom_Common`, `Rock_Medium_2/3`, `Pebble_Round_2`, `Bush_Common`, `Bush_Common_Flowers`, `Flower_3_Group`,
   `Flower_4_Group`, `Grass_Common_Short`, `Plant_1_Big`, `Rock_Medium_1`, in `assets/env/nature/`.
 - Textures were downscaled (≤ 512 px) for mobile. The meshes are re-shaded with our toon foliage
   shader.
@@ -47,6 +48,7 @@ Textures and sky from https://polyhaven.com (CC0 1.0), downscaled and packed for
 - `marble_01` (Rob Tuytel)
 - `stone_tiles_02` (Charlotte Baglioni)
 - `belfast_sunset_puresky` HDRI (Poly Haven)
+- `forest_leaves_02` (Rob Tuytel) and `dirt_floor` (eye-candy.xyz): the forest floor and path
 
 ## Sound effects
 `assets/audio/sfx/*.wav` are synthesised from scratch by `tools/gen_sfx.py`, so there are no

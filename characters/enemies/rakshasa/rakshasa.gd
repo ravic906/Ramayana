@@ -4,6 +4,8 @@ extends CharacterBody3D
 ## hits and dies with a reward. Tuning comes from `data` (EnemyResource).
 
 signal died(rakshasa: Rakshasa)
+## Fled and was let go (an act of restraint: raises Dharma).
+signal spared(rakshasa: Rakshasa)
 
 ## At most this many rakshasas may wind up an attack at once (readability).
 const MAX_ATTACKERS := 2
@@ -18,6 +20,8 @@ static var _attackers := 0
 @export var data: EnemyResource
 @export var arrow_scene: PackedScene
 @export var aggro_range := 45.0
+## When > 0, the rakshasa flees once its health falls below this fraction.
+@export var flee_below := 0.0
 
 @onready var health: Health = $Health
 @onready var state_machine: StateMachine = $StateMachine
@@ -187,10 +191,26 @@ func _fire_arrow() -> void:
 
 # --- Damage -------------------------------------------------------------------
 
+func is_fleeing() -> bool:
+	return state_machine.is_in(&"Flee")
+
+
 func _on_damaged(amount: float, _source: Node) -> void:
 	model.hit_flash(Color(1.0, 0.95, 0.8), 1.6)
+	if flee_below > 0.0 and not health.is_dead() and health.ratio() < flee_below and not is_fleeing():
+		state_machine.transition_to(&"Flee")
+		return
 	if not health.is_dead() and amount >= data.stagger_threshold:
 		state_machine.transition_to(&"Stagger")
+
+
+## Called by the Flee state when it gets away.
+func escape() -> void:
+	release_attack_token()
+	remove_from_group(&"enemies")
+	FX.burst(get_parent(), global_position + Vector3.UP, Color(0.2, 0.15, 0.12, 0.7), 16, 3.0, 1.0, 0.8, 0.5, true)
+	spared.emit(self)
+	queue_free()
 
 
 func _on_died() -> void:

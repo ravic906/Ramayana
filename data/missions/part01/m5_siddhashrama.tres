@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MissionResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/mission_resource.gd" id="1_m"]
+
+[resource]
+script = ExtResource("1_m")
+number = 5
+id = &"siddhashrama"
+title = "Six Nights at Siddhashrama"
+narration = ""
+scene_path = ""
+checkpoint = &""
+available = false

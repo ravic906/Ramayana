@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://characters/npc/npc_model.tscn" id="1_base"]
+
+[node name="Dasharatha" instance=ExtResource("1_base")]
+skin = Color(0.78, 0.6, 0.45, 1)
+garment = Color(0.6, 0.12, 0.15, 1)
+trim = Color(0.85, 0.65, 0.2, 1)
+sash = Color(0.9, 0.75, 0.3, 1)
+hair_color = Color(0.85, 0.85, 0.85, 1)
+beard = true
+crown = true

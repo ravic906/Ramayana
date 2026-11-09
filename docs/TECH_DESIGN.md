@@ -178,6 +178,37 @@ through Play Games Services and iCloud later.
   against 286 and 296k for Stylised, because it has no outline passes. It does use more texture
   memory, mostly the 2K HDR sky (~16 MB as RGBA16F).
 
+### Story and missions
+- **Dialogue:** `DialogueResource` (`data/dialogue/**`) holds compact `Speaker|shot|action|text`
+  lines.
+- **Cutscenes:** `Cutscene` draws letterbox bars, typewriter subtitles and Lava–Kusha narration
+  cards, and moves level-supplied camera shots. It supports tap-to-advance and Skip; skipping
+  still emits every story action.
+- **Story levels:** `StoryLevel` locks Rama's controls (`Rama.controls_locked`), hides the HUD,
+  stages NPCs and hands off between missions.
+- **Missions:** `MissionResource` (`data/missions/part01`) plus `PartFlow`, which resumes from
+  `GameState.current_mission`.
+- **When story runs:** only when a Part is launched from the Journey menu
+  (`GameState.story_session`), so tests and direct scene runs stay deterministic.
+- **Cast:**
+  - `NpcModel`: shared rig, palette, beard, crown, topknot, staff.
+  - `Lakshmana`: a follower on `RamaModel`.
+  - `Tataka`: the boss on `RakshasaModel` (weapon NONE, 2.4× scale), with a charge, slam ring,
+    `Boulder` projectiles that can be shot down, a maya vanish phase and a stagger meter.
+- **Forest:** `tools/build_forest.gd` builds `kandas/01_bala/env/tataka_forest.scn`:
+  - a baked path ribbon, ruins, bones, mist, light shafts and spores
+  - colliders, a grove gate, and bloom MultiMeshes whose instances grow from metadata targets
+    (hidden until the bloom, so they cost nothing before it)
+  - **Render cost:**
+    - Trees are split into cells so culling and visibility ranges work per cell.
+    - Near trees show full detail within 30 m and a proxy mesh beyond. The proxy is the
+      bark's coarsest LOD plus a third of the leaf cards, enlarged (`far_mesh`).
+    - Shadows come from shadow-only proxy copies.
+    - Distant cells end at 85 m, where the fog has them.
+    - Path view: about 330k triangles including shadows, down from about 840k.
+- **Astras:** `AstraResource.effect` (FIRE / WATER / WIND) drives `Explosion.detonate`. Water
+  quenches `FirePatch` and `Burn`; wind is mostly knockback.
+
 ### Parts (episodic content)
 - **Data:** `PartResource` (`core/progress/part_resource.gd`) in `data/parts/*.tres`, listed in
   order by `PartCatalog`.

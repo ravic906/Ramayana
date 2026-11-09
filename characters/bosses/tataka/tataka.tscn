@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://characters/bosses/tataka/tataka.gd" id="1_t"]
+[ext_resource type="PackedScene" path="res://characters/enemies/rakshasa/rakshasa_model.tscn" id="2_model"]
+[ext_resource type="Script" path="res://core/combat/health.gd" id="3_h"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_body"]
+radius = 1.0
+height = 4.6
+
+[node name="Tataka" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 1
+platform_floor_layers = 1
+script = ExtResource("1_t")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+shape = SubResource("Shape_body")
+
+[node name="RakshasaModel" parent="." instance=ExtResource("2_model")]
+weapon = 2
+horns = false
+body_material = "res://assets/materials/tataka_body.tres"
+body_material_realistic = "res://assets/materials/env_real/tataka_body_pbr.tres"
+hair_material = "res://assets/materials/tataka_hair.tres"
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("3_h")
+max_health = 900.0

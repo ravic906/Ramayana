@@ -5,6 +5,9 @@
 [resource]
 script = ExtResource("1_script")
 id = &"agneyastra"
+effect = 0
+short_name = "Agni"
+mantra = "Fire of Agni, burn only what must burn."
 display_name = "Agneyastra"
 cooldown = 12.0
 min_draw = 0.6

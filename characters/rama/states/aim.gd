@@ -19,8 +19,8 @@ func physics_update(delta: float) -> void:
 	rama.apply_horizontal(direction * rama.move_speed * rama.aim_move_factor * minf(input.length(), 1.0), delta)
 	rama.move_and_slide()
 	rama.update_draw(TimeFX.unscaled(delta))
-	if Input.is_action_just_pressed(&"dodge") and rama.can_dodge():
+	if rama.action_just_pressed(&"dodge") and rama.can_dodge():
 		machine.transition_to(&"Dodge")
-	elif not Input.is_action_pressed(&"shoot"):
+	elif not rama.action_held(&"shoot"):
 		rama.release_draw()
 		machine.transition_to(&"Move" if input.length() > 0.05 else &"Idle")

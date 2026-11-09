@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MissionResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/mission_resource.gd" id="1_m"]
+
+[resource]
+script = ExtResource("1_m")
+number = 2
+id = &"sage_at_gate"
+title = "The Sage at the Gate"
+narration = "Then came a sage to the palace gate, and with him the first step of a long road."
+scene_path = "res://kandas/01_bala/training_grounds.tscn"
+checkpoint = &"sage"
+available = true

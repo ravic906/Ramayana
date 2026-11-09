@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://characters/enemies/rakshasa/rakshasa.gd" id="1_r"]
 [ext_resource type="Resource" path="res://data/enemies/grunt.tres" id="2_data"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://characters/enemies/rakshasa/states/recover.gd" id="10_rec"]
 [ext_resource type="Script" path="res://characters/enemies/rakshasa/states/stagger.gd" id="11_stag"]
 [ext_resource type="Script" path="res://characters/enemies/rakshasa/states/dead.gd" id="12_dead"]
+[ext_resource type="Script" path="res://characters/enemies/rakshasa/states/flee.gd" id="13_flee"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_body"]
 radius = 0.4
@@ -56,3 +57,6 @@ script = ExtResource("11_stag")
 
 [node name="Dead" type="Node" parent="StateMachine"]
 script = ExtResource("12_dead")
+
+[node name="Flee" type="Node" parent="StateMachine"]
+script = ExtResource("13_flee")
