@@ -37,6 +37,9 @@ var _panel: PanelContainer
 var _narration: ColorRect
 var _narration_text: Label
 var _bars: Array[ColorRect] = []
+var _line_token := 0
+## Seconds to wait after a spoken line before moving on by itself.
+const AUTO_ADVANCE_PAUSE := 0.6
 
 
 ## Starts a cutscene under `host` (usually the level root).
@@ -79,7 +82,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _typing and _typing.is_running():
 			_typing.kill()
 			_text.visible_ratio = 1.0
+			_narration_text.visible_ratio = 1.0
 		elif not _waiting:
+			Voice.stop()
 			advance()
 
 
@@ -140,8 +145,17 @@ func _show_line(speaker: String, text: String) -> void:
 	label.visible_ratio = 0.0
 	if _typing:
 		_typing.kill()
+	_line_token += 1
+	var spoken := Voice.say(speaker, text)
+	var type_time := maxf(text.length() / CHARS_PER_SECOND, 0.2)
+	if spoken > 0.0:
+		type_time = minf(type_time, spoken * 0.8)  # the text keeps pace with the voice
+		var token := _line_token
+		get_tree().create_timer(spoken + AUTO_ADVANCE_PAUSE, true, false, true).timeout.connect(func() -> void:
+			if token == _line_token and not _done and not _waiting:
+				advance())
 	_typing = create_tween()
-	_typing.tween_property(label, "visible_ratio", 1.0, maxf(text.length() / CHARS_PER_SECOND, 0.2))
+	_typing.tween_property(label, "visible_ratio", 1.0, type_time)
 
 
 func _move_camera(shot: Array, smooth: bool) -> void:
@@ -166,6 +180,8 @@ func _finish() -> void:
 	if _done:
 		return
 	_done = true
+	_line_token += 1
+	Voice.stop()
 	if _typing:
 		_typing.kill()
 	if _cam:

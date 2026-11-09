@@ -56,17 +56,23 @@ Play from the Journey menu to get the story:
 
 Cutscenes can be skipped. Missions resume from where you left off.
 
-### Music
-Adaptive music, generated in code by `tools/gen_music.py` (placeholder until the real score):
-| Scene | Raga | What you hear |
-|---|---|---|
-| Journey menu | Yaman | tanpura and a slow bansuri alaap |
-| Ayodhya trials | Yaman | flute and santoor; tabla teental comes in when a trial starts |
-| Silent Forest | Malkauns | low drone, breathy flute and wind; mridangam and dhol in ambushes |
-| Tataka | Malkauns | barrel drums and dhol; an eerie choir joins in her maya phase |
-| The bloom | Bhupali | choir, santoor and flute |
+### Music and voices
+Cinematic music by Kevin MacLeod (CC BY 4.0), switched by the action:
 
-Music dips under dialogue. The pause menu has **Music** and **Sound** volume sliders.
+| Scene | Exploring | In combat |
+|---|---|---|
+| Journey menu | Tempting Secrets | |
+| Ayodhya | Dhaka (sarod, drone) | Vadodora (sitar, bansuri, percussion) |
+| Silent Forest | Hidden Wonders (santur, tanpura) | All This (orchestral action) |
+| Tataka | Final Battle of the Dark Wizards; Hitman in her maya phase | |
+| The bloom | Tempting Secrets | |
+
+- **Stingers:** cinematic hits when Tataka appears and at the astra blessing.
+- **Voices:** every line is spoken, each character with their own voice; the brothers have
+  Indian-English voices. These are placeholder neural voices from `tools/gen_voices.py`.
+- **Cutscenes:** they move on when a line ends, and a tap skips ahead.
+- **Pause menu:** Music, Sound and Voices sliders.
+- **Credits:** listed on the Journey menu's Credits screen.
 
 ### Agneyastra (a glimpse in the prologue)
 Tap **Agni** to set the bow aflame, then loose a drawn arrow (at least 60% draw). It explodes in

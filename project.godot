@@ -20,6 +20,7 @@ SaveSystem="*res://autoload/save_system.gd"
 TimeFX="*res://autoload/time_fx.gd"
 Settings="*res://autoload/settings.gd"
 Music="*res://autoload/music.gd"
+Voice="*res://autoload/voice.gd"
 
 [display]
 

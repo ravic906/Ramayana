@@ -103,6 +103,7 @@ func _start_boss() -> void:
 		return
 	boss_started = true
 	Music.play("tataka")
+	Music.stinger("sting_reveal")
 	PartFlow.advance_to(4)
 	rama.spawn_point = rama.global_position
 	var gate := env.get_node("GroveGate") as StaticBody3D
@@ -148,6 +149,7 @@ func _on_story_action(action_name: StringName) -> void:
 			Music.play("bloom")
 			bloom()
 		&"astra_ceremony":
+			Music.stinger("sting_blessing")
 			_astra_ceremony()
 		&"grant_astras":
 			grant_astras()

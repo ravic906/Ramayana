@@ -1,0 +1,212 @@
+{
+ "d967ba7741f46dd2644b7dde576d2fa4": {
+  "speaker": "Narration",
+  "text": "They walked into lands where no bird sang: the lands of Malada and Karusha.",
+  "source": "forest_intro",
+  "seconds": 4.66
+ },
+ "f5433bdd0b4e62ed538275a1cd33346c": {
+  "speaker": "Vishvamitra",
+  "text": "No bird sings here. Listen to what silence costs a land.",
+  "source": "forest_intro",
+  "seconds": 4.48
+ },
+ "510165d94e7b857d0e01fece449c2c1a": {
+  "speaker": "Vishvamitra",
+  "text": "Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.",
+  "source": "forest_intro",
+  "seconds": 8.81
+ },
+ "07f44fcf5971e5d66321a1fbbccd3e3c": {
+  "speaker": "Lakshmana",
+  "text": "Stay close, brother. The trees themselves are watching.",
+  "source": "forest_intro",
+  "seconds": 3.41
+ },
+ "dadb93a8a103977943ad42470cbbe570": {
+  "speaker": "Narration",
+  "text": "Golden Ayodhya, on the banks of the Sarayu. The princes trained beneath their guru's eye...",
+  "source": "m1_intro",
+  "seconds": 5.36
+ },
+ "33ceb37b4abb6ffd2221a0a1b6af8c96": {
+  "speaker": "Vasishtha",
+  "text": "An arrow obeys the hand. The hand must obey something higher.",
+  "source": "m1_intro",
+  "seconds": 4.32
+ },
+ "ab014a2842264d319b522351da5a46eb": {
+  "speaker": "Lakshmana",
+  "text": "Brother, leave one for me. Just one.",
+  "source": "m1_intro",
+  "seconds": 2.28
+ },
+ "e217177bafa233251f0f9fb1417de09e": {
+  "speaker": "Vasishtha",
+  "text": "Then let us see what you have learned. These are only shadows of my making. Face them as if they were not.",
+  "source": "m1_intro",
+  "seconds": 6.14
+ },
+ "d728966b1fc98f810076ba29fc9396f0": {
+  "speaker": "Narration",
+  "text": "Then came a sage to the palace gate, and with him the first step of a long road.",
+  "source": "sage_at_gate",
+  "seconds": 5.12
+ },
+ "d905ab50e7f9e0bc7ad5ae835d90e93c": {
+  "speaker": "Vishvamitra",
+  "text": "King of Ayodhya. Rakshasas defile my sacrifice in the forest. I ask for Rama.",
+  "source": "sage_at_gate",
+  "seconds": 6.26
+ },
+ "54bcf3df07d5c4d699fad729452392e0": {
+  "speaker": "Dasharatha",
+  "text": "He is not yet sixteen. Take my army, take me. Not my son.",
+  "source": "sage_at_gate",
+  "seconds": 5.19
+ },
+ "036addc5b8c67cd596022e442cd20751": {
+  "speaker": "Vishvamitra",
+  "text": "A king who promises and then bargains has forgotten whose son he is.",
+  "source": "sage_at_gate",
+  "seconds": 4.86
+ },
+ "d95180820e4d04d863ca2b688b44be0d": {
+  "speaker": "Vasishtha",
+  "text": "Let him go, my king. With this sage, no harm can reach him.",
+  "source": "sage_at_gate",
+  "seconds": 5.7
+ },
+ "1d06dc37c37913085e1d1994da65eb9f": {
+  "speaker": "Rama",
+  "text": "Father, I will return. Bless the bow, not only the boy.",
+  "source": "sage_at_gate",
+  "seconds": 4.44
+ },
+ "5a702c5ef1aa0fb27b1df8e0e4ea0570": {
+  "speaker": "Lakshmana",
+  "text": "Where my brother walks, I walk.",
+  "source": "sage_at_gate",
+  "seconds": 2.07
+ },
+ "d7ca2b1256aa5ceb3f1d2cbfe8a3c687": {
+  "speaker": "Dasharatha",
+  "text": "Go then, both of you. And come back to me.",
+  "source": "sage_at_gate",
+  "seconds": 3.64
+ },
+ "c7475caa263c4fb930f7b001e5274e79": {
+  "speaker": "Lakshmana",
+  "text": "Brother... look. The forest is breathing again.",
+  "source": "tataka_bloom",
+  "seconds": 3.67
+ },
+ "abc00805449c6cb4811171b8ca98fade": {
+  "speaker": "Vishvamitra",
+  "text": "The curse is lifted from this land. You did not strike in anger, Rama. That is why you may now receive what I carry.",
+  "source": "tataka_bloom",
+  "seconds": 7.48
+ },
+ "ae28355b138a837c021194caf16a869b": {
+  "speaker": "The Astras",
+  "text": "Command us, and we will come.",
+  "source": "tataka_bloom",
+  "seconds": 4.9
+ },
+ "9446a678af0438d9014f8570e14ce3bf": {
+  "speaker": "Vishvamitra",
+  "text": "Agneyastra, the fire that burns only what must burn. Varunastra, the water that cleanses. Vayavyastra, the wind that clears the field.",
+  "source": "tataka_bloom",
+  "seconds": 9.3
+ },
+ "b81b93f0e7cf3d5f5b3f94ed9cdbd4ee": {
+  "speaker": "Rama",
+  "text": "I will call on them only for dharma, Guru-dev.",
+  "source": "tataka_bloom",
+  "seconds": 3.33
+ },
+ "96f2bed07a1120da3d59b1e0bf9c5b76": {
+  "speaker": "Narration",
+  "text": "And so the princes walked on toward Siddhashrama, where six nights of fire awaited them...",
+  "source": "tataka_bloom",
+  "seconds": 5.28
+ },
+ "cb163cf284997ff035a3f840313996a0": {
+  "speaker": "Tataka",
+  "text": "Princes of men, in my forest? I will grind your bones to dust as I did the others.",
+  "source": "tataka_intro",
+  "seconds": 8.08
+ },
+ "fb0d0b2ca9de0607387c64c135993d22": {
+  "speaker": "Rama",
+  "text": "Guru-dev, she is a woman. Is there no other way?",
+  "source": "tataka_intro",
+  "seconds": 3.09
+ },
+ "674a0cb46a1912d0f09a625cdc40056a": {
+  "speaker": "Vishvamitra",
+  "text": "Ask instead: how many have no other way while she lives? A protector's duty does not look away.",
+  "source": "tataka_intro",
+  "seconds": 6.5
+ },
+ "364c4d3de314570121cee028d708169a": {
+  "speaker": "Rama",
+  "text": "Then I will try to turn her back first. If she will not turn, I will not look away.",
+  "source": "tataka_intro",
+  "seconds": 4.65
+ },
+ "c4af81c55fd5dc513e8d179f89d455e1": {
+  "speaker": "Rama",
+  "text": "It burned without touching me, Guru-ji. Is that what power is?",
+  "source": "trials_complete",
+  "seconds": 4.12
+ },
+ "62edc5d65d9db342d806d903264bbf55": {
+  "speaker": "Vasishtha",
+  "text": "That is what restraint is. Remember the feeling.",
+  "source": "trials_complete",
+  "seconds": 3.75
+ },
+ "5e5fe17d54c19dd7b48621e7f47dcffd": {
+  "speaker": "Herald",
+  "text": "My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line.",
+  "source": "trials_complete",
+  "seconds": 5.95
+ },
+ "d3855805e100361dff7c18f7f975c710": {
+  "speaker": "Rama",
+  "text": "Go. Do not return.",
+  "source": "forest",
+  "seconds": 1.96
+ },
+ "520967ff6f93f2a97b50e4424f5e8ac8": {
+  "speaker": "Lakshmana",
+  "text": "The forest grows quiet again. Too quiet.",
+  "source": "forest",
+  "seconds": 2.61
+ },
+ "a8254db3b9ca5787dc5dd5cde6707e7f": {
+  "speaker": "Lakshmana",
+  "text": "She's down, brother! Now!",
+  "source": "forest",
+  "seconds": 2.22
+ },
+ "a09bc6d221e2ea9736bb30fd9e042bd9": {
+  "speaker": "Lakshmana",
+  "text": "Rakshasas, brother! Real ones, this time.",
+  "source": "forest",
+  "seconds": 3.26
+ },
+ "68643ce8761a73c7cbda7380439310fc": {
+  "speaker": "Lakshmana",
+  "text": "Mercy is also dharma, brother.",
+  "source": "forest",
+  "seconds": 2.2
+ },
+ "93b3af9b48ebb5c24870cb9d65f84085": {
+  "speaker": "Lakshmana",
+  "text": "He had already turned to flee...",
+  "source": "forest",
+  "seconds": 1.87
+ }
+}

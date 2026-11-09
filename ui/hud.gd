@@ -196,8 +196,8 @@ func _build_pause() -> void:
 	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_pause_panel.offset_left = -260
 	_pause_panel.offset_right = 260
-	_pause_panel.offset_top = -300
-	_pause_panel.offset_bottom = 300
+	_pause_panel.offset_top = -340
+	_pause_panel.offset_bottom = 340
 	_pause_panel.visible = false
 	$Root.add_child(_pause_panel)
 	var box := VBoxContainer.new()
@@ -223,6 +223,7 @@ func _build_pause() -> void:
 		box.add_child(b)
 	box.add_child(_volume_row("Music", Settings.music_volume, Settings.set_music_volume))
 	box.add_child(_volume_row("Sound", Settings.sfx_volume, Settings.set_sfx_volume))
+	box.add_child(_volume_row("Voices", Settings.voice_volume, Settings.set_voice_volume))
 
 
 func _volume_row(label: String, value: float, setter: Callable) -> HBoxContainer:
@@ -315,6 +316,9 @@ func _build_subtitle() -> void:
 
 
 func show_subtitle(speaker: String, text: String, seconds := 3.5) -> void:
+	# Spoken when a voice line exists; a line already playing is not cut off.
+	var spoken := Voice.say(speaker, text, false)
+	seconds = maxf(seconds, spoken + 0.4)
 	_subtitle_speaker.text = speaker
 	_subtitle_speaker.add_theme_color_override(&"font_color", Cutscene.SPEAKER_COLORS.get(speaker, Color.WHITE))
 	_subtitle_text.text = text

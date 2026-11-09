@@ -167,6 +167,16 @@ func _build() -> void:
 		Settings.toggle_visual_style()
 		look.text = "Look: %s" % Settings.style_name())
 	bottom.add_child(look)
+	var credits := Button.new()
+	credits.name = "CreditsButton"
+	credits.text = "Credits"
+	credits.custom_minimum_size = Vector2(0, 72)
+	credits.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		credits.add_theme_stylebox_override(s, PartCard._style(Color(0.25, 0.18, 0.12), PartCard.GOLD, 4, 16))
+	credits.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	credits.pressed.connect(show_credits)
+	bottom.add_child(credits)
 	_message = _title("", 24, Color(1, 0.97, 0.9))
 	_message.modulate.a = 0.0
 	root.add_child(_message)
@@ -191,3 +201,55 @@ class SunEmblem extends Control:
 			var r := 150.0 if i % 2 == 0 else 120.0
 			draw_line(c + Vector2.from_angle(a) * 95.0, c + Vector2.from_angle(a) * r, Color(1, 0.8, 0.35, 0.35), 6.0, true)
 		draw_circle(c, 88.0, Color(1, 0.78, 0.35, 0.3))
+
+
+## Music, voice and art credits (the CC-BY music licence requires them).
+static func credits_text() -> String:
+	var lines := ["MUSIC"]
+	var data = JSON.parse_string(FileAccess.get_file_as_string("res://assets/audio/music/credits.json"))
+	var seen := {}
+	if data is Dictionary:
+		for cue in data:
+			var c: Dictionary = data[cue]
+			if seen.has(c["title"]):
+				continue
+			seen[c["title"]] = true
+			lines.append("\"%s\" %s\nLicensed under %s\n%s" % [c["title"], c["author"], c["license"], c["license_url"]])
+	lines.append("\nVOICES\nPlaceholder voices generated with Piper (rhasspy/piper), English VCTK voice\n" +
+		"trained on the CSTR VCTK Corpus, University of Edinburgh (CC BY 4.0).")
+	lines.append("\nCHARACTERS AND NATURE\nQuaternius (CC0): Universal Base Characters, Animation Library, Stylized Nature MegaKit")
+	lines.append("\nTEXTURES AND SKY\nPoly Haven (CC0)")
+	lines.append("\nSOUND EFFECTS\nSynthesised for this game")
+	return "\n\n".join(lines)
+
+
+func show_credits() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "Credits"
+	layer.layer = 50
+	add_child(layer)
+	var bg := ColorRect.new()
+	bg.color = Color(0.08, 0.05, 0.04, 0.96)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(bg)
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.offset_left = 120
+	scroll.offset_right = -120
+	scroll.offset_top = 60
+	scroll.offset_bottom = -140
+	layer.add_child(scroll)
+	var text := PartCard._label(credits_text(), 26, Color(1, 0.93, 0.8), false)
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	text.custom_minimum_size = Vector2(1500, 0)
+	scroll.add_child(text)
+	var close := Button.new()
+	close.text = "Close"
+	close.add_theme_font_size_override(&"font_size", 30)
+	close.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	close.offset_left = -130
+	close.offset_right = 130
+	close.offset_top = -120
+	close.offset_bottom = -36
+	close.pressed.connect(layer.queue_free)
+	layer.add_child(close)

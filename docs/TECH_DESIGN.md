@@ -83,19 +83,42 @@ tests/           Headless test runner + unit tests
   Prototype sounds are synthesised by `tools/gen_sfx.py`.
 
 ### Music
-- **Generation:** `tools/gen_music.py` writes `assets/audio/music/<track>_<stem>.ogg`.
-  - Every stem is exactly 48 s and loop-exact: decays past the end wrap onto the start.
-  - Stems of one track share tempo and key, so they can be layered.
-  - Loudness is normalized on the band phone speakers reproduce (above ~200 Hz), with sub-bass
-    cut, so every track sounds equally loud on a phone.
-  - About 3.4 MB in total (Vorbis q4, 32 kHz stereo).
-- **Playback:** `Music` starts all stems of a track together and blends them by volume:
-  - `set_intensity(0..1)` raises "combat" over "explore" (explore steps back 4 dB);
-  - `set_layer("maya", on)` adds a layer;
-  - `duck(true)` dips 8 dB under cutscenes (`StoryLevel.cutscene`).
-- **Hooks:** `WaveSpawner` wave signals drive intensity. The forest switches to "tataka" in
-  `_start_boss`, falls silent when she falls, and plays "bloom" with the bloom action.
-- **Buses:** Master ← Music, SFX. Any other `AudioStreamPlayer*` added on Master is moved to SFX.
+- **Cues:** `tools/fetch_music.py` downloads Kevin MacLeod tracks (CC BY 4.0) and cuts each cue
+  to a seamless loop:
+  - it searches the loop start and length where the music after the end best matches the start
+    (log band-energy similarity);
+  - it aligns the seam to the sample by cross-correlation and crossfades (1.2 s, or 2.5 s for
+    weak matches);
+  - it normalizes loudness on the band phone speakers reproduce (above ~200 Hz).
+  - Output: `assets/audio/music/<cue>.ogg` plus `credits.json`, about 7 MB in total.
+- **Playback (`Music`):** each scene track maps to cues (`TRACKS`).
+  - `set_intensity()` crossfades explore ↔ combat with hysteresis: on at 0.5, off at 0.2. In
+    0.6 s, out 3 s.
+  - `set_layer("maya")` swaps Tataka's cue.
+  - `stinger()` plays a one-shot and ducks the music 9 dB.
+  - `duck()` (cutscenes, -6 dB) and `voice_duck()` (while a line is spoken, -7 dB) add up.
+- **Hooks:** `WaveSpawner` wave signals drive intensity.
+  - The forest switches to "tataka" in `_start_boss`, with the reveal stinger.
+  - It falls silent when she falls, plays the blessing stinger at the astra ceremony, and plays
+    "bloom" with the bloom action.
+- **Buses:** Master ← Music, SFX, Voice. Any other `AudioStreamPlayer*` added on Master is moved
+  to SFX.
+
+### Voices
+- **Generation:** `tools/gen_voices.py` (Piper, `en_GB-vctk-medium`) voices:
+  - every line in `data/dialogue/**`;
+  - every `show_subtitle("Speaker", "...")` and `lakshmana.say("...")` call-out in code.
+- **Cast:** `CAST` sets each character's VCTK speaker, speed, pitch and size, and reverb. Tataka
+  gets a growl and distortion, the narrators unison, and the astras a choir.
+- **Pronunciation:** `PRONOUNCE` respells Sanskrit names for the voice only.
+- **Files:** `assets/audio/voice/<md5("Speaker|text")>.ogg`. `Voice.key()` computes the same
+  key, so any subtitle is spoken without extra data. Edited lines need a regenerate; a test
+  catches missing lines.
+- **Playback (`Voice`):**
+  - `say(speaker, text, interrupt)` returns the line's length and ducks the music;
+  - `Cutscene` speaks each line, paces the typewriter to it, and auto-advances 0.6 s after it
+    ends (a tap stops it and advances);
+  - `HUD.show_subtitle` speaks call-outs without interrupting a line already playing.
 
 ### Enemies and astras
 - **`Rakshasa`** (`characters/enemies/rakshasa/`) is a CharacterBody3D driven by the shared

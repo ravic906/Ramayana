@@ -4,7 +4,7 @@ extends Node
 ##                 sky) or Stylised (toon, the original Art Bible look).
 ##   story_mode:   gentler boss damage for younger players.
 ##   low_quality:  turns off ambient life and real-time shadows.
-##   music_volume / sfx_volume: 0..1, applied to the Music and SFX buses.
+##   music_volume / sfx_volume / voice_volume: 0..1, applied to their buses.
 ## Command-line overrides (after "--"): --low-quality, --realistic, --stylised.
 
 signal style_changed(style: int)
@@ -19,6 +19,7 @@ var low_quality := false
 var story_mode := false
 var music_volume := 0.8
 var sfx_volume := 1.0
+var voice_volume := 1.0
 var config_path := DEFAULT_PATH
 
 
@@ -61,6 +62,7 @@ func save_settings() -> Error:
 	cfg.set_value("gameplay", "story_mode", story_mode)
 	cfg.set_value("audio", "music_volume", music_volume)
 	cfg.set_value("audio", "sfx_volume", sfx_volume)
+	cfg.set_value("audio", "voice_volume", voice_volume)
 	return cfg.save(config_path)
 
 
@@ -73,12 +75,13 @@ func load_settings() -> void:
 	story_mode = bool(cfg.get_value("gameplay", "story_mode", false))
 	music_volume = clampf(float(cfg.get_value("audio", "music_volume", 0.8)), 0.0, 1.0)
 	sfx_volume = clampf(float(cfg.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)
+	voice_volume = clampf(float(cfg.get_value("audio", "voice_volume", 1.0)), 0.0, 1.0)
 	apply_audio()
 
 
-## Creates the Music and SFX buses (both feed Master) if they don't exist.
+## Creates the Music, SFX and Voice buses (all feed Master) if they don't exist.
 func ensure_audio_buses() -> void:
-	for bus_name in ["Music", "SFX"]:
+	for bus_name in ["Music", "SFX", "Voice"]:
 		if AudioServer.get_bus_index(bus_name) == -1:
 			AudioServer.add_bus()
 			var i := AudioServer.bus_count - 1
@@ -99,8 +102,14 @@ func set_sfx_volume(v: float) -> void:
 	save_settings()
 
 
+func set_voice_volume(v: float) -> void:
+	voice_volume = clampf(v, 0.0, 1.0)
+	apply_audio()
+	save_settings()
+
+
 func apply_audio() -> void:
-	for pair in [["Music", music_volume], ["SFX", sfx_volume]]:
+	for pair in [["Music", music_volume], ["SFX", sfx_volume], ["Voice", voice_volume]]:
 		var i := AudioServer.get_bus_index(pair[0])
 		if i != -1:
 			AudioServer.set_bus_volume_db(i, linear_to_db(maxf(pair[1], 0.0001)))
