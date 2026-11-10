@@ -78,6 +78,7 @@ func _process(delta: float) -> void:
 	mat.set_shader_parameter(&"glow", 1.0 if _perfect else 0.0)
 	mat.set_shader_parameter(&"hurt", _hurt)
 	mat.set_shader_parameter(&"fire", _fire)
+	_refresh_lookups(real_delta)
 	_update_agni(real_delta)
 	_update_command()
 	_update_interact()
@@ -123,8 +124,8 @@ func _update_interact() -> void:
 	_interact_target = null
 	if rama and not rama.controls_locked and not rama.health.is_dead():
 		var best_d := INF
-		for n in get_tree().get_nodes_in_group(&"interactables"):
-			var it := n as Interactable
+		for n in _interactables:
+			var it := n as Interactable if is_instance_valid(n) else null
 			if it == null or not it.enabled or not it.is_visible_in_tree():
 				continue
 			var d := it.global_position.distance_to(rama.global_position)
@@ -157,26 +158,97 @@ func _update_interact() -> void:
 		_interact_target.interact()
 
 
-## The active quest's objective, small along the top (empty hides it).
+var _objective_label: Label
+var compass: Compass
+
+
+func _build_compass() -> void:
+	compass = Compass.new()
+	compass.name = "Compass"
+	compass.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	compass.offset_left = -420  # clear of the health bar and the Map/Log buttons
+	compass.offset_right = 420
+	compass.offset_top = 6
+	compass.offset_bottom = 82
+	$Root.add_child(compass)
+	_objective_label = _outlined_label("", 26, Color(1, 0.88, 0.55))
+	_objective_label.name = "ObjectiveLabel"
+	_objective_label.offset_top = 84
+	_objective_label.offset_bottom = 120
+	$Root.add_child(_objective_label)
+	_tracker = _outlined_label("", 22, Color(0.8, 0.88, 1.0))
+	_tracker.name = "QuestTracker"
+	_tracker.offset_top = 118
+	_tracker.offset_bottom = 150
+	$Root.add_child(_tracker)
+
+
+func _outlined_label(text: String, size: int, color: Color) -> Label:
+	var l := PartCard._label(text, size, color, true)
+	l.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	l.offset_left = -700
+	l.offset_right = 700
+	l.add_theme_color_override(&"font_outline_color", Color(0.08, 0.04, 0.02))
+	l.add_theme_constant_override(&"outline_size", 8)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+
+## The story objective line under the compass.
+func set_objective(text: String) -> void:
+	if _objective_label == null:
+		_build_compass()
+	_objective_label.text = text
+	_objective_label.visible = text != ""
+
+
+## A second, smaller line (the tracked side quest, or a timer).
 func set_tracker(text: String) -> void:
 	if _tracker == null:
-		_tracker = PartCard._label("", 26, Color(1, 0.9, 0.65), true)
-		_tracker.name = "QuestTracker"
-		_tracker.set_anchors_preset(Control.PRESET_CENTER_TOP)
-		_tracker.offset_left = -600
-		_tracker.offset_right = 600
-		_tracker.offset_top = 22
-		_tracker.offset_bottom = 70
-		_tracker.add_theme_color_override(&"font_outline_color", Color(0.1, 0.05, 0.03))
-		_tracker.add_theme_constant_override(&"outline_size", 8)
-		$Root.add_child(_tracker)
+		_build_compass()
 	_tracker.text = text
 	_tracker.visible = text != ""
 
 
+func _update_side_tracker() -> void:
+	if _tracker == null or _tracker_override:
+		return
+	var q := Quests.tracked
+	# Only where the quest can be pursued (its markers are in this level).
+	var here := false
+	if q != &"" and Quests.is_active(q):
+		for n in get_tree().get_nodes_in_group(&"nav_markers"):
+			if (n as NavMarker) and (n as NavMarker).quest_id == q:
+				here = true
+				break
+	_tracker.text = Quests.tracker_text(q) if here else ""
+	_tracker.visible = _tracker.text != ""
+
+
+var _tracker_override := false
+
+
 ## The Command button toggles Lakshmana between Attack and Guard.
+var _lookup_left := 0.0
+var _companion: Lakshmana
+var _interactables: Array[Node] = []
+
+
+## Group lookups are refreshed a few times a second, not every frame.
+func _refresh_lookups(delta: float) -> void:
+	_lookup_left -= delta
+	if _lookup_left > 0.0:
+		return
+	_lookup_left = 0.15
+	_companion = get_tree().get_first_node_in_group(&"companions") as Lakshmana
+	_interactables = get_tree().get_nodes_in_group(&"interactables")
+	if compass == null and _player is Rama:
+		_build_compass()
+	_update_side_tracker()
+
+
 func _update_command() -> void:
-	var l := get_tree().get_first_node_in_group(&"companions") as Lakshmana
+	var l := _companion if is_instance_valid(_companion) else null
 	var show := l != null and l.command != Lakshmana.Command.FOLLOW and _player is Rama \
 		and not (_player as Rama).controls_locked
 	if _command_button == null:
@@ -283,6 +355,36 @@ func _build_pause() -> void:
 	button.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.2, 0.12, 0.08, 0.6), PartCard.GOLD, 3, 45))
 	button.pressed.connect(set_paused.bind(true))
 	$Root.add_child(button)
+	var log_button := Button.new()
+	log_button.name = "LogButton"
+	log_button.text = "Log"
+	log_button.add_theme_font_size_override(&"font_size", 26)
+	log_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	log_button.offset_left = -270
+	log_button.offset_top = 30
+	log_button.offset_right = -150
+	log_button.offset_bottom = 120
+	log_button.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.2, 0.12, 0.08, 0.6), PartCard.GOLD, 3, 45))
+	log_button.pressed.connect(func() -> void:
+		get_tree().paused = true
+		var j := JournalScreen.open(self)
+		j.tree_exited.connect(func() -> void:
+			if is_inside_tree() and not _pause_panel.visible:
+				get_tree().paused = false))
+	$Root.add_child(log_button)
+	var map_button := Button.new()
+	map_button.name = "MapButton"
+	map_button.text = "Map"
+	map_button.add_theme_font_size_override(&"font_size", 26)
+	map_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	map_button.offset_left = -400
+	map_button.offset_top = 30
+	map_button.offset_right = -280
+	map_button.offset_bottom = 120
+	map_button.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.2, 0.12, 0.08, 0.6), PartCard.GOLD, 3, 45))
+	map_button.pressed.connect(open_map)
+	map_button.visible = MapResource.for_level(_scene_path()) != null
+	$Root.add_child(map_button)
 
 	_pause_panel = PanelContainer.new()
 	_pause_panel.name = "PausePanel"
@@ -290,8 +392,8 @@ func _build_pause() -> void:
 	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_pause_panel.offset_left = -260
 	_pause_panel.offset_right = 260
-	_pause_panel.offset_top = -440
-	_pause_panel.offset_bottom = 440
+	_pause_panel.offset_top = -500
+	_pause_panel.offset_bottom = 500
 	_pause_panel.visible = false
 	$Root.add_child(_pause_panel)
 	var box := VBoxContainer.new()
@@ -302,14 +404,19 @@ func _build_pause() -> void:
 	box.add_child(PartCard._label("Part %d: %s" % [part.number, part.title] if part else "Paused", 30, PartCard.INK, true))
 	var look := ["Look: %s" % Settings.style_name(), func() -> void: pass]
 	var mode := ["Mode: %s" % Settings.mode_name(), func() -> void: pass]
-	for entry in [["Resume", set_paused.bind(false)], ["Skills", func() -> void: SkillsScreen.open(self)], ["Journal", func() -> void: JournalScreen.open(self)], mode, look, ["Back to the Journey", back_to_journey]]:
+	var quality := ["Quality: %s" % Settings.quality_name(), func() -> void: pass]
+	for entry in [["Resume", set_paused.bind(false)], ["Skills", func() -> void: SkillsScreen.open(self)], ["Log", func() -> void: JournalScreen.open(self)], ["Map", open_map], mode, quality, look, ["Back to the Journey", back_to_journey]]:
 		var b := Button.new()
 		b.text = entry[0]
 		b.custom_minimum_size = Vector2(0, 80)
 		b.add_theme_font_size_override(&"font_size", 30)
 		b.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.85, 0.42, 0.1), PartCard.GOLD, 3, 14))
 		b.add_theme_color_override(&"font_color", Color(1, 0.97, 0.9))
-		if entry == mode:
+		if entry == quality:
+			b.pressed.connect(func() -> void:
+				Settings.cycle_quality()
+				b.text = "Quality: %s" % Settings.quality_name())
+		elif entry == mode:
 			b.pressed.connect(func() -> void:
 				Settings.set_story_mode(not Settings.story_mode)
 				b.text = "Mode: %s" % Settings.mode_name())
@@ -344,6 +451,27 @@ func _volume_row(label: String, value: float, setter: Callable) -> HBoxContainer
 	return row
 
 
+func _scene_path() -> String:
+	# The level this HUD belongs to (its parent), else the current scene.
+	var level := get_parent()
+	if level and level.scene_file_path != "":
+		return level.scene_file_path
+	var s := get_tree().current_scene if is_inside_tree() else null
+	return s.scene_file_path if s else ""
+
+
+## The parchment map of this level (paused while open).
+func open_map() -> void:
+	get_tree().paused = true
+	var m := MapScreen.open(self, _scene_path())
+	if m == null:
+		get_tree().paused = false
+		return
+	m.tree_exited.connect(func() -> void:
+		if is_inside_tree() and not _pause_panel.visible:
+			get_tree().paused = false)
+
+
 func set_paused(paused: bool) -> void:
 	get_tree().paused = paused
 	_pause_panel.visible = paused
@@ -372,8 +500,8 @@ func _build_subtitle() -> void:
 	_subtitle = PanelContainer.new()
 	_subtitle.add_theme_stylebox_override(&"panel", PartCard._style(Color(0.08, 0.05, 0.04, 0.7), PartCard.GOLD, 2, 14))
 	_subtitle.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	_subtitle.offset_left = -520
-	_subtitle.offset_right = 520
+	_subtitle.offset_left = -430  # clear of the joystick and the action buttons on 4:3 too
+	_subtitle.offset_right = 430
 	_subtitle.offset_top = -250
 	_subtitle.offset_bottom = -150
 	_subtitle.modulate.a = 0.0
@@ -503,6 +631,11 @@ func _make_bar(color: Color, height: float) -> ProgressBar:
 func show_boss(boss_name: String, health: Health) -> void:
 	_boss_health = health
 	_boss_box.visible = health != null
+	# The boss bar takes the top of the screen; the compass steps aside.
+	for n in ["Compass", "ObjectiveLabel", "QuestTracker"]:
+		var c := $Root.get_node_or_null(n) as CanvasItem
+		if c:
+			c.visible = health == null and (n == "Compass" or (c as Label).text != "")
 	if health:
 		_boss_name.text = boss_name
 		_boss_bar.max_value = health.max_health
@@ -514,7 +647,7 @@ func show_boss(boss_name: String, health: Health) -> void:
 
 ## Hides gameplay controls during cutscenes.
 func set_cinematic(on: bool) -> void:
-	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel", "ObjectiveBox", "CommandButton", "InteractButton", "QuestTracker"]:
+	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel", "ObjectiveBox", "CommandButton", "InteractButton", "QuestTracker", "Compass", "ObjectiveLabel", "LogButton", "MapButton"]:
 		var c := $Root.get_node_or_null(n) as CanvasItem
 		if c:
 			c.visible = not on

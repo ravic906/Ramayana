@@ -1,0 +1,41 @@
+# Quality bar
+
+This is a serious, devotional retelling. **Every aspect must be top-notch.** Nothing light,
+playful or dance-like: not in the music, the voices, the text, or the effects. Anything subjective
+that tests can't verify (music, voices, pronunciation, the look of a face) goes in front of the
+owner before it ships.
+
+## Standing rules
+- **Music:**
+  - Orchestral or choral, cinematic, solemn.
+  - `tools/fetch_music.py` refuses any track whose catalogue mood includes Grooving, Bouncy,
+    Humorous, Bright, Quirky, Silly or Funky.
+  - Every cue is chosen by the owner from an audition reel.
+- **Voices:** every Sanskrit name is checked in a pronunciation reel and fixed in
+  `gen_voices.py`'s `PRONOUNCE`.
+- **Rama** is calm, dignified, never the source of humour; divine figures are never trivialised
+  (`docs/STORY.md`).
+- **Typography:**
+  - Tiro Devanagari Sanskrit for titles; Noto Sans for everything else (project default font).
+  - No glyph-dependent symbols; stars and swatches are drawn.
+- **Performance and heat:**
+  - 60 fps cap (30 in menus, cutscenes and Battery saver).
+  - FSR-upscaled 3D at 0.6/0.75/0.85, no MSAA.
+  - No per-frame group scans.
+- **Layout:** the HUD is checked at 20:9 and 4:3. Touch targets are at least 64 px; nothing
+  overlaps.
+
+## Audit log
+
+| Area | Finding | Status |
+|---|---|---|
+| Heat | No fps cap; native-resolution 3D with MSAA; per-frame group scans | Fixed: caps, FSR, presets, cached lookups (CPU in the siege 2.15 → 1.85 ms/frame) |
+| Music | *Vadodora* (trials fights) and *Hidden Wonders* (forest) are dance/groove pieces; *The Curtain Rises* is "Bright" | Removed; interim *Strength of the Titans*, *Oppressive Gloom*, *Our Story Begins*; owner auditions all scenes |
+| Text | Rama's quip on the fifth night ("fell it like one") | Rewritten: "Size is not strength, brother. Stand with me." |
+| Fonts | Engine default font everywhere | Tiro Devanagari Sanskrit (titles) + Noto Sans (body), OFL |
+| Navigation | No mission log, objectives, map or compass | Log (Story / Side quests / Palm leaves), objectives per level, compass, beacon, parchment map |
+| Layout | Subtitles overlapped Dodge on 4:3 | Narrowed |
+| Voices | Pronunciation unverified | Reel sent to the owner; awaiting corrections |
+| Faces | No facial expressions; dialogue lacks close-ups | **Next:** expression-capable face rig, close-up cutscene framing, Rama's look refined |
+| Dialogue | Scenes are brief | **Next:** richer, longer scenes with staging (owner request) |
+| Score | Licensed placeholders | A commissioned score (Indian classical + orchestra + choir) is the goal for launch |

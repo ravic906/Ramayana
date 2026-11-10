@@ -269,6 +269,35 @@ through Play Games Services and iCloud later.
   - Chosen on first Play (`JourneyMenu.choose_mode`); toggles on the Journey menu and in the
     pause menu.
 
+### Navigation, the Log and thermals
+- **Objectives:** `StoryLevel.set_objective(text, target, beacon)` sets the objective line,
+  moves a MAIN `NavMarker` onto the target (it follows moving targets) and points a
+  `WaypointBeacon` at it.
+- **Markers:** `NavMarker` (MAIN, SIDE, PICKUP, EXIT, plus `quest_id`) in the "nav_markers"
+  group. PICKUPs show only when near (25 m) or when their quest is tracked (`Quests.tracked`,
+  saved in flags).
+- **HUD:**
+  - `Compass` (bearing maths in `Compass.bar_position`);
+  - distances for the objective and the nearest tracked marker only;
+  - the side-quest tracker shows only in levels with that quest's markers;
+  - the compass hides during boss fights.
+- **Map:** `tools/render_map.gd` renders each environment top-down to `assets/maps/*.png` and
+  writes `data/maps/*.tres` (`MapResource`: world rect, image path, `other_scenes`).
+  - `MapScreen` draws it as parchment (shader), with markers, Rama's arrow and Lakshmana.
+  - Pan, pinch or +/- to zoom; tap a quest marker to track it.
+- **Log:** `JournalScreen` with Story (missions, current objective, star goals), Side quests
+  (Track) and Palm leaves tabs, opened from the HUD and the pause menu.
+- **Thermals:**
+  - `application/run/max_fps` 60;
+  - Mobile FSR `scaling_3d` 0.75, MSAA off;
+  - `Settings.quality`: Battery / Balanced / High sets the fps (30/60), render scale
+    (0.6/0.75/0.85), FXAA (High), shadow mode and distance, glow, and the particle amounts;
+  - `Settings.set_fps_context()`: menus and cutscenes run at 30;
+  - HUD group lookups are cached at 0.15 s; rakshasa crowd separation is shared per physics
+    tick.
+- **Fonts:** the project default is Noto Sans; `PartCard._label` uses Tiro Devanagari Sanskrit
+  at title sizes (≥ 34).
+
 ### Side quests and the Ayodhya hub
 - **Quests:** `QuestResource` (`data/quests`), `LoreResource` (`data/lore`) and the `Quests`
   autoload: start, progress (optional auto-complete), complete with rewards, tracker text.

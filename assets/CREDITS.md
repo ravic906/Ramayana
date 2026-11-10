@@ -89,3 +89,11 @@ third-party sounds. The bowstring uses Karplus–Strong synthesis; the creak use
 clicks through wooden resonances.
 
 These are **prototype assets**. Final hero art will follow the Art Bible and replace them.
+
+## Fonts (SIL Open Font License 1.1)
+- **Tiro Devanagari Sanskrit** (John Hudson and Fiona Ross, Tiro Typeworks): titles.
+  `assets/fonts/OFL-TiroDevanagariSanskrit.txt`
+- **Noto Sans** (Google): body text. `assets/fonts/OFL-NotoSans.txt`
+
+## Map images
+Rendered from the game's own levels by `tools/render_map.gd`.

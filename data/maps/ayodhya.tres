@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_jsmk5"]
+
+[resource]
+script = ExtResource("1_jsmk5")
+title = "Ayodhya, the palace grounds"
+level_scene = "res://kandas/01_bala/ayodhya_hub.tscn"
+image_path = "res://assets/maps/ayodhya.png"
+world_rect = Rect2(-48, -62, 96, 92)
+other_scenes = PackedStringArray("res://kandas/01_bala/training_grounds.tscn")

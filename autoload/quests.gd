@@ -15,6 +15,13 @@ const LORE_PATHS := [
 ]
 
 var all: Array[QuestResource] = []
+## The side quest the compass and beacon follow (saved in GameState flags).
+var tracked: StringName:
+	get:
+		return StringName(GameState.get_flag("tracked_quest", ""))
+	set(value):
+		GameState.set_flag("tracked_quest", String(value))
+		changed.emit()
 var lore_entries: Array[LoreResource] = []
 
 
@@ -63,6 +70,8 @@ func start(id: StringName) -> void:
 	if state(id) != "":
 		return
 	GameState.quests[String(id)] = {"state": "active", "count": 0}
+	if tracked == &"" or is_done(tracked):
+		tracked = id  # follow the newest quest unless one is already tracked
 	GameState.quests_changed.emit()
 	changed.emit()
 
@@ -91,6 +100,12 @@ func complete(id: StringName) -> void:
 		return
 	var q := get_quest(id)
 	(GameState.quests[String(id)] as Dictionary)["state"] = "done"
+	if tracked == id:
+		tracked = &""
+		for other in all:
+			if is_active(other.id):
+				tracked = other.id
+				break
 	if q:
 		GameState.add_punya(q.reward_punya)
 		if q.reward_dharma > 0:
@@ -106,6 +121,8 @@ func tracker_text(id: StringName) -> String:
 	var q := get_quest(id)
 	if q == null:
 		return ""
+	if q.return_text != "" and goal_reached(id):
+		return q.return_text
 	if q.goal_count > 1:
 		return "%s  (%d/%d)" % [q.objective, count(id), q.goal_count]
 	return q.objective

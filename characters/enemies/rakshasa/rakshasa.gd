@@ -166,8 +166,8 @@ func flat_to_target() -> Vector3:
 func steer(desired: Vector3, speed: float, delta: float, face: Vector3 = Vector3.ZERO) -> void:
 	var dir := desired.normalized() if desired.length_squared() > 0.0001 else Vector3.ZERO
 	var push := Vector3.ZERO
-	for other in get_tree().get_nodes_in_group(&"enemies"):
-		if other == self or not (other is Rakshasa):
+	for other in _crowd():
+		if other == self or not is_instance_valid(other):
 			continue
 		var away: Vector3 = global_position - (other as Node3D).global_position
 		away.y = 0.0
@@ -184,6 +184,22 @@ func steer(desired: Vector3, speed: float, delta: float, face: Vector3 = Vector3
 	move_and_slide()
 	var look := face if face.length_squared() > 0.0001 else horizontal
 	face_toward(look, delta)
+
+
+static var _crowd_frame := -1
+static var _crowd_list: Array[Rakshasa] = []
+
+
+## Every rakshasa on the field, gathered once per physics tick and shared.
+func _crowd() -> Array[Rakshasa]:
+	var f := Engine.get_physics_frames()
+	if f != _crowd_frame:
+		_crowd_frame = f
+		_crowd_list.clear()
+		for e in get_tree().get_nodes_in_group(&"enemies"):
+			if e is Rakshasa:
+				_crowd_list.append(e)
+	return _crowd_list
 
 
 func face_toward(dir: Vector3, delta: float) -> void:

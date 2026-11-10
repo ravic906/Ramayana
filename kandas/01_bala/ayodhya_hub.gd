@@ -39,6 +39,14 @@ func _ready() -> void:
 	_build_lotuses()
 	_build_range()
 	_build_gate()
+	_mark("scribe", npcs["scribe"], &"leaves_of_old", NavMarker.Kind.SIDE, "The Palace Scribe")
+	_mark("sumantra", npcs["sumantra"], &"archers_challenge", NavMarker.Kind.SIDE, "Sumantra")
+	_mark("grandfather", npcs["grandfather"], &"lost_child", NavMarker.Kind.SIDE, "Chandu's grandfather")
+	_mark("gardener", npcs["gardener"], &"lotus_for_guru", NavMarker.Kind.SIDE, "The Old Gardener")
+	_mark("vasishtha", npcs["vasishtha"], &"lotus_for_guru", NavMarker.Kind.SIDE, "Guru Vasishtha")
+	if child:
+		_mark("child", child, &"lost_child", NavMarker.Kind.PICKUP, "Chandu")
+	_mark("gate", _gate, &"", NavMarker.Kind.EXIT, "The palace gate")
 	Quests.changed.connect(refresh_tracker)
 	refresh_tracker()
 	if story_enabled() and not GameState.get_flag("hub_intro"):
@@ -81,16 +89,34 @@ func _process(delta: float) -> void:
 ## The HUD line: the first active quest, else a gentle pointer to the gate.
 func refresh_tracker() -> void:
 	if challenge_left >= 0.0:
+		hud._tracker_override = true
 		hud.set_tracker("Targets %d/6   %d s" % [Quests.count(&"archers_challenge"), ceili(challenge_left)])
 		return
-	if Quests.is_active(&"lotus_for_guru") and Quests.goal_reached(&"lotus_for_guru"):
-		hud.set_tracker("Bring the lotuses to Guru Vasishtha")
-		return
-	for q in Quests.all:
-		if Quests.is_active(q.id):
-			hud.set_tracker(Quests.tracker_text(q.id))
-			return
-	hud.set_tracker("Help the people of Ayodhya, or go to the palace gate when ready")
+	hud._tracker_override = false
+	hud._update_side_tracker()
+	if objective_text == "":
+		set_objective("Help the people of Ayodhya, then go to the palace gate", _gate, false)
+	# Vasishtha is marked once the lotuses are gathered; Chandu's grandfather
+	# once the boy is following.
+	_markers.get("vasishtha", null).active = Quests.goal_reached(&"lotus_for_guru")
+	_markers.get("grandfather", null).active = not Quests.is_active(&"lost_child") or child_following
+	if _markers.has("child") and is_instance_valid(_markers["child"]):
+		_markers["child"].active = not child_following
+
+
+var _markers := {}
+
+
+## A compass/map marker on a person or a place, tied to a side quest.
+func _mark(key: String, at: Node3D, quest: StringName, kind := NavMarker.Kind.SIDE, text := "") -> NavMarker:
+	var m := NavMarker.new()
+	m.name = "Marker_" + key
+	m.kind = kind
+	m.quest_id = quest
+	m.label = text
+	at.add_child(m)
+	_markers[key] = m
+	return m
 
 
 # --- People ---------------------------------------------------------------------
@@ -185,6 +211,7 @@ func _talk_child() -> void:
 	if not Quests.is_active(&"lost_child"):
 		Quests.start(&"lost_child")
 	child_following = true
+	refresh_tracker()
 	(child.get_node("Talk") as Interactable).enabled = false
 	await say_lines([
 		["Chandu", "Shh! I am a tiger, hunting in the garden!"],
@@ -244,6 +271,7 @@ func _build_scrolls() -> void:
 		it.add_child(leaf)
 		add_child(it)
 		it.interacted.connect(_pick_leaf.bind(it, id))
+		_mark("leaf_" + spec[0], it, &"leaves_of_old", NavMarker.Kind.PICKUP, "A palm leaf")
 
 
 func _pick_leaf(it: Interactable, id: StringName) -> void:
@@ -278,6 +306,7 @@ func _build_lotuses() -> void:
 		it.add_child(bloom)
 		add_child(it)
 		it.interacted.connect(_gather_lotus.bind(it))
+		_mark("lotus_%d" % i, it, &"lotus_for_guru", NavMarker.Kind.PICKUP, "A lotus")
 
 
 func _gather_lotus(it: Interactable) -> void:

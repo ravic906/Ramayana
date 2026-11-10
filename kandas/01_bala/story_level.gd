@@ -12,9 +12,37 @@ const LAKSHMANA := preload("res://characters/companions/lakshmana/lakshmana.tscn
 var shots := {}
 ## What happens during the current mission (stars, summary).
 var stats: MissionStats
+## The current story objective (shown on the HUD, in the Log, on the compass).
+var objective_text := ""
+var _objective_marker: NavMarker
+var _beacon: WaypointBeacon
+
+
+## States what to do now. `target` (optional) puts the gold marker and the
+## light beacon on it; `beacon` false keeps the marker without the beacon
+## (e.g. a boss in plain sight).
+func set_objective(text: String, target: Node3D = null, beacon := true) -> void:
+	objective_text = text
+	if hud and hud.has_method("set_objective"):
+		hud.set_objective(text)
+	if _objective_marker == null:
+		_objective_marker = NavMarker.new()
+		_objective_marker.name = "ObjectiveMarker"
+		_objective_marker.kind = NavMarker.Kind.MAIN
+		add_child(_objective_marker)
+		_beacon = WaypointBeacon.new()
+		_beacon.name = "ObjectiveBeacon"
+		add_child(_beacon)
+	_objective_marker.label = text
+	_objective_marker.follow = target
+	_objective_marker.active = target != null
+	if target:
+		_objective_marker.global_position = target.global_position
+	_beacon.target = _objective_marker if (target != null and beacon) else null
 
 
 func _enter_tree() -> void:
+	Settings.set_fps_context("game")
 	_begin_stats.call_deferred()
 
 
@@ -60,6 +88,7 @@ func cutscene(path: String) -> void:
 	hud.set_cinematic(true)
 	rama.controls_locked = true
 	_cinematic = true
+	Settings.set_fps_context("cinematic")
 	Music.duck(true)
 	var c := Cutscene.play(self, dialogue, shots)
 	c.action.connect(_on_story_action)
@@ -75,6 +104,7 @@ var _orphan_time := 0.0
 
 func _end_cinematic() -> void:
 	_cinematic = false
+	Settings.set_fps_context("game")
 	Music.duck(false)
 	_orphan_time = 0.0
 	hud.set_cinematic(false)

@@ -16,6 +16,7 @@ var _downloads := {}
 
 func _ready() -> void:
 	get_tree().paused = false
+	Settings.set_fps_context("menu")
 	if SaveSystem.has_save(SaveSystem.AUTOSAVE_SLOT):
 		SaveSystem.load_game(SaveSystem.AUTOSAVE_SLOT)
 	loader = PartLoader.new()
@@ -213,6 +214,19 @@ func _build() -> void:
 		Settings.set_story_mode(not Settings.story_mode)
 		mode.text = "Mode: %s" % Settings.mode_name())
 	bottom.add_child(mode)
+	var quality := Button.new()
+	quality.name = "QualityButton"
+	quality.text = Settings.quality_name()
+	quality.custom_minimum_size = Vector2(0, 72)
+	quality.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		quality.add_theme_stylebox_override(s, PartCard._style(Color(0.22, 0.25, 0.3), PartCard.GOLD, 4, 16))
+	quality.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	quality.pressed.connect(func() -> void:
+		Settings.cycle_quality()
+		Settings.set_fps_context("menu")
+		quality.text = Settings.quality_name())
+	bottom.add_child(quality)
 	_message = _title("", 24, Color(1, 0.97, 0.9))
 	_message.modulate.a = 0.0
 	root.add_child(_message)

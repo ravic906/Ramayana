@@ -154,6 +154,7 @@ func start_night(n: int) -> void:
 	spawner.waves = waves
 	hud.show_objective("Sacred Fire", fire.health)
 	hud.show_banner(String(spec["title"]), Color(1, 0.78, 0.45), 2.8)
+	set_objective("Defend the sacred fire: night %d of 6" % n, fire, false)
 	spawner.start()
 
 
@@ -281,9 +282,11 @@ func start_sky_battle() -> void:
 	maricha.awaken(fire.global_position, entry + Vector3(4, 0, 0))
 	hud.show_boss("Subahu", subahu.health)
 	hud.add_boss_bar("Maricha", maricha.health)
+	set_objective("Maricha and Subahu: protect the fire and bring them down", fire, false)
 
 
 func _on_subahu_shielded(_b: SkyRakshasa) -> void:
+	set_objective("Only the Agneyastra can end Subahu", subahu, false)
 	hud.show_banner("Subahu hides in smoke! Only the Agneyastra can end him.", Color(1.0, 0.55, 0.25), 3.5)
 	hud.show_subtitle("Vishvamitra", "His maya shields him! Only Agni's fire can end Subahu!", 3.5)
 
@@ -296,6 +299,7 @@ func _on_subahu_defeated(_b: SkyRakshasa) -> void:
 
 
 func _on_maricha_yielded(_b: SkyRakshasa) -> void:
+	set_objective("Spare Maricha: cast the Manavastra to carry him away", maricha, false)
 	rama.grant_temporary_astra(MANAVASTRA_SLOT)
 	hud.show_banner("Manavastra: carry him away. Do not kill.", Color(0.6, 0.8, 1.0), 3.5)
 	hud.show_subtitle("Vishvamitra", "Maricha falters. The Manavastra carries without killing, Rama.", 4.0)
@@ -332,6 +336,7 @@ func _check_victory() -> void:
 
 ## The yagna completes: dawn, the Dharma bonus, then on toward Mithila.
 func finish_yagna() -> void:
+	set_objective("")
 	yagna_complete = true
 	Music.play("bloom")
 	if fire_lowest >= 0.75 and sage_hits == 0:

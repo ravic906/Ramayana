@@ -53,6 +53,16 @@ func _ready() -> void:
 	tataka.staggered.connect(func() -> void: lakshmana.say("She's down, brother! Now!", 2.0))
 	if GameState.current_mission >= 4:
 		_place_at_grove_entry()
+	else:
+		set_objective("Follow the path north into the silent forest", $Trigger1)
+	encounter1.all_cleared.connect(func() -> void:
+		set_objective("Press on toward the heart of the forest", $Trigger2))
+	encounter2.all_cleared.connect(func() -> void:
+		set_objective("Reach the ruined grove", $BossTrigger))
+	encounter1.wave_started.connect(func(_i: int, _n: int) -> void: set_objective("Rakshasas! Defend yourselves"))
+	encounter2.wave_started.connect(func(_i: int, _n: int) -> void: set_objective("Rakshasas! Spare any who flee"))
+	tataka.phase_changed.connect(func(_p: int) -> void:
+		set_objective("Tataka hides in her maya: watch the dust, strike when she appears", tataka, false))
 	if story_enabled():
 		_intro.call_deferred()
 
@@ -131,10 +141,12 @@ func _start_boss() -> void:
 		if is_instance_valid(_sage):
 			_sage.walk_to((env.get_node("GroveEntry") as Node3D).global_position + Vector3(4.0, 0, 9.0), 3.0)
 	tataka.awaken()
+	set_objective("Defeat Tataka: dodge her charge, roll through the shockwave, shoot down the boulders", tataka, false)
 	hud.show_boss("Tataka", tataka.health)
 
 
 func _on_tataka_defeated() -> void:
+	set_objective("")
 	boss_defeated = true
 	Music.stop()  # a moment of silence before the forest blooms
 	hud.show_boss("", null)

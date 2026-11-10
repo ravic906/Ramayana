@@ -100,10 +100,18 @@ static func _style(bg: Color, border: Color, border_w: int, radius: int) -> Styl
 	return sb
 
 
+## Display face for titles (Art Bible: Devanagari-inspired display + clean sans
+## for body text, which is the project-wide default font).
+const DISPLAY_FONT := preload("res://assets/fonts/TiroDevanagariSanskrit-Regular.ttf")
+const TITLE_SIZE := 34
+
+
 static func _label(text: String, size: int, color: Color, centered: bool) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_size_override(&"font_size", size)
+	if size >= TITLE_SIZE:
+		l.add_theme_font_override(&"font", DISPLAY_FONT)
 	l.add_theme_color_override(&"font_color", color)
 	if centered:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

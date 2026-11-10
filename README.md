@@ -76,6 +76,17 @@ Play from the Journey menu to get the story:
    - Keep the fire strong and the sages unhurt for a Dharma bonus. Dawn follows, then a
      "coming soon" card for the next mission.
 
+**Finding your way:**
+- **Compass:** along the top, with the story objective (gold), the tracked side quest and
+  things to find, plus distances.
+- **Beacon:** a soft light column marks the objective from afar.
+- **Map:** the parchment map (Map button) shows everything, with Rama's arrow.
+- **Log:** the Log button lists the story so far and the current objective, side quests with
+  **Track**, and palm leaves.
+
+**Comfort:** Quality presets (Battery saver / Balanced / High) keep the phone cool. Frames are
+capped at 60 (30 in menus and cutscenes), and the 3D is upscaled with FSR.
+
 **Progression and replay:**
 - **Skills:** spend Punya on 12 skills in three branches:
   - Archery: faster draw, longer perfect window, piercing and twin arrows;

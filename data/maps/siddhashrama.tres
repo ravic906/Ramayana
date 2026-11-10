@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_lr4g2"]
+
+[resource]
+script = ExtResource("1_lr4g2")
+title = "Siddhashrama"
+level_scene = "res://kandas/01_bala/siddhashrama.tscn"
+image_path = "res://assets/maps/siddhashrama.png"
+world_rect = Rect2(-50, -50, 100, 72)

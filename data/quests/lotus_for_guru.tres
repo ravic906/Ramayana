@@ -12,3 +12,4 @@ objective = "Gather lotuses from the kalyani"
 goal_count = 3
 reward_punya = 50
 reward_dharma = 5
+return_text = "Bring the lotuses to Guru Vasishtha"

@@ -91,6 +91,7 @@ func _play_sage_at_gate() -> void:
 
 ## In the final trial Vasishtha grants a glimpse of the Agneyastra.
 func _on_wave_started(index: int, total: int) -> void:
+	set_objective("Vasishtha's maya trials: defeat the illusions (%d of %d)" % [index + 1, total])
 	if index == total - 1:
 		rama.grant_temporary_astra(0)
 		await get_tree().create_timer(2.3).timeout

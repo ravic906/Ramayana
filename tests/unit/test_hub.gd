@@ -104,7 +104,7 @@ func test_quests_and_lore_are_saved_and_shown() -> void:
 	SaveSystem.load_game()
 	assert_true(Quests.is_active(&"lost_child"))
 	assert_true(&"sarayu" in GameState.lore)
-	var j: JournalScreen = JournalScreen.open(self)
+	var j: JournalScreen = JournalScreen.open(self, JournalScreen.Tab.QUESTS)
 	await get_tree().process_frame
 	assert_true(j.find_child("Quest_lost_child", true, false) != null)
 	j.queue_free()
