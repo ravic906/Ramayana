@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|dawn_wide|dawn|
+Narration|||And at dawn on the seventh day, the yagna was complete.
+Vishvamitra|altar||The fire is whole. You kept your word, Rama, and you kept your mercy.
+Vishvamitra|altar||Now come with me. In Mithila, King Janaka keeps a bow that no man has ever strung.
+Lakshmana|brothers||A bow no one can string? Brother, I think we should see it."

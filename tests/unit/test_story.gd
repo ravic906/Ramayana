@@ -138,7 +138,7 @@ func test_part_flow_resumes_missions() -> void:
 	GameState.current_mission = 0
 	assert_true(SaveSystem.load_game())
 	assert_eq(GameState.current_mission, 3, "saved by advance_to")
-	GameState.current_mission = 5  # Siddhashrama: not yet available
+	GameState.current_mission = 6  # The Stone and the Dawn: not yet available
 	assert_eq(PartFlow.current(part).number, 1, "replays from the start")
 
 
@@ -265,7 +265,10 @@ func test_defeating_tataka_grants_the_astras() -> void:
 	assert_true(GameState.is_part_completed(&"part_01"))
 	var rama: Rama = level.get_node("Rama")
 	for astra in rama.astras:
-		assert_true(rama.is_astra_unlocked(astra))
+		if astra.id == &"manavastra":
+			assert_false(rama.is_astra_unlocked(astra), "the Manavastra is only lent for Maricha")
+		else:
+			assert_true(rama.is_astra_unlocked(astra))
 
 
 func test_varuna_and_vayu_effects() -> void:

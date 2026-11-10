@@ -55,6 +55,27 @@
   "license_url": "http://creativecommons.org/licenses/by/4.0/",
   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Tempting%20Secrets.mp3"
  },
+ "ashram": {
+  "title": "Night Vigil",
+  "author": "Kevin MacLeod (incompetech.com)",
+  "license": "Creative Commons: By Attribution 4.0 License",
+  "license_url": "http://creativecommons.org/licenses/by/4.0/",
+  "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Night%20Vigil.mp3"
+ },
+ "ashram_combat": {
+  "title": "The Descent",
+  "author": "Kevin MacLeod (incompetech.com)",
+  "license": "Creative Commons: By Attribution 4.0 License",
+  "license_url": "http://creativecommons.org/licenses/by/4.0/",
+  "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Descent.mp3"
+ },
+ "sky_bosses": {
+  "title": "Black Vortex",
+  "author": "Kevin MacLeod (incompetech.com)",
+  "license": "Creative Commons: By Attribution 4.0 License",
+  "license_url": "http://creativecommons.org/licenses/by/4.0/",
+  "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Black%20Vortex.mp3"
+ },
  "sting_reveal": {
   "title": "Discovery Hit",
   "author": "Kevin MacLeod (incompetech.com)",

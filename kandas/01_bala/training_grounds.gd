@@ -40,6 +40,7 @@ func _start_story() -> void:
 	_vasishtha = spawn_npc("res://characters/npc/vasishtha.tscn", Vector3(-7.5, 0, -9.0), Vector3.ZERO)
 	var lakshmana := LAKSHMANA.instantiate() as Lakshmana
 	lakshmana.position = Vector3(-1.6, 0, 1.8)
+	lakshmana.command = Lakshmana.Command.FOLLOW  # Vasishtha's trials are Rama's alone
 	add_child(lakshmana)
 	if GameState.current_mission >= 2:
 		# Resuming at "The Sage at the Gate".

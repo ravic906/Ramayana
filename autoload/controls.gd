@@ -12,6 +12,8 @@ const ACTIONS := {
 	"astra_1": [KEY_L, KEY_1],
 	"astra_2": [KEY_2],
 	"astra_3": [KEY_3],
+	"astra_4": [KEY_4],
+	"companion": [KEY_Q],
 }
 
 const PAD_BUTTONS := {
@@ -20,6 +22,8 @@ const PAD_BUTTONS := {
 	"astra_1": JOY_BUTTON_Y,
 	"astra_2": JOY_BUTTON_X,
 	"astra_3": JOY_BUTTON_LEFT_SHOULDER,
+	"astra_4": JOY_BUTTON_DPAD_UP,
+	"companion": JOY_BUTTON_B,
 }
 
 const PAD_AXES := {

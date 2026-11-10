@@ -53,6 +53,24 @@ Play from the Journey menu to get the story:
    - Below half health she vanishes into maya, and only the dust shows where she is.
    - Afterwards the forest blooms, and Vishvamitra grants **Agneyastra, Varunastra and
      Vayavyastra** for good.
+5. **Six Nights at Siddhashrama:** guard Vishvamitra's yagna at night.
+   - Three waves come down the forest lanes. Torch-bearing raiders run for the **sacred fire**;
+     its bar is on the HUD.
+   - The waves teach Varunastra (put out a burning hut) and Vayavyastra (hurl a crowd back).
+   - **Maricha and Subahu** attack from the sky, circling, raining fire and blood shards, and
+     swooping.
+   - Subahu hides in smoke at the end, and only the **Agneyastra** can end him.
+   - Maricha yields, and Rama spares him with the **Manavastra**, which carries him far over
+     the sea (+20 Dharma).
+   - Keep the fire strong and the sages unhurt for a Dharma bonus. Dawn follows, then a
+     "coming soon" card for the next mission.
+
+**Lakshmana fights beside Rama** from the forest onward:
+- He shoots rakshasas and shoves back any that close in.
+- The **Command** button switches him between **Attack** and **Guard** (at Siddhashrama he
+  guards the fire).
+- If he's knocked down, he gets back up.
+- He never shoots a rakshasa that's fleeing; sparing it is Rama's choice.
 
 Cutscenes can be skipped. Missions resume from where you left off.
 

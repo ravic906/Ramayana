@@ -1,6 +1,8 @@
 class_name FirePatch
 extends Node3D
-## Burning ground left by Agneyastra: damages and ignites enemies inside.
+## Burning ground. Agneyastra's burns enemies; a `hostile` patch (Subahu's fire
+## bolts) burns Rama, his companions and the sacred fire instead. Varunastra
+## quenches either kind.
 
 const TICK := 0.5
 
@@ -9,6 +11,7 @@ var dps := 8.0
 var duration := 3.0
 var burn_dps := 5.0
 var source: Node
+var hostile := false
 var _age := 0.0
 var _tick := 0.0
 var _disc: MeshInstance3D
@@ -56,7 +59,9 @@ func _physics_process(delta: float) -> void:
 	_tick -= delta
 	if _tick <= 0.0:
 		_tick += TICK
-		for enemy in get_tree().get_nodes_in_group(&"enemies"):
+		if hostile:
+			_burn_the_righteous()
+		for enemy in ([] if hostile else get_tree().get_nodes_in_group(&"enemies")):
 			var e := enemy as Node3D
 			if e == null:
 				continue
@@ -71,3 +76,17 @@ func _physics_process(delta: float) -> void:
 	_flames.emitting = fade > 0.3
 	if _age >= duration:
 		queue_free()
+
+
+func _burn_the_righteous() -> void:
+	for group in [&"player", &"companions", &"objective", &"bystanders"]:
+		for n in get_tree().get_nodes_in_group(group):
+			var t := n as Node3D
+			if t == null:
+				continue
+			var reach = t.get("reach_radius")
+			var r := radius + (float(reach) if reach != null else 0.0)
+			var d := Vector2(t.global_position.x - global_position.x, t.global_position.z - global_position.z).length()
+			if d <= r and t.has_method("on_attacked"):
+				t.on_attacked(dps * TICK, source)
+

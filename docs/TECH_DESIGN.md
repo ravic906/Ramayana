@@ -249,6 +249,42 @@ through Play Games Services and iCloud later.
 - **Astras:** `AstraResource.effect` (FIRE / WATER / WIND) drives `Explosion.detonate`. Water
   quenches `FirePatch` and `Burn`; wind is mostly knockback.
 
+### Mission 5: Siddhashrama
+- **Environment:** `tools/build_ashram.gd` extends the forest builder (same helpers, tree cells
+  and proxies) and writes `kandas/01_bala/env/siddhashrama.scn`. It has:
+  - a clearing with the altar at the origin;
+  - three spawn lanes (N/W/E) and eight huts (group "huts");
+  - sage, spawn and sky markers.
+- **Night look:**
+  - Stylised: `sky_night.tres`.
+  - Realistic: `realistic_night_environment.tres` (Poly Haven `qwantani_moonrise_puresky`).
+  - Dawn swaps in the sunset environment.
+- **`SacredFire`:**
+  - in the "objective" group, with a `Health`, a `reach_radius` (struck at the altar's edge)
+    and `on_attacked`;
+  - flames and light dim with health;
+  - `defiled` triggers a retry.
+- **Enemy targeting:** `Rakshasa.target_mode` is PLAYER, NEAREST (Rama or companions) or
+  OBJECTIVE.
+  - OBJECTIVE raiders turn on whoever hits them.
+  - `flat_to_target()` honours `reach_radius`.
+- **Hostile fire:** `FirePatch.hostile` and the `Boulder` kinds `fire` and `shard` hurt the
+  "player", "companions", "objective" and "bystanders" (the sages, `NpcModel.on_attacked`)
+  groups. Varunastra quenches any `FirePatch`.
+- **`SkyRakshasa`** (Subahu, Maricha):
+  - flies its orbit, volleys, and swoops; only one swoops at a time (static token);
+  - Subahu's LAST_STAND makes `Health` invulnerable, and `on_astra()` (called by
+    `Explosion.detonate`) lets the Agneyastra kill him;
+  - Maricha's YIELDING is invulnerable, and `banish()` is triggered by the BANISH effect
+    (`AstraResource.Effect.BANISH`, `manavastra.tres` in Rama's 4th slot, lent with
+    `grant_temporary_astra(3)`).
+- **Lakshmana:** command FOLLOW, ATTACK or GUARD, plus a DOWNED state.
+  - He shoots with `arrow.tscn`.
+  - The `companion` action / HUD Command button toggles him.
+  - `guard_point` is the fire at Siddhashrama; FOLLOW applies in Vasishtha's trials.
+- **Flow:** `StoryLevel.go_to_mission()` shows an end card when the next mission isn't
+  released. `say_lines()` speaks in-game exchanges without locking controls.
+
 ### Parts (episodic content)
 - **Data:** `PartResource` (`core/progress/part_resource.gd`) in `data/parts/*.tres`, listed in
   order by `PartCatalog`.

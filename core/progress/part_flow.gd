@@ -9,6 +9,7 @@ const MISSIONS := {
 		"res://data/missions/part01/m3_silent_forest.tres",
 		"res://data/missions/part01/m4_tataka.tres",
 		"res://data/missions/part01/m5_siddhashrama.tres",
+		"res://data/missions/part01/m6_stone_and_dawn.tres",
 	],
 }
 

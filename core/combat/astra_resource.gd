@@ -2,7 +2,7 @@ class_name AstraResource
 extends Resource
 ## A divine weapon Rama can invoke onto a drawn arrow (see data/astras/*.tres).
 
-enum Effect { FIRE, WATER, WIND }
+enum Effect { FIRE, WATER, WIND, BANISH }
 
 @export var id := &"agneyastra"
 @export var effect := Effect.FIRE

@@ -22,6 +22,15 @@ static var _attackers := 0
 @export var aggro_range := 45.0
 ## When > 0, the rakshasa flees once its health falls below this fraction.
 @export var flee_below := 0.0
+## Who it goes after:
+##   PLAYER    Rama (default)
+##   NEAREST   Rama or a companion (Lakshmana), whoever is closer
+##   OBJECTIVE the nearest node in the "objective" group (e.g. the sacred fire);
+##             turns on whoever hits it
+enum TargetMode { PLAYER, NEAREST, OBJECTIVE }
+@export var target_mode := TargetMode.PLAYER
+## Raiders carry a burning torch to defile the sacred fire.
+@export var carries_torch := false
 
 @onready var health: Health = $Health
 @onready var state_machine: StateMachine = $StateMachine
@@ -33,6 +42,7 @@ var has_attack_token := false
 var knockback := Vector3.ZERO
 var strafe_sign := 1.0
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
+var _retarget_left := 0.0
 
 
 func _ready() -> void:
@@ -43,11 +53,14 @@ func _ready() -> void:
 	health.damaged.connect(_on_damaged)
 	health.died.connect(_on_died)
 	strafe_sign = 1.0 if randf() < 0.5 else -1.0
+	if carries_torch:
+		_add_torch()
 	attack_cooldown_left = randf_range(0.3, 1.2)
 
 
 func _physics_process(delta: float) -> void:
 	attack_cooldown_left = maxf(attack_cooldown_left - delta, 0.0)
+	_retarget_left -= delta
 	knockback = knockback.move_toward(Vector3.ZERO, 18.0 * delta)
 
 
@@ -66,24 +79,56 @@ func is_ranged() -> bool:
 # --- Target -----------------------------------------------------------------
 
 func find_target() -> Node3D:
-	if target != null and is_instance_valid(target):
+	var valid := target != null and is_instance_valid(target) and _is_alive(target)
+	if valid and (target_mode == TargetMode.PLAYER or _retarget_left > 0.0):
 		return target
-	var players := get_tree().get_nodes_in_group(&"player")
-	target = players[0] as Node3D if not players.is_empty() else null
+	_retarget_left = 1.0
+	match target_mode:
+		TargetMode.OBJECTIVE:
+			target = _nearest_in([&"objective"])
+			if target == null:
+				target = _nearest_in([&"player"])
+		TargetMode.NEAREST:
+			target = _nearest_in([&"player", &"companions"])
+		_:
+			var players := get_tree().get_nodes_in_group(&"player")
+			target = players[0] as Node3D if not players.is_empty() else null
 	return target
 
 
 func target_alive() -> bool:
 	var t := find_target()
-	if t == null:
+	return t != null and _is_alive(t)
+
+
+func _is_alive(t: Node) -> bool:
+	if t.has_method("can_be_targeted") and not t.can_be_targeted():
 		return false
 	var h := t.get_node_or_null("Health") as Health
 	return h == null or not h.is_dead()
 
 
+func _nearest_in(groups: Array) -> Node3D:
+	var best: Node3D = null
+	var best_d := INF
+	for g: StringName in groups:
+		for n in get_tree().get_nodes_in_group(g):
+			if not (n is Node3D) or not _is_alive(n):
+				continue
+			var d := global_position.distance_squared_to((n as Node3D).global_position)
+			if d < best_d:
+				best_d = d
+				best = n
+	return best
+
+
 func flat_to_target() -> Vector3:
 	var d := target.global_position - global_position
 	d.y = 0.0
+	# Wide targets (the altar) are reached at their edge, not their centre.
+	var reach = target.get("reach_radius")
+	if reach != null and float(reach) > 0.0:
+		d = d.normalized() * maxf(d.length() - float(reach), 0.05)
 	return d
 
 
@@ -195,8 +240,14 @@ func is_fleeing() -> bool:
 	return state_machine.is_in(&"Flee")
 
 
-func _on_damaged(amount: float, _source: Node) -> void:
+func _on_damaged(amount: float, source: Node) -> void:
 	model.hit_flash(Color(1.0, 0.95, 0.8), 1.6)
+	# Raiders bound for the fire turn on whoever strikes them.
+	if target_mode == TargetMode.OBJECTIVE and source is Node3D and source != target \
+			and ((source as Node).is_in_group(&"player") or (source as Node).is_in_group(&"companions")):
+		target_mode = TargetMode.NEAREST
+		target = source
+		_retarget_left = 3.0
 	if flee_below > 0.0 and not health.is_dead() and health.ratio() < flee_below and not is_fleeing():
 		state_machine.transition_to(&"Flee")
 		return
@@ -231,3 +282,22 @@ func _sfx(stream: AudioStream, volume_db: float, pitch: float) -> void:
 	add_child(p)
 	p.play()
 	p.finished.connect(p.queue_free)
+
+
+func _add_torch() -> void:
+	var flame := CPUParticles3D.new()
+	flame.name = "Torch"
+	flame.amount = 16
+	flame.lifetime = 0.5
+	flame.local_coords = false
+	flame.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	flame.emission_sphere_radius = 0.06
+	flame.direction = Vector3.UP
+	flame.spread = 15.0
+	flame.gravity = Vector3(0, 2.0, 0)
+	flame.initial_velocity_min = 0.3
+	flame.initial_velocity_max = 0.8
+	flame.mesh = FX.glow_quad(Color(1.0, 0.55, 0.15, 0.9), 0.18)
+	flame.position = Vector3(0.38, 1.75, -0.25) * data.model_scale
+	model.add_child(flame)
+

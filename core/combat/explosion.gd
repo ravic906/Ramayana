@@ -12,6 +12,17 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 	var hit := []
 	if parent == null or not parent.is_inside_tree():
 		return hit
+	if astra.effect == AstraResource.Effect.BANISH:
+		# Manavastra: no wound, only a force that carries the foe far away.
+		for enemy in parent.get_tree().get_nodes_in_group(&"enemies"):
+			var e := enemy as Node3D
+			if e and e.has_method("banish") and e.get_aim_point().distance_to(at) <= astra.radius:
+				e.banish(source)
+				hit.append(e)
+		FX.burst(parent, at, astra.color, 60, 7.0, 1.2, 1.0, 0.0, false)
+		FX.sparks(parent, at, astra.glow_color, 50, 9.0)
+		_feedback(parent, 0.15, 200, 0.8)
+		return hit
 	for enemy in parent.get_tree().get_nodes_in_group(&"enemies"):
 		var e := enemy as Node3D
 		if e == null:
@@ -21,6 +32,8 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 		if d > astra.radius:
 			continue
 		var falloff := 1.0 - d / astra.radius
+		if e.has_method("on_astra"):
+			e.on_astra(astra, source)  # e.g. Subahu, whom only the Agneyastra can end
 		var h := e.get_node_or_null("Health") as Health
 		if h:
 			h.take_damage(astra.impact_damage * lerpf(0.4, 1.0, falloff), source)

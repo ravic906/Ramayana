@@ -16,6 +16,8 @@ const TRACKS := {
 	"forest": {"explore": "forest", "combat": "forest_combat"},
 	"tataka": {"explore": "tataka", "maya": "tataka_maya"},
 	"bloom": {"explore": "bloom"},
+	"ashram": {"explore": "ashram", "combat": "ashram_combat"},
+	"sky_bosses": {"explore": "sky_bosses"},
 }
 const STINGERS := ["sting_reveal", "sting_blessing"]
 const SILENT_DB := -60.0

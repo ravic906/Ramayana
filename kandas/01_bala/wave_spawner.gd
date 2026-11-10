@@ -13,6 +13,7 @@ signal enemy_spawned(rakshasa: Rakshasa)
 const SCENES := {
 	"grunt": "res://characters/enemies/rakshasa/rakshasa_grunt.tscn",
 	"archer": "res://characters/enemies/rakshasa/rakshasa_archer.tscn",
+	"raider": "res://characters/enemies/rakshasa/rakshasa_raider.tscn",
 }
 
 @export var auto_start := true

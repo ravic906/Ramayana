@@ -41,6 +41,8 @@ CAST = {
     "Tataka": {"spk": "p248", "speed": 1.25, "pitch": -7.0, "reverb": (1.8, 0.22), "demon": True},
     "Narration": {"spk": "p273", "speed": 1.12, "pitch": 3.0, "reverb": (1.5, 0.12), "unison": True},
     "The Astras": {"spk": "p248", "speed": 1.2, "pitch": -2.0, "reverb": (3.0, 0.35), "choir": True},
+    "Subahu": {"spk": "p256", "speed": 1.05, "pitch": -3.0, "reverb": (1.6, 0.2), "demon": True},
+    "Maricha": {"spk": "p345", "speed": 1.1, "pitch": -3.5, "reverb": (1.8, 0.24)},
 }
 
 ## Sanskrit names, spelled the way the English voice should say them
@@ -58,6 +60,10 @@ PRONOUNCE = {
 TRES_TEXT = re.compile(r'^text = "((?:[^"\\]|\\.)*)"', re.S | re.M)
 SUBTITLE = re.compile(r'show_subtitle\(\s*"([^"]+)"\s*,\s*"((?:[^"\\]|\\.)*)"')
 LAKSHMANA_SAY = re.compile(r'lakshmana\.say\(\s*"((?:[^"\\]|\\.)*)"')
+## Lakshmana's own lines inside lakshmana.gd: say("...").
+OWN_SAY = re.compile(r'(?<![.\w])say\(\s*"((?:[^"\\]|\\.)*)"')
+## say_lines([["Speaker", "text"], ...]) pairs.
+PAIR = re.compile(r'\[\s*"([A-Z][A-Za-z ]+)"\s*,\s*"((?:[^"\\]|\\.)*)"\s*\]')
 
 
 def key(speaker: str, text: str) -> str:
@@ -85,6 +91,12 @@ def collect_lines():
             lines.append((speaker, unescape(text), gd.stem))
         for text in LAKSHMANA_SAY.findall(src):
             lines.append(("Lakshmana", unescape(text), gd.stem))
+        if gd.stem == "lakshmana":
+            for text in OWN_SAY.findall(src):
+                lines.append(("Lakshmana", unescape(text), gd.stem))
+        for speaker, text in PAIR.findall(src):
+            if speaker in CAST:
+                lines.append((speaker, unescape(text), gd.stem))
     seen, out = set(), []
     for line in lines:
         if (line[0], line[1]) not in seen:
@@ -195,6 +207,7 @@ def load_growl():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True, help="folder holding en_GB-vctk-medium.onnx(.json)")
+    ap.add_argument("--force", action="store_true", help="re-voice lines that already have audio")
     ap.add_argument("--preview", help="also write a listening reel (gate scene + Tataka intro) to this .mp3")
     args = ap.parse_args()
     from piper import PiperVoice, SynthesisConfig  # noqa: imported here so --help works without piper
@@ -205,12 +218,19 @@ def main():
     growl = load_growl()
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {}
+    manifest_path = OUT / "manifest.json"
+    old_manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     lines = collect_lines()
     rendered = {}
     for speaker, text, source in lines:
         cast = CAST.get(speaker)
         if cast is None:
             print(f"! no voice cast for {speaker!r}: {text}")
+            continue
+        k = key(speaker, text)
+        if not args.force and not args.preview and (OUT / f"{k}.ogg").exists() and k in old_manifest:
+            # Piper's synthesis is not deterministic: keep existing takes stable.
+            manifest[k] = old_manifest[k]
             continue
         r = 2 ** (cast["pitch"] / 12)
         cfg = SynthesisConfig(speaker_id=ids[cast["spk"]], length_scale=cast["speed"] * r,
@@ -227,7 +247,6 @@ def main():
             x = unison(x)
         x = reverb(x, *cast["reverb"])
         x = normalize(x)
-        k = key(speaker, text)
         encode(x, OUT / f"{k}.ogg")
         manifest[k] = {"speaker": speaker, "text": text, "source": source, "seconds": round(len(x) / SR, 2)}
         rendered.setdefault(source, []).append(x)

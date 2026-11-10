@@ -17,6 +17,8 @@ const SPEAKER_COLORS := {
 	"Tataka": Color(0.85, 0.4, 0.75),
 	"Herald": Color(0.85, 0.85, 0.85),
 	"The Astras": Color(1.0, 0.92, 0.6),
+	"Subahu": Color(1.0, 0.35, 0.2),
+	"Maricha": Color(0.75, 0.55, 1.0),
 }
 const CHARS_PER_SECOND := 45.0
 

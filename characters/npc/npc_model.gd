@@ -43,6 +43,21 @@ func _ready() -> void:
 	anim.seek(randf() * 2.0)
 
 
+signal hurt(npc: NpcModel)
+
+
+## Bystanders (the sages at the yagna) flinch when struck but are never killed.
+func on_attacked(_damage: float, _source: Node) -> bool:
+	hurt.emit(self)
+	anim.play(&"hit", 0.1)
+	anim.queue(&"idle")
+	return true
+
+
+func get_aim_point() -> Vector3:
+	return global_position + Vector3.UP * 1.3
+
+
 func play(clip: StringName, blend := 0.2) -> void:
 	anim.play(clip, blend)
 

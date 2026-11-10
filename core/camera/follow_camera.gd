@@ -93,6 +93,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotate_by((event as InputEventScreenDrag).relative)
 
 
+## Aerial fights: a flatter, higher view so foes in the sky stay in frame.
+func frame_sky(on: bool, seconds := 1.2) -> void:
+	var t := create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
+	t.tween_property(spring_arm, "rotation:x", deg_to_rad(-11.0 if on else initial_pitch_deg), seconds)
+	t.tween_property(self, "height_offset", 2.3 if on else 1.4, seconds)
+
+
 func rotate_by(relative: Vector2) -> void:
 	var sens := swipe_sensitivity * lerpf(1.0, aim_sensitivity_scale, aim_weight)
 	rotation.y -= relative.x * sens

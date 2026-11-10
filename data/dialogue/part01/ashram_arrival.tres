@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "Narration|||Vishvamitra led the princes to Siddhashrama, where the sages would keep a sacred fire for six nights.
+Vishvamitra|altar||Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.
+Vishvamitra|altar||Maricha and Subahu will come, as they always come, with rakshasas behind them. Guard the fire, princes of Raghu.
+Lakshmana|brothers||Let them come, Guru-dev. We will be waiting.
+Rama|rama||No one will put out this fire while I stand."

@@ -38,6 +38,9 @@ LOOPS = {
     "tataka": ("Final Battle of the Dark Wizards", 62.0, (55, 85)),
     "tataka_maya": ("Hitman", 52.0, (45, 75)),
     "bloom": ("Tempting Secrets", 110.0, (40, 60)),
+    "ashram": ("Night Vigil", 30.0, (60, 95)),
+    "ashram_combat": ("The Descent", 75.0, (55, 85)),
+    "sky_bosses": ("Black Vortex", 40.0, (55, 85)),
 }
 ## stinger -> (track title, start s, length s): one-shots, faded out.
 STINGERS = {

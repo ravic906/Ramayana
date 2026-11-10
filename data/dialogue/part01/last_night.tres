@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "Narration|||On the sixth night, the sky itself grew dark.
+Lakshmana|sky||Brother... the stars are going out.
+Subahu|sky||Little princes with little bows! We will drown your sage's fire in blood!
+Maricha|sky||Tataka's sons have come for those who killed her.
+Rama|rama||Turn back while you still can. This fire is not yours to put out."

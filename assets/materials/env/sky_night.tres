@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/sky_golden.gdshader" id="1_shader"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/zenith_color = Color(0.03, 0.05, 0.12, 1)
+shader_parameter/rose_color = Color(0.08, 0.1, 0.2, 1)
+shader_parameter/horizon_color = Color(0.16, 0.18, 0.28, 1)
+shader_parameter/ground_color = Color(0.04, 0.05, 0.06, 1)
+shader_parameter/cloud_light = Color(0.3, 0.33, 0.42, 1)
+shader_parameter/cloud_shadow = Color(0.08, 0.09, 0.14, 1)
+shader_parameter/sun_size = 0.025
+shader_parameter/sun_intensity = 1.6

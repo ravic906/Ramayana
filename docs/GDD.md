@@ -119,8 +119,11 @@ short "vision" sequences framed by Rama's perspective, then returns to Rama.
   6. Ahalya's hermitage — a quiet narrative/exploration interlude.
   7. Mithila: **Shiva's bow (Pinaka)**, Valmiki's test of strength, as a cinematic
      draw-and-hold finale. Epilogue: the **Parashurama** cutscene teases the later Parts.
-- **Playable now:** missions 1–4 (trials, the sage at the gate, the Silent Forest with the
-  Dharma moment, the Tataka boss and the astra ceremony).
+- **Playable now:**
+  - missions 1–4: trials, the sage at the gate, the Silent Forest with the Dharma moment,
+    the Tataka boss and the astra ceremony;
+  - mission 5: the Siddhashrama yagna defence, Maricha and Subahu, and the Manavastra.
+  - Mission 6 shows a "coming soon" card.
 - **Prologue:** Guru Vasishtha's maya trials in the Ayodhya training grounds. The
   final trial grants a temporary *glimpse* of the Agneyastra.
 - **Unlocks:** Agneyastra, Varunastra and Vayavyastra (from Vishvamitra after Tataka), and

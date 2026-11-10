@@ -79,6 +79,7 @@ func _process(delta: float) -> void:
 	mat.set_shader_parameter(&"hurt", _hurt)
 	mat.set_shader_parameter(&"fire", _fire)
 	_update_agni(real_delta)
+	_update_command()
 	shoot_button.progress = _draw if aiming else 0.0
 	shoot_button.progress_color = Color(1.0, 0.95, 0.6) if _perfect else Color(1.0, 0.82, 0.3)
 
@@ -90,7 +91,7 @@ var _astra_buttons: Array[ActionButton] = []
 func _ensure_astra_buttons(count: int) -> void:
 	if _astra_buttons.is_empty():
 		_astra_buttons.append(agni_button)
-	var spots := [Rect2(-430, -462, 140, 140), Rect2(-575, -352, 130, 130)]
+	var spots := [Rect2(-430, -462, 140, 140), Rect2(-575, -352, 130, 130), Rect2(-610, -520, 150, 150)]
 	while _astra_buttons.size() < count:
 		var i := _astra_buttons.size()
 		var b := ActionButton.new()
@@ -107,6 +108,38 @@ func _ensure_astra_buttons(count: int) -> void:
 		b.offset_bottom = r.position.y + r.size.y
 		$Root.add_child(b)
 		_astra_buttons.append(b)
+
+
+var _command_button: ActionButton
+
+
+## The Command button toggles Lakshmana between Attack and Guard.
+func _update_command() -> void:
+	var l := get_tree().get_first_node_in_group(&"companions") as Lakshmana
+	var show := l != null and l.command != Lakshmana.Command.FOLLOW and _player is Rama \
+		and not (_player as Rama).controls_locked
+	if _command_button == null:
+		if not show:
+			return
+		_command_button = ActionButton.new()
+		_command_button.name = "CommandButton"
+		_command_button.action = &"companion"
+		_command_button.anchor_left = 1.0
+		_command_button.anchor_top = 1.0
+		_command_button.anchor_right = 1.0
+		_command_button.anchor_bottom = 1.0
+		_command_button.offset_left = -215
+		_command_button.offset_top = -585
+		_command_button.offset_right = -95
+		_command_button.offset_bottom = -465
+		$Root.add_child(_command_button)
+	_command_button.visible = show
+	if show:
+		var guarding := l.command == Lakshmana.Command.GUARD
+		_command_button.label = "Guard" if guarding else "Attack"
+		_command_button.color = Color(0.25, 0.45, 0.3, 0.85) if guarding else Color(0.7, 0.35, 0.15, 0.85)
+		_command_button.progress = 0.0 if not l.is_downed else 1.0
+		_command_button.queue_redraw()
 
 
 func _update_agni(real_delta: float) -> void:
@@ -330,6 +363,76 @@ func show_subtitle(speaker: String, text: String, seconds := 3.5) -> void:
 	_subtitle_tween.tween_property(_subtitle, "modulate:a", 0.0, 0.5)
 
 
+## Adds a second (third...) boss bar under the first: Maricha and Subahu fight together.
+func add_boss_bar(boss_name: String, health: Health) -> void:
+	_boss_box.visible = true
+	_boss_box.offset_bottom += 62
+	var label := PartCard._label(boss_name, 24, Color(1, 0.85, 0.8), true)
+	label.add_theme_color_override(&"font_outline_color", Color(0.15, 0.03, 0.05))
+	label.add_theme_constant_override(&"outline_size", 8)
+	label.add_to_group(&"extra_boss_bar")
+	_boss_box.add_child(label)
+	var bar := _make_bar(Color(0.55, 0.1, 0.45), 14)
+	bar.add_to_group(&"extra_boss_bar")
+	bar.max_value = health.max_health
+	bar.value = health.current
+	health.changed.connect(func(c: float, m: float) -> void:
+		if is_instance_valid(bar):
+			bar.max_value = m
+			bar.value = c)
+	_boss_box.add_child(bar)
+
+
+func clear_boss_bars() -> void:
+	for n in get_tree().get_nodes_in_group(&"extra_boss_bar"):
+		n.queue_free()
+	_boss_box.offset_bottom = 80
+	show_boss("", null)
+
+
+var _objective_box: VBoxContainer
+
+
+## A bar for what Rama must protect (e.g. the sacred fire); null hides it.
+func show_objective(label: String, health: Health) -> void:
+	if _objective_box == null:
+		_objective_box = VBoxContainer.new()
+		_objective_box.name = "ObjectiveBox"
+		_objective_box.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		_objective_box.offset_left = 40
+		_objective_box.offset_top = 128
+		_objective_box.offset_right = 460
+		_objective_box.offset_bottom = 190
+		_objective_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		$Root.add_child(_objective_box)
+	for c in _objective_box.get_children():
+		c.queue_free()
+	_objective_box.visible = health != null
+	if health == null:
+		return
+	_objective_box.add_child(PartCard._label(label, 24, Color(1, 0.8, 0.45), false))
+	var bar := _make_bar(Color(1.0, 0.55, 0.15), 14)
+	bar.name = "ObjectiveBar"
+	bar.max_value = health.max_health
+	bar.value = health.current
+	health.changed.connect(func(c: float, m: float) -> void:
+		if is_instance_valid(bar):
+			bar.max_value = m
+			bar.value = c)
+	_objective_box.add_child(bar)
+
+
+func _make_bar(color: Color, height: float) -> ProgressBar:
+	var bar := ProgressBar.new()
+	bar.custom_minimum_size = Vector2(0, height)
+	bar.show_percentage = false
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = color
+	fill.set_corner_radius_all(6)
+	bar.add_theme_stylebox_override(&"fill", fill)
+	return bar
+
+
 ## Shows a boss health bar bound to `health` (null hides it).
 func show_boss(boss_name: String, health: Health) -> void:
 	_boss_health = health
@@ -345,7 +448,7 @@ func show_boss(boss_name: String, health: Health) -> void:
 
 ## Hides gameplay controls during cutscenes.
 func set_cinematic(on: bool) -> void:
-	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel"]:
+	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel", "ObjectiveBox", "CommandButton"]:
 		var c := $Root.get_node_or_null(n) as CanvasItem
 		if c:
 			c.visible = not on

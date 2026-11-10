@@ -1,4 +1,58 @@
 {
+ "636d4a4e7f3e2ab72820216f99e1f626": {
+  "speaker": "Narration",
+  "text": "Vishvamitra led the princes to Siddhashrama, where the sages would keep a sacred fire for six nights.",
+  "source": "ashram_arrival",
+  "seconds": 5.9
+ },
+ "4b85ecc1d55bb8ebeaf2e5eb55055af1": {
+  "speaker": "Vishvamitra",
+  "text": "Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.",
+  "source": "ashram_arrival",
+  "seconds": 6.74
+ },
+ "1bccd3b4967c25a0349521821cb5f273": {
+  "speaker": "Vishvamitra",
+  "text": "Maricha and Subahu will come, as they always come, with rakshasas behind them. Guard the fire, princes of Raghu.",
+  "source": "ashram_arrival",
+  "seconds": 7.78
+ },
+ "64f9c5db93cd7f77ba13a2c19f74946b": {
+  "speaker": "Lakshmana",
+  "text": "Let them come, Guru-dev. We will be waiting.",
+  "source": "ashram_arrival",
+  "seconds": 3.69
+ },
+ "91babb11578005b89ef2107091fd14aa": {
+  "speaker": "Rama",
+  "text": "No one will put out this fire while I stand.",
+  "source": "ashram_arrival",
+  "seconds": 2.6
+ },
+ "dd7aef7f403dfce52cae0865ce6780ce": {
+  "speaker": "Narration",
+  "text": "And at dawn on the seventh day, the yagna was complete.",
+  "source": "dawn",
+  "seconds": 4.07
+ },
+ "4ab0b75c906343d582ba058defc230a6": {
+  "speaker": "Vishvamitra",
+  "text": "The fire is whole. You kept your word, Rama, and you kept your mercy.",
+  "source": "dawn",
+  "seconds": 5.65
+ },
+ "047d95f43f3ef7d066afc0775a45e5e1": {
+  "speaker": "Vishvamitra",
+  "text": "Now come with me. In Mithila, King Janaka keeps a bow that no man has ever strung.",
+  "source": "dawn",
+  "seconds": 6.3
+ },
+ "24cd289ee8043beeda8d8f2509195031": {
+  "speaker": "Lakshmana",
+  "text": "A bow no one can string? Brother, I think we should see it.",
+  "source": "dawn",
+  "seconds": 3.27
+ },
  "d967ba7741f46dd2644b7dde576d2fa4": {
   "speaker": "Narration",
   "text": "They walked into lands where no bird sang: the lands of Malada and Karusha.",
@@ -22,6 +76,36 @@
   "text": "Stay close, brother. The trees themselves are watching.",
   "source": "forest_intro",
   "seconds": 3.41
+ },
+ "2b2b094a2e1eb9c5817c47621f4133a4": {
+  "speaker": "Narration",
+  "text": "On the sixth night, the sky itself grew dark.",
+  "source": "last_night",
+  "seconds": 3.54
+ },
+ "4d1b81f31a60eb1dabd78922d4d2c825": {
+  "speaker": "Lakshmana",
+  "text": "Brother... the stars are going out.",
+  "source": "last_night",
+  "seconds": 1.98
+ },
+ "f3008e5fd871e27ee4a3ef7bd6016062": {
+  "speaker": "Subahu",
+  "text": "Little princes with little bows! We will drown your sage's fire in blood!",
+  "source": "last_night",
+  "seconds": 5.87
+ },
+ "06cfa4d3a72237008b1f91431c8be553": {
+  "speaker": "Maricha",
+  "text": "Tataka's sons have come for those who killed her.",
+  "source": "last_night",
+  "seconds": 4.24
+ },
+ "89ce635025da15b70cb7a4c6db29d5f8": {
+  "speaker": "Rama",
+  "text": "Turn back while you still can. This fire is not yours to put out.",
+  "source": "last_night",
+  "seconds": 4.01
  },
  "dadb93a8a103977943ad42470cbbe570": {
   "speaker": "Narration",
@@ -173,6 +257,36 @@
   "source": "trials_complete",
   "seconds": 5.95
  },
+ "166e0f308c86e2bed7ef9c61ae36b708": {
+  "speaker": "Lakshmana",
+  "text": "With you, brother!",
+  "source": "lakshmana",
+  "seconds": 2.16
+ },
+ "b8a432de4320a86e322b20bfd206dc63": {
+  "speaker": "Lakshmana",
+  "text": "I'll guard the fire.",
+  "source": "lakshmana",
+  "seconds": 1.61
+ },
+ "b539463d86e1080da051936cee56e1b2": {
+  "speaker": "Lakshmana",
+  "text": "I'll stay close, brother.",
+  "source": "lakshmana",
+  "seconds": 1.74
+ },
+ "d3413235fef8502f45e70bc8dc95c4f1": {
+  "speaker": "Lakshmana",
+  "text": "I'm hit... give me a moment, brother.",
+  "source": "lakshmana",
+  "seconds": 2.26
+ },
+ "6c1bfcb080ca78aa90ecc756bf826cee": {
+  "speaker": "Lakshmana",
+  "text": "I'm with you again!",
+  "source": "lakshmana",
+  "seconds": 1.41
+ },
  "d3855805e100361dff7c18f7f975c710": {
   "speaker": "Rama",
   "text": "Go. Do not return.",
@@ -208,5 +322,53 @@
   "text": "He had already turned to flee...",
   "source": "forest",
   "seconds": 1.87
+ },
+ "09a2fac3279e80452e362e32dde2dee7": {
+  "speaker": "Vishvamitra",
+  "text": "His maya shields him! Only Agni's fire can end Subahu!",
+  "source": "siddhashrama",
+  "seconds": 4.86
+ },
+ "58bb94793326bc1812ec0108c083a687": {
+  "speaker": "Vishvamitra",
+  "text": "Maricha falters. The Manavastra carries without killing, Rama.",
+  "source": "siddhashrama",
+  "seconds": 4.96
+ },
+ "1145ed2f861544a2156e2de51894e6b9": {
+  "speaker": "Lakshmana",
+  "text": "Too many! Let Vayu sweep them back!",
+  "source": "siddhashrama",
+  "seconds": 2.29
+ },
+ "074baf9efdd29c5130b30f90401c2656": {
+  "speaker": "Lakshmana",
+  "text": "The huts are burning! Varuna's waters, brother!",
+  "source": "siddhashrama",
+  "seconds": 2.85
+ },
+ "d9f75cd0190f5ea44de94104c9822169": {
+  "speaker": "Lakshmana",
+  "text": "Subahu is down, brother!",
+  "source": "siddhashrama",
+  "seconds": 1.99
+ },
+ "5684ebb2cd1dc6a6023b84432c694011": {
+  "speaker": "Rama",
+  "text": "This one I will not kill. Let the sea teach him what mercy is.",
+  "source": "siddhashrama",
+  "seconds": 3.8
+ },
+ "3717272a07e364e8cde349ddae06c923": {
+  "speaker": "Lakshmana",
+  "text": "He will remember this, brother.",
+  "source": "siddhashrama",
+  "seconds": 2.11
+ },
+ "b86953111f253e488e99dd4df5f702bb": {
+  "speaker": "Rama",
+  "text": "Then let him remember that he was spared.",
+  "source": "siddhashrama",
+  "seconds": 2.53
  }
 }

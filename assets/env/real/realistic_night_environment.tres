@@ -1,0 +1,35 @@
+[gd_resource type="Environment" load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/env/real/sky_qwantani_moonrise_1k.hdr" id="1_hdr"]
+
+[sub_resource type="PanoramaSkyMaterial" id="Sky_mat"]
+panorama = ExtResource("1_hdr")
+energy_multiplier = 0.6
+
+[sub_resource type="Sky" id="Sky_res"]
+sky_material = SubResource("Sky_mat")
+radiance_size = 1
+
+[resource]
+background_mode = 2
+sky = SubResource("Sky_res")
+ambient_light_source = 2
+ambient_light_color = Color(0.32, 0.38, 0.55, 1)
+ambient_light_energy = 0.75
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_exposure = 1.15
+tonemap_white = 6.0
+glow_enabled = true
+glow_intensity = 0.55
+glow_bloom = 0.06
+glow_hdr_threshold = 1.1
+fog_enabled = true
+fog_light_color = Color(0.16, 0.2, 0.3, 1)
+fog_light_energy = 1.0
+fog_density = 0.02
+fog_aerial_perspective = 0.5
+fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_contrast = 1.08
+adjustment_saturation = 0.95
