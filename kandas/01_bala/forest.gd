@@ -42,6 +42,11 @@ func _ready() -> void:
 		Music.play("forest")
 	$BossTrigger.body_entered.connect(_on_boss_trigger)
 	tataka.defeated.connect(_on_tataka_defeated)
+	get_tree().node_added.connect(func(n: Node) -> void:
+		if n is Boulder:
+			(n as Boulder).shot_down.connect(func(_b: Boulder) -> void:
+				if stats:
+					stats.facts["boulder_shot"] = true))
 	tataka.phase_changed.connect(func(_p: int) -> void: Music.set_layer("maya", true))
 	tataka.phase_changed.connect(func(_p: int) -> void:
 		hud.show_banner("Tataka weaves her maya!\nWatch for the dust.", Color(0.85, 0.55, 0.95), 2.5))
@@ -83,6 +88,8 @@ func _on_encounter2_spawned(r: Rakshasa) -> void:
 	_fleeing_one = r
 	r.flee_below = 0.35
 	r.spared.connect(func(_r: Rakshasa) -> void:
+		if stats:
+			stats.facts["spared"] = true
 		GameState.add_dharma(10)
 		hud.show_subtitle("Rama", "Go. Do not return.", 2.5)
 		get_tree().create_timer(2.8).timeout.connect(func() -> void:
@@ -102,6 +109,10 @@ func _start_boss() -> void:
 	if boss_started:
 		return
 	boss_started = true
+	if GameState.current_mission == 3 and story_enabled():
+		await complete_mission(3)
+		if not is_inside_tree():
+			return
 	Music.play("tataka")
 	Music.stinger("sting_reveal")
 	PartFlow.advance_to(4)
@@ -136,6 +147,8 @@ func _on_tataka_defeated() -> void:
 		shots[&"astras"] = [rama.global_position + Vector3(0, 2.4, 5.0), rama.global_position + Vector3(0, 1.8, 0)]
 		shots[&"grove_wide"] = [center + Vector3(6.0, 7.0, 13.0), center + Vector3(0, 0, -3.0)]
 		await cutscene(D + "tataka_bloom.tres")
+		if is_inside_tree():
+			await complete_mission(4)
 		if is_inside_tree():
 			go_to_mission(5)
 	else:

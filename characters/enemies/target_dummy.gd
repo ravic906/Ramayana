@@ -4,6 +4,8 @@ extends StaticBody3D
 ## and respawns after a short delay.
 
 @export var respawn_delay := 2.0
+## Punya for knocking it down (0 in free-roam, so it can't be farmed).
+@export var punya_reward := 10
 @export var hit_color := Color(1.0, 0.85, 0.3)
 
 @onready var health: Health = $Health
@@ -33,7 +35,7 @@ func _on_damaged(_amount: float, _source: Node) -> void:
 
 
 func _on_died() -> void:
-	GameState.add_punya(10)
+	GameState.add_punya(punya_reward)
 	var tween := create_tween()
 	tween.tween_property(mesh, "rotation_degrees:x", -85.0, 0.35)
 	tween.tween_interval(respawn_delay)

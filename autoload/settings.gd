@@ -2,7 +2,10 @@ extends Node
 ## Player-facing settings, saved to user://settings.cfg.
 ##   visual_style: Realistic (default: physically based materials + photographed
 ##                 sky) or Stylised (toon, the original Art Bible look).
-##   story_mode:   gentler boss damage for younger players.
+##   story_mode:   Story difficulty, for the tale: Rama takes half damage, foes
+##                 are weaker, aim assist is wider, the perfect window longer.
+##                 Off = Warrior (the full challenge).
+##   difficulty_chosen: the player picked a mode (asked once, on first Play).
 ##   low_quality:  turns off ambient life and real-time shadows.
 ##   music_volume / sfx_volume / voice_volume: 0..1, applied to their buses.
 ## Command-line overrides (after "--"): --low-quality, --realistic, --stylised.
@@ -17,6 +20,7 @@ const DEFAULT_PATH := "user://settings.cfg"
 var visual_style := VisualStyle.REALISTIC
 var low_quality := false
 var story_mode := false
+var difficulty_chosen := false
 var music_volume := 0.8
 var sfx_volume := 1.0
 var voice_volume := 1.0
@@ -33,6 +37,26 @@ func _ready() -> void:
 		visual_style = VisualStyle.REALISTIC
 	elif "--stylised" in args:
 		visual_style = VisualStyle.STYLISED
+
+
+func set_story_mode(on: bool) -> void:
+	story_mode = on
+	difficulty_chosen = true
+	save_settings()
+
+
+func mode_name() -> String:
+	return "Story" if story_mode else "Warrior"
+
+
+## Scales damage Rama (and what he protects) receives.
+func incoming_damage_scale() -> float:
+	return 0.5 if story_mode else 1.0
+
+
+## Scales enemy health.
+func enemy_health_scale() -> float:
+	return 0.8 if story_mode else 1.0
 
 
 func is_realistic() -> bool:
@@ -60,6 +84,7 @@ func save_settings() -> Error:
 	cfg.set_value("graphics", "visual_style", visual_style)
 	cfg.set_value("graphics", "low_quality", low_quality)
 	cfg.set_value("gameplay", "story_mode", story_mode)
+	cfg.set_value("gameplay", "difficulty_chosen", difficulty_chosen)
 	cfg.set_value("audio", "music_volume", music_volume)
 	cfg.set_value("audio", "sfx_volume", sfx_volume)
 	cfg.set_value("audio", "voice_volume", voice_volume)
@@ -73,6 +98,7 @@ func load_settings() -> void:
 	visual_style = int(cfg.get_value("graphics", "visual_style", VisualStyle.REALISTIC))
 	low_quality = bool(cfg.get_value("graphics", "low_quality", false))
 	story_mode = bool(cfg.get_value("gameplay", "story_mode", false))
+	difficulty_chosen = bool(cfg.get_value("gameplay", "difficulty_chosen", false))
 	music_volume = clampf(float(cfg.get_value("audio", "music_volume", 0.8)), 0.0, 1.0)
 	sfx_volume = clampf(float(cfg.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)
 	voice_volume = clampf(float(cfg.get_value("audio", "voice_volume", 1.0)), 0.0, 1.0)

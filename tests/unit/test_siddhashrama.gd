@@ -154,3 +154,43 @@ func test_lakshmana_guards_the_fire_here() -> void:
 	assert_eq(level.lakshmana.guard_point, level.fire)
 	level.lakshmana.toggle_command()
 	assert_eq(level.lakshmana.command, Lakshmana.Command.GUARD)
+
+
+func test_six_nights_each_bring_something_new() -> void:
+	_ashram()
+	await _frames(3)
+	assert_eq(level.NIGHTS.size(), 5, "five nights of waves, then the sky battle")
+	var kinds := {}
+	for spec in level.NIGHTS:
+		for w in spec["waves"]:
+			for k in w:
+				kinds[k] = true
+	for k in ["grunt", "raider", "archer", "mayavi", "shield", "brute"]:
+		assert_true(kinds.has(k), "%s appears" % k)
+	level.start_night(2)
+	await _frames(2)
+	assert_eq(level.night, 2)
+	assert_eq(GameState.checkpoint, "night_2", "checkpoint saved")
+	assert_true("mayavi" in level.spawner.waves[0])
+
+
+func test_resume_from_a_checkpoint_and_move_on() -> void:
+	GameState.checkpoint = "night_4"
+	level = load("res://kandas/01_bala/siddhashrama.tscn").instantiate()
+	add_child(level)
+	await _frames(4)
+	assert_eq(level.night, 4, "picks up at the fourth night")
+	level.spawner.finished = true
+	level.spawner.all_cleared.emit()
+	await get_tree().create_timer(4.6).timeout
+	assert_eq(level.night, 5, "on to the fifth")
+
+
+func test_on_the_fourth_night_they_go_for_the_sages() -> void:
+	_ashram()
+	await _frames(3)
+	level.night = 4
+	var r: Rakshasa = level.spawner.spawn_enemy("shield", Vector3(0, 0, -12))
+	await _frames(2)
+	assert_eq(r.target_mode, Rakshasa.TargetMode.OBJECTIVE)
+	assert_true(r.find_target() in level.sages)

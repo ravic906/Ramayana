@@ -42,6 +42,11 @@ CAST = {
     "Narration": {"spk": "p273", "speed": 1.12, "pitch": 3.0, "reverb": (1.5, 0.12), "unison": True},
     "The Astras": {"spk": "p248", "speed": 1.2, "pitch": -2.0, "reverb": (3.0, 0.35), "choir": True},
     "Subahu": {"spk": "p256", "speed": 1.05, "pitch": -3.0, "reverb": (1.6, 0.2), "demon": True},
+    "Scribe": {"spk": "p270", "speed": 1.05, "pitch": -0.5, "reverb": (0.8, 0.08)},
+    "Sumantra": {"spk": "p260", "speed": 1.0, "pitch": -1.0, "reverb": (0.8, 0.08)},
+    "Grandfather": {"spk": "p326", "speed": 1.15, "pitch": -1.0, "reverb": (0.6, 0.06)},
+    "Chandu": {"spk": "p273", "speed": 0.95, "pitch": 6.0, "reverb": (0.5, 0.05)},
+    "Gardener": {"spk": "p347", "speed": 1.12, "pitch": -0.5, "reverb": (0.6, 0.06)},
     "Maricha": {"spk": "p345", "speed": 1.1, "pitch": -3.5, "reverb": (1.8, 0.24)},
 }
 

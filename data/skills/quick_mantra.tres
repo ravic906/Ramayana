@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"quick_mantra"
+branch = 1
+tier = 1
+cost = 100
+requires = &""
+display_name = "Quick Mantra"
+description = "Astras answer sooner: cooldowns 15% shorter."
+effects = {"astra_cooldown_mult": 0.85}

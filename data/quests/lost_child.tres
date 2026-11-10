@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"lost_child"
+title = "The Lost Child"
+giver = "A worried grandfather"
+summary = "An old man has lost his little grandson Chandu somewhere in the palace grounds."
+objective = "Find Chandu and bring him back"
+goal_count = 1
+reward_punya = 40
+reward_dharma = 8

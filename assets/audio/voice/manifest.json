@@ -131,6 +131,60 @@
   "source": "m1_intro",
   "seconds": 6.14
  },
+ "b8b31f65f63fc3dff8103e7e53af44db": {
+  "speaker": "Narration",
+  "text": "On the second night, a fog of maya rose from the forest.",
+  "source": "night_2",
+  "seconds": 3.91
+ },
+ "e4786f7fb38b1fe6653c0edca820fb3b": {
+  "speaker": "Vishvamitra",
+  "text": "Illusions, Rama. Of every shape you see, only one is true. Look for the one that shimmers.",
+  "source": "night_2",
+  "seconds": 6.39
+ },
+ "6f246663c93dac9729ca32e2ee5ba007": {
+  "speaker": "Narration",
+  "text": "On the third night, arrows flew from the dark between the trees.",
+  "source": "night_3",
+  "seconds": 4.58
+ },
+ "9ba9341b743409b1590436fb4abf2c94": {
+  "speaker": "Lakshmana",
+  "text": "They are shooting from the trees! And more torches behind them.",
+  "source": "night_3",
+  "seconds": 3.36
+ },
+ "9ca56b48deedf984aca72eb4da31ca76": {
+  "speaker": "Narration",
+  "text": "On the fourth night, the rakshasas came for the sages themselves.",
+  "source": "night_4",
+  "seconds": 4.44
+ },
+ "97928f65242de052330db91073774fa8": {
+  "speaker": "Vishvamitra",
+  "text": "The sages must not move, whatever comes. Their lives are in your hands now.",
+  "source": "night_4",
+  "seconds": 5.24
+ },
+ "64f0d70eb57c3997ebdf1f5d27335561": {
+  "speaker": "Narration",
+  "text": "On the fifth night, the whole forest seemed to march on the ashram.",
+  "source": "night_5",
+  "seconds": 4.01
+ },
+ "e0696f5ea9ad83a319945908a014ad25": {
+  "speaker": "Lakshmana",
+  "text": "Brother... that one is the size of a tree.",
+  "source": "night_5",
+  "seconds": 3.18
+ },
+ "ee20c2e5f423aec1e1ba38173485d87e": {
+  "speaker": "Rama",
+  "text": "Then we will fell it like one.",
+  "source": "night_5",
+  "seconds": 1.99
+ },
  "d728966b1fc98f810076ba29fc9396f0": {
   "speaker": "Narration",
   "text": "Then came a sage to the palace gate, and with him the first step of a long road.",
@@ -286,6 +340,156 @@
   "text": "I'm with you again!",
   "source": "lakshmana",
   "seconds": 1.41
+ },
+ "497022546e12b890a9985b237928bd91": {
+  "speaker": "Lakshmana",
+  "text": "A sage waits at the gate, brother. But the palace is full of people who could use our help.",
+  "source": "ayodhya_hub",
+  "seconds": 4.67
+ },
+ "6a919fd5c01757c6e699643d7364c3a9": {
+  "speaker": "Rama",
+  "text": "Then let us walk through it first. We will go to the gate when it is time.",
+  "source": "ayodhya_hub",
+  "seconds": 4.31
+ },
+ "ba589013664e481853272e38551536a3": {
+  "speaker": "Scribe",
+  "text": "Every leaf back in its bundle. The old tales are safe, Prince Rama.",
+  "source": "ayodhya_hub",
+  "seconds": 4.23
+ },
+ "d093ffc16840ee6707f960b3a65f6045": {
+  "speaker": "Scribe",
+  "text": "Still a few leaves out there, my prince. Look where the wind would carry them.",
+  "source": "ayodhya_hub",
+  "seconds": 4.78
+ },
+ "673833d55499a9fae2e61f8195b35437": {
+  "speaker": "Scribe",
+  "text": "Prince Rama! A wind off the Sarayu tore my bundle open. The old tales are scattered over the courtyard.",
+  "source": "ayodhya_hub",
+  "seconds": 6.43
+ },
+ "16d1f4fcbc464066a700a3efcf9f578a": {
+  "speaker": "Rama",
+  "text": "Then we will gather them, every one.",
+  "source": "ayodhya_hub",
+  "seconds": 2.53
+ },
+ "d31371b87062182020b4a75051566cdb": {
+  "speaker": "Sumantra",
+  "text": "Six targets before the sand ran out. I will tell the king myself.",
+  "source": "ayodhya_hub",
+  "seconds": 4.35
+ },
+ "ab68fc3f4b87fab7a7003f44b29bb0b7": {
+  "speaker": "Sumantra",
+  "text": "A wager, young prince: six targets on the range, before this sand runs out.",
+  "source": "ayodhya_hub",
+  "seconds": 4.43
+ },
+ "ddbbe4e82afebb3cdf7ff217d858595f": {
+  "speaker": "Lakshmana",
+  "text": "He accepts. I would bet on him against the whole army.",
+  "source": "ayodhya_hub",
+  "seconds": 4.11
+ },
+ "291de8c2721ceb38be9b7ee30fa6407b": {
+  "speaker": "Sumantra",
+  "text": "Again? Good. The sand is turned.",
+  "source": "ayodhya_hub",
+  "seconds": 2.57
+ },
+ "51fb7ea070670829084d32cae40126ce": {
+  "speaker": "Grandfather",
+  "text": "May you always find what others have lost, Prince Rama.",
+  "source": "ayodhya_hub",
+  "seconds": 3.39
+ },
+ "bb62a6a1d880950725714ae8efe11379": {
+  "speaker": "Grandfather",
+  "text": "Chandu loves to hide. He thinks he is a tiger.",
+  "source": "ayodhya_hub",
+  "seconds": 3.26
+ },
+ "069af94a1ecc85570067c213c46acf91": {
+  "speaker": "Grandfather",
+  "text": "Forgive me, my prince. My grandson Chandu ran off in the crowd, and my eyes are not what they were.",
+  "source": "ayodhya_hub",
+  "seconds": 6.26
+ },
+ "249d8ae6144eda8243418fa84a847840": {
+  "speaker": "Rama",
+  "text": "Rest here, grandfather. We will find him.",
+  "source": "ayodhya_hub",
+  "seconds": 2.91
+ },
+ "1ebae09f4f575267c9028987a3ba35bf": {
+  "speaker": "Chandu",
+  "text": "Shh! I am a tiger, hunting in the garden!",
+  "source": "ayodhya_hub",
+  "seconds": 2.7
+ },
+ "312077d256c1b3c69f31c9df120affa1": {
+  "speaker": "Rama",
+  "text": "A brave tiger. But your grandfather is looking for you. Will you walk with me?",
+  "source": "ayodhya_hub",
+  "seconds": 4.6
+ },
+ "ab4ec87b0ee21ba9512905195299fa4c": {
+  "speaker": "Grandfather",
+  "text": "Chandu! Thank you, Prince Rama. A kind heart is the first strength of a king.",
+  "source": "ayodhya_hub",
+  "seconds": 4.89
+ },
+ "96a90af087a86d2837f877c705bfb9dd": {
+  "speaker": "Gardener",
+  "text": "The guru smiled, they tell me. Thank you, my prince.",
+  "source": "ayodhya_hub",
+  "seconds": 3.68
+ },
+ "58631064e07fa112a4544fcda9be7e6f": {
+  "speaker": "Gardener",
+  "text": "The lotuses float by the steps of the kalyani. Take them to Guru Vasishtha.",
+  "source": "ayodhya_hub",
+  "seconds": 5.2
+ },
+ "e2ccc258f3cace5b0f2d1c383d41ba4d": {
+  "speaker": "Gardener",
+  "text": "The guru's worship needs lotuses, but my old knees cannot manage the kalyani steps any more.",
+  "source": "ayodhya_hub",
+  "seconds": 6.34
+ },
+ "1593c02b90a09a6a11d2e56b5ebf2c94": {
+  "speaker": "Lakshmana",
+  "text": "We will fetch them, grandfather.",
+  "source": "ayodhya_hub",
+  "seconds": 2.07
+ },
+ "6030e4db1a2cc2567f330ad55de18ea6": {
+  "speaker": "Vasishtha",
+  "text": "Lotuses from the gardener, carried by a prince. Service is the root of every strength, Rama.",
+  "source": "ayodhya_hub",
+  "seconds": 6.99
+ },
+ "515b5a11b93f72dfc73ebd00cc3749a6": {
+  "speaker": "Vasishtha",
+  "text": "A sage waits at the gate, Rama. Go when your heart is ready.",
+  "source": "ayodhya_hub",
+  "seconds": 4.35
+ },
+ "337b20531b48753c2d83578a5f89c2ce": {
+  "speaker": "Lakshmana",
+  "text": "The sage is waiting, brother. Let us go.",
+  "source": "ayodhya_hub",
+  "seconds": 2.59
+ },
+ "138bd9dac9563c0c056c1f180c20f816": {
+  "speaker": "Sumantra",
+  "text": "Six! The sand still running! I have lost my wager gladly.",
+  "source": "ayodhya_hub",
+  "seconds": 3.71
  },
  "d3855805e100361dff7c18f7f975c710": {
   "speaker": "Rama",

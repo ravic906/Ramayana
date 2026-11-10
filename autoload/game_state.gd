@@ -7,6 +7,8 @@ signal part_completed(id: StringName)
 signal dharma_changed(value: int)
 signal punya_changed(total: int)
 signal astra_unlocked(astra_id: StringName)
+signal skills_changed
+signal quests_changed
 
 const KANDAS: Array[String] = [
 	"Bala Kanda",
@@ -23,7 +25,8 @@ const KANDAS: Array[String] = [
 const FREE_KANDAS := 1
 
 ## v2: progress is tracked per Part (current_part, completed_parts).
-const SAVE_VERSION := 2
+## v3: skills, mission stars, checkpoints, quests and lore.
+const SAVE_VERSION := 3
 
 ## Runtime only (not saved): true when a Part was launched from the Journey
 ## menu, so levels play their story (narration, cutscenes, mission hand-off).
@@ -38,6 +41,16 @@ var punya := 0
 var dharma := 0
 var unlocked_astras: Array[StringName] = []
 var flags: Dictionary = {}
+## Skill ids bought with Punya.
+var skills: Array[StringName] = []
+## "part:mission" -> best stars (0..3).
+var mission_stars: Dictionary = {}
+## Mid-mission checkpoint (e.g. which night at Siddhashrama); "" = none.
+var checkpoint := ""
+## Quest id -> {"state": "active"/"done", "progress": {...}}.
+var quests: Dictionary = {}
+## Palm-leaf lore entries found.
+var lore: Array[StringName] = []
 
 
 func reset() -> void:
@@ -49,6 +62,11 @@ func reset() -> void:
 	dharma = 0
 	unlocked_astras.clear()
 	flags.clear()
+	skills.clear()
+	mission_stars.clear()
+	checkpoint = ""
+	quests.clear()
+	lore.clear()
 
 
 func is_kanda_playable(index: int, owns_full_game: bool = _store_owns_full_game()) -> bool:
@@ -106,6 +124,33 @@ func add_punya(amount: int) -> void:
 	punya_changed.emit(punya)
 
 
+func spend_punya(amount: int) -> bool:
+	if amount > punya:
+		return false
+	punya -= amount
+	punya_changed.emit(punya)
+	return true
+
+
+## Records stars for a mission, keeping the best. Returns the best.
+func record_stars(part: int, mission: int, stars: int) -> int:
+	var k := "%d:%d" % [part, mission]
+	var best := maxi(int(mission_stars.get(k, 0)), stars)
+	mission_stars[k] = best
+	return best
+
+
+func stars_for(part: int, mission: int) -> int:
+	return int(mission_stars.get("%d:%d" % [part, mission], 0))
+
+
+func find_lore(id: StringName) -> bool:
+	if id in lore:
+		return false
+	lore.append(id)
+	return true
+
+
 func unlock_astra(astra_id: StringName) -> void:
 	if astra_id in unlocked_astras:
 		return
@@ -138,6 +183,11 @@ func to_dict() -> Dictionary:
 		"dharma": dharma,
 		"unlocked_astras": astras,
 		"flags": flags.duplicate(true),
+		"skills": skills.map(func(x: StringName) -> String: return String(x)),
+		"mission_stars": mission_stars.duplicate(),
+		"checkpoint": checkpoint,
+		"quests": quests.duplicate(true),
+		"lore": lore.map(func(x: StringName) -> String: return String(x)),
 	}
 
 
@@ -150,6 +200,14 @@ func from_dict(data: Dictionary) -> void:
 	for a in data.get("unlocked_astras", []):
 		unlocked_astras.append(StringName(a))
 	flags = (data.get("flags", {}) as Dictionary).duplicate(true)
+	# v3 fields (absent in older saves: start empty).
+	for k in data.get("skills", []):
+		skills.append(StringName(k))
+	mission_stars = (data.get("mission_stars", {}) as Dictionary).duplicate()
+	checkpoint = String(data.get("checkpoint", ""))
+	quests = (data.get("quests", {}) as Dictionary).duplicate(true)
+	for k in data.get("lore", []):
+		lore.append(StringName(k))
 	if int(data.get("version", 1)) < 2 or not data.has("current_part"):
 		# v1 saves tracked kandas only.
 		current_part = PartCatalog.part_number_for_kanda(current_kanda)

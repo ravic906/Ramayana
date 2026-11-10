@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"vasishtha"
+title = "Guru Vasishtha"
+text = "Vasishtha is the family priest and teacher of the Ikshvaku kings, one of the seven great sages. He guides Dasharatha and teaches the young princes the Vedas and the duties of a king."

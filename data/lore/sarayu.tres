@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"sarayu"
+title = "The River Sarayu"
+text = "Ayodhya stands on the banks of the Sarayu. In the Valmiki Ramayana the river runs through the story from beginning to end: the princes learn beside it, and it is there that the epic closes."

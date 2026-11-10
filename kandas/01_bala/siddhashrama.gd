@@ -1,15 +1,31 @@
 extends StoryLevel
 ## Bala Kanda, mission 5: Six Nights at Siddhashrama. Rama and Lakshmana guard
-## Vishvamitra's yagna. Three waves of rakshasas come down the forest lanes
-## (raiders run for the sacred fire); on the last night Maricha and Subahu
-## attack from the sky. Subahu falls to the Agneyastra; Maricha is spared and
-## carried over the sea by the Manavastra. At dawn the yagna is complete.
+## Vishvamitra's yagna for six nights, each with its own threat (see NIGHTS),
+## coming down the forest lanes; raiders run for the sacred fire. On the sixth
+## night Maricha and Subahu attack from the sky. Subahu falls to the
+## Agneyastra; Maricha is spared and carried over the sea by the Manavastra.
+## At dawn the yagna is complete. Each night is a checkpoint.
 
 const D := "res://data/dialogue/part01/"
 const MANAVASTRA_SLOT := 3
 const DAWN_ENV := "res://assets/env/real/realistic_environment.tres"
 const DAWN_SKY := "res://assets/materials/env/sky.tres"
 const SAGE := "res://characters/npc/vasishtha.tscn"
+
+## Nights 1-5 (the sixth is Maricha and Subahu). Each: waves, fog, a lesson.
+const NIGHTS := [
+	{"title": "The First Night", "waves": [["grunt", "raider", "grunt", "raider"],
+		["grunt", "raider", "grunt", "grunt", "raider"]], "fog": 0.02, "lesson": "varuna"},
+	{"title": "The Second Night: Maya", "waves": [["mayavi", "grunt", "grunt"],
+		["mayavi", "grunt", "raider", "mayavi", "grunt"]], "fog": 0.055, "lesson": "mayavi"},
+	{"title": "The Third Night: Arrows from the Dark", "waves": [["archer", "archer", "raider", "raider", "grunt"],
+		["raider", "raider", "grunt", "raider", "raider", "grunt", "raider"]], "fog": 0.025, "lesson": "vayu"},
+	{"title": "The Fourth Night: The Sages", "waves": [["shield", "grunt", "shield", "grunt"],
+		["shield", "grunt", "grunt", "shield", "archer"]], "fog": 0.02, "lesson": "shield", "sages": true},
+	{"title": "The Fifth Night: The Siege", "waves": [["brute", "grunt", "raider", "archer"],
+		["shield", "mayavi", "raider", "grunt", "raider"],
+		["brute", "shield", "raider", "archer", "grunt", "raider"]], "fog": 0.03, "lesson": "brute"},
+]
 
 ## Tests turn this off to drive the mission by hand.
 @export var auto_start := true
@@ -32,6 +48,9 @@ var subahu_down := false
 var maricha_gone := false
 var yagna_complete := false
 var _retrying := false
+## 1..6 (6 = Maricha and Subahu).
+var night := 0
+var _night_sage_hits := 0
 
 
 func _ready() -> void:
@@ -91,23 +110,68 @@ var _vishvamitra: Node3D
 
 
 func _begin() -> void:
+	var resume := _checkpoint_night()
+	if resume > 1:
+		start_night(resume)
+		return
 	if story_enabled() and GameState.current_mission <= 5:
 		await cutscene(D + "ashram_arrival.tres")
 		if not is_inside_tree():
 			return
-	start_defence()
+	start_night(1)
 
 
-## The waves begin; the sacred fire's bar appears.
+func _checkpoint_night() -> int:
+	if GameState.checkpoint.begins_with("night_"):
+		return clampi(int(GameState.checkpoint.substr(6)), 1, 6)
+	return 1
+
+
+## Kept for tests and old callers: the first night's defence.
 func start_defence() -> void:
+	start_night(1)
+
+
+## Begins night `n` (1-5: waves; 6: Maricha and Subahu). Saves a checkpoint.
+func start_night(n: int) -> void:
+	night = n
+	_night_sage_hits = sage_hits
+	GameState.checkpoint = "night_%d" % n
+	SaveSystem.save_game()
+	fire.rekindle()
+	if n >= 6:
+		start_sky_battle()
+		return
+	var spec: Dictionary = NIGHTS[n - 1]
+	if n > 1 and story_enabled():
+		await cutscene(D + "night_%d.tres" % n)
+		if not is_inside_tree():
+			return
+	_set_fog(float(spec.get("fog", 0.02)))
+	var waves: Array[PackedStringArray] = []
+	for w in spec["waves"]:
+		waves.append(PackedStringArray(w))
+	spawner.waves = waves
 	hud.show_objective("Sacred Fire", fire.health)
-	hud.show_banner("Guard the sacred fire!", Color(1, 0.75, 0.35), 2.5)
+	hud.show_banner(String(spec["title"]), Color(1, 0.78, 0.45), 2.8)
 	spawner.start()
+
+
+func _set_fog(density: float) -> void:
+	var e := world_env.environment
+	if e:
+		create_tween().tween_property(e, "fog_density", density, 2.5)
 
 
 # --- The defence ------------------------------------------------------------------
 
 func _on_enemy_spawned(r: Rakshasa) -> void:
+	if night >= 1 and night <= NIGHTS.size() and NIGHTS[night - 1].get("sages", false) \
+			and not r.carries_torch and not r.is_ranged():
+		# The fourth night: they go for the sages.
+		r.target_mode = Rakshasa.TargetMode.OBJECTIVE
+		r.objective_group = &"bystanders"
+		return
 	if r.carries_torch:
 		r.died.connect(func(dead: Rakshasa) -> void:
 			if dead.global_position.distance_to(fire.global_position) > 5.0:
@@ -118,13 +182,25 @@ func _on_enemy_spawned(r: Rakshasa) -> void:
 
 func _on_wave_started(index: int, _total: int) -> void:
 	Music.set_intensity(1.0)
-	if index == 0:
-		_varuna_lesson()
-	elif index == 1:
-		await get_tree().create_timer(3.0).timeout
-		if is_inside_tree():
-			lakshmana.say("Too many! Let Vayu sweep them back!", 3.0)
-			hud.show_banner("Vayavyastra: its wind hurls a crowd away.", Color(0.8, 1.0, 0.95), 3.0)
+	if index != 0 or night < 1 or night > NIGHTS.size():
+		if index == 1 and night == 3:
+			await get_tree().create_timer(3.0).timeout
+			if is_inside_tree():
+				lakshmana.say("Too many! Let Vayu sweep them back!", 3.0)
+				hud.show_banner("Vayavyastra: its wind hurls a crowd away.", Color(0.8, 1.0, 0.95), 3.0)
+		return
+	match String(NIGHTS[night - 1].get("lesson", "")):
+		"varuna":
+			_varuna_lesson()
+		"mayavi":
+			hud.show_banner("Mayavi: only one is real. Strike the one that shimmers.", Color(0.8, 0.6, 1.0), 3.5)
+		"shield":
+			hud.show_banner("Shield-bearers: strike from the side, use an astra,\nor let Lakshmana break their guard.", Color(0.9, 0.85, 0.7), 4.0)
+			await get_tree().create_timer(4.0).timeout
+			if is_inside_tree():
+				hud.show_banner("They are going for the sages! Protect them.", Color(1.0, 0.6, 0.4), 3.0)
+		"brute":
+			hud.show_banner("A brute! Only a perfect shot or an astra will stagger it.", Color(1.0, 0.55, 0.35), 3.5)
 
 
 ## The first raiders' torches set a hut alight: a lesson in Varunastra.
@@ -174,11 +250,15 @@ func _on_rama_respawned() -> void:
 		spawner.restart_wave()
 
 
+## A night is held: a little Dharma, then the next night.
 func _on_waves_cleared() -> void:
 	Music.set_intensity(0.0)
-	await get_tree().create_timer(3.0).timeout
-	if is_inside_tree():
-		start_sky_battle()
+	if sage_hits == _night_sage_hits:
+		GameState.add_dharma(3)
+	hud.show_banner("The night passes. The fire still burns.", Color(1.0, 0.85, 0.55), 2.5)
+	await get_tree().create_timer(4.0).timeout
+	if is_inside_tree() and not bosses_started:
+		start_night(night + 1)
 
 
 # --- Maricha and Subahu --------------------------------------------------------------
@@ -238,6 +318,7 @@ func _on_maricha_banished(_b: SkyRakshasa) -> void:
 func _check_victory() -> void:
 	if subahu_down and maricha_gone and not yagna_complete:
 		yagna_complete = true
+		GameState.checkpoint = ""
 		hud.clear_boss_bars()
 		var cam := get_node_or_null("FollowCamera")
 		if cam and cam.has_method("frame_sky"):
@@ -261,8 +342,12 @@ func finish_yagna() -> void:
 	GameState.set_flag("yagna_protected", true)
 	SaveSystem.save_game()
 	hud.show_objective("", null)
+	if stats:
+		stats.facts["fire_min"] = fire_lowest
 	if story_enabled():
 		await cutscene(D + "dawn.tres")
+		if is_inside_tree():
+			await complete_mission(5)
 		if is_inside_tree():
 			go_to_mission(6)
 	else:

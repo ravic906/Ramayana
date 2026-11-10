@@ -11,3 +11,4 @@ narration = "For six nights the sages kept silence, and the princes kept watch o
 scene_path = "res://kandas/01_bala/siddhashrama.tscn"
 checkpoint = &""
 available = true
+star_goals = PackedStringArray("finish|Complete the yagna", "fire:75|Keep the sacred fire above 75%", "perfect:8|Loose 8 perfect shots")

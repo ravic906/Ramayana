@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"leaves_of_old"
+title = "Leaves of the Old Tales"
+giver = "The Palace Scribe"
+summary = "A gust from the Sarayu scattered the scribe's palm-leaf manuscripts across the courtyard."
+objective = "Find the scattered palm leaves"
+goal_count = 5
+reward_punya = 80
+reward_dharma = 0

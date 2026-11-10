@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"lotus_for_guru"
+title = "Lotuses for the Guru"
+giver = "The Old Gardener"
+summary = "The gardener's knees are too old for the steps of the kalyani. Lotuses for Guru Vasishtha's worship lie on the water."
+objective = "Gather lotuses from the kalyani"
+goal_count = 3
+reward_punya = 50
+reward_dharma = 5

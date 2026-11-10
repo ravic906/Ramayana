@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"archers_challenge"
+title = "The Archer's Challenge"
+giver = "Sumantra"
+summary = "Sumantra, the king's charioteer, wagers that no prince can fell six targets before the sand runs out."
+objective = "Fell 6 targets in 45 seconds"
+goal_count = 6
+reward_punya = 100
+reward_dharma = 0

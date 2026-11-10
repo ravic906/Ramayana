@@ -125,12 +125,29 @@ func _ready() -> void:
 	_creak = _loop_player(SFX_CREAK)
 	_heartbeat = _loop_player(SFX_HEARTBEAT)
 	spawn_point = global_position
+	var extra := Skills.add("rama_health")
+	if extra > 0.0:
+		health.max_health += extra
+		health.revive()
+	_last_dharma = GameState.dharma
+	GameState.dharma_changed.connect(_on_dharma_changed)
 	health.damaged.connect(_on_hurt)
 	health.died.connect(_on_died)
 
 
 func _exit_tree() -> void:
 	TimeFX.clear_all()
+
+
+var _last_dharma := 0
+
+
+## Blessing: Rama is healed whenever his Dharma rises.
+func _on_dharma_changed(value: int) -> void:
+	if value > _last_dharma and Skills.flag("dharma_heal") and not health.is_dead():
+		health.heal(15.0)
+		FX.sparks(get_parent(), global_position + Vector3.UP * 1.2, Color(1.0, 0.9, 0.5), 24, 3.0)
+	_last_dharma = value
 
 
 func _physics_process(delta: float) -> void:
@@ -261,7 +278,7 @@ func update_draw(real_delta: float) -> void:
 			model.begin_aim()
 		if cam:
 			cam.set_aiming(true)
-	draw_amount = minf(draw_amount + real_delta / draw_time, 1.0)
+	draw_amount = minf(draw_amount + real_delta / (draw_time * Skills.mult("draw_time")), 1.0)
 	if draw_amount >= 1.0:
 		if full_draw_time < 0.0:
 			full_draw_time = 0.0
@@ -299,7 +316,12 @@ func update_draw(real_delta: float) -> void:
 
 
 func is_in_perfect_window() -> bool:
-	return full_draw_time >= 0.0 and full_draw_time <= perfect_window
+	return full_draw_time >= 0.0 and full_draw_time <= perfect_window_now()
+
+
+## The perfect window with skills and Story mode applied.
+func perfect_window_now() -> float:
+	return perfect_window + Skills.add("perfect_window") + (0.2 if Settings.story_mode else 0.0)
 
 
 ## Fires the drawn arrow (or a snap shot for a quick tap) and ends the draw.
@@ -317,12 +339,19 @@ func release_draw() -> Arrow:
 	var direction := (aim_point - origin).normalized()
 	var damage := lerpf(min_damage, max_damage, power) * (perfect_multiplier if perfect else 1.0)
 	arrow = _spawn_arrow(origin, direction, damage, lerpf(min_arrow_speed, max_arrow_speed, power), perfect)
+	if power >= 0.95 and Skills.flag("pierce"):
+		arrow.pierce = 1
+	if perfect and Skills.flag("twin"):
+		# Twin Arrows: a second shaft a breath to the side.
+		var twin_dir := direction.rotated(Vector3.UP, deg_to_rad(3.5))
+		var twin := _spawn_arrow(origin, twin_dir, damage * 0.6, lerpf(min_arrow_speed, max_arrow_speed, power), false)
+		twin.set_trail_color(Color(1.0, 0.85, 0.4, 0.7))
 	var target := aim_target
 	_shoot_timer = shoot_cooldown
 	if armed_astra != null and draw_amount >= armed_astra.min_draw:
 		var astra := armed_astra
 		arrow.set_astra(astra)
-		astra_cooldowns[astra.id] = astra.cooldown
+		astra_cooldowns[astra.id] = astra.cooldown * Skills.mult("astra_cooldown")
 		_set_armed(null)
 		_sfx(SFX_IGNITE, -2.0, 1.3)
 		arrow.impacted.connect(func(at: Vector3, _c: Object, _k: bool) -> void: astra_detonated.emit(at))
@@ -383,7 +412,7 @@ func _update_aim() -> void:
 		origin = ray[0]
 		dir = ray[1]
 	var target := AutoAim.find_best_target(origin, dir, get_tree().get_nodes_in_group(&"enemies"),
-		assist_range, assist_cone_degrees)
+		assist_range, assist_cone_degrees * (1.6 if Settings.story_mode else 1.0))
 	if target != null:
 		aim_point = AutoAim.aim_point_of(target)
 	else:
@@ -465,7 +494,7 @@ func on_attacked(damage: float, source: Node) -> bool:
 		TimeFX.hitstop(0.12, 0.3)
 		perfect_dodge.emit()
 		return false
-	health.take_damage(damage, source)
+	health.take_damage(damage * Settings.incoming_damage_scale(), source)
 	return true
 
 

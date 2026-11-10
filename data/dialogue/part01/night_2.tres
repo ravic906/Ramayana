@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "Narration|||On the second night, a fog of maya rose from the forest.
+Vishvamitra|altar||Illusions, Rama. Of every shape you see, only one is true. Look for the one that shimmers."

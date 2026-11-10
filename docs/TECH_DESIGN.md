@@ -249,6 +249,46 @@ through Play Games Services and iCloud later.
 - **Astras:** `AstraResource.effect` (FIRE / WATER / WIND) drives `Explosion.detonate`. Water
   quenches `FirePatch` and `Burn`; wind is mostly knockback.
 
+### Progression, stars, difficulty
+- **Skills:** `SkillResource` (`data/skills/*.tres`) and the `Skills` autoload: `buy()`,
+  `mult(key)`, `add(key)`, `flag(key)`.
+  - Hooks: `Rama` (draw time, perfect window, cooldowns, pierce, twin, health, Blessing),
+    `Explosion` (water radius, burn, wind knockback) and `Lakshmana` (health, downed time, shot
+    interval).
+  - UI: `ui/skills_screen.gd`, opened from the Journey menu, the pause menu and the summary.
+- **Stars:** `MissionResource.star_goals` (`kind[:param]|label`) are scored by `MissionStats`
+  (perfect shots, falls, damage, Dharma, level facts).
+  - `StoryLevel.complete_mission(n)` records the best stars and shows `MissionSummary`.
+  - `MissionsScreen` replays reached missions (`PartFlow.furthest()`).
+- **Save v3:** skills, mission_stars, checkpoint, quests, lore. Older saves load with empty
+  defaults.
+- **Story mode:** `Settings.story_mode` / `difficulty_chosen`.
+  - Damage to Rama, Lakshmana and the sacred fire ×0.5 (`incoming_damage_scale`).
+  - Enemy health ×0.8; sky bosses ×0.75.
+  - Aim-assist cone ×1.6; perfect window +0.2 s.
+  - Chosen on first Play (`JourneyMenu.choose_mode`); toggles on the Journey menu and in the
+    pause menu.
+
+### Side quests and the Ayodhya hub
+- **Quests:** `QuestResource` (`data/quests`), `LoreResource` (`data/lore`) and the `Quests`
+  autoload: start, progress (optional auto-complete), complete with rewards, tracker text.
+- **Interaction:** `Interactable` (group "interactables", prompt, radius, glint). The HUD shows
+  an Interact button (action `interact`: E / D-pad down) for the nearest one, plus a quest
+  tracker line.
+- **Journal:** `JournalScreen` (pause menu) lists quests and the palm-leaf codex.
+- **Hub:** `kandas/01_bala/ayodhya_hub.tscn` reuses the Ayodhya environment and is mission 2's
+  scene.
+  - The trials hand off to it; its gate leads to the sage scene (`training_grounds`, mission 2).
+  - Practice targets give no Punya there (`TargetDummy.punya_reward`).
+
+### New enemies (Rakshasa variants)
+- **Shield-bearer:** `shield`. A `Health.damage_filter` cuts frontal hits to 10%; astras
+  (`Health.from_astra`) and flank shots pass. Lakshmana's shove calls `break_shield()`.
+- **Mayavi:** `blinks`. Teleports every 3.5–5 s; the first blink conjures 2 `is_decoy`
+  copies (1 HP, harmless, no reward, fade after 14 s).
+- **Brute:** data only (220 HP, 1.6× scale, stagger threshold 50). Only perfect shots
+  stagger it by damage; any astra staggers through `Rakshasa.on_astra`.
+
 ### Mission 5: Siddhashrama
 - **Environment:** `tools/build_ashram.gd` extends the forest builder (same helpers, tree cells
   and proxies) and writes `kandas/01_bala/env/siddhashrama.scn`. It has:
@@ -282,6 +322,9 @@ through Play Games Services and iCloud later.
   - He shoots with `arrow.tscn`.
   - The `companion` action / HUD Command button toggles him.
   - `guard_point` is the fire at Siddhashrama; FOLLOW applies in Vasishtha's trials.
+- **Nights:** `NIGHTS` in `siddhashrama.gd` set the waves, fog and lesson per night.
+  - `start_night(n)` saves `GameState.checkpoint = "night_n"`; resuming starts there.
+  - Night 4 sends melee rakshasas after the sages (OBJECTIVE + `objective_group = bystanders`).
 - **Flow:** `StoryLevel.go_to_mission()` shows an end card when the next mission isn't
   released. `say_lines()` speaks in-game exchanges without locking controls.
 

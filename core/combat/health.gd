@@ -11,6 +11,10 @@ signal died
 var current := 0.0
 ## While true, take_damage() is ignored (e.g. during a dodge roll).
 var invulnerable := false
+## Optional (amount, source) -> amount: e.g. a shield that blocks frontal hits.
+var damage_filter: Callable
+## True while an astra's blast is being applied (shields don't stop astras).
+static var from_astra := false
 
 
 func _ready() -> void:
@@ -20,6 +24,10 @@ func _ready() -> void:
 func take_damage(amount: float, source: Node = null) -> void:
 	if amount <= 0.0 or invulnerable or is_dead():
 		return
+	if damage_filter.is_valid():
+		amount = damage_filter.call(amount, source)
+		if amount <= 0.0:
+			return
 	current = maxf(current - amount, 0.0)
 	damaged.emit(amount, source)
 	changed.emit(current, max_health)

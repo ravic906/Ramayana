@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"agnis_wrath"
+branch = 1
+tier = 2
+cost = 150
+requires = &"quick_mantra"
+display_name = "Agni's Wrath"
+description = "Agneyastra's flames burn half again as fiercely."
+effects = {"burn_mult": 1.5}

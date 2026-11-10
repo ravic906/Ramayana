@@ -44,7 +44,12 @@ The red dummies remain for target practice. If Rama falls, he rises again and th
 ### Part 1 so far
 Play from the Journey menu to get the story:
 1. **Golden Hour:** Guru Vasishtha's maya trials in Ayodhya.
-2. **The Sage at the Gate:** Vishvamitra asks Dasharatha for Rama.
+2. **Ayodhya and the Sage at the Gate:** walk the palace grounds freely before going to the gate,
+   where Vishvamitra asks Dasharatha for Rama. Four **side quests**:
+   - **Leaves of the Old Tales:** find 5 palm leaves; each unlocks a lore entry in the Journal.
+   - **The Archer's Challenge:** fell 6 targets in 45 s.
+   - **The Lost Child:** find little Chandu and bring him home (+Dharma).
+   - **Lotuses for the Guru:** gather lotuses from the kalyani for Vasishtha (+Dharma).
 3. **The Silent Forest:** a cursed forest walk with Lakshmana, two ambushes, and a wounded
    rakshasa who flees. Let him go and Rama's **Dharma** rises.
 4. **Tataka:** the first boss.
@@ -53,10 +58,16 @@ Play from the Journey menu to get the story:
    - Below half health she vanishes into maya, and only the dust shows where she is.
    - Afterwards the forest blooms, and Vishvamitra grants **Agneyastra, Varunastra and
      Vayavyastra** for good.
-5. **Six Nights at Siddhashrama:** guard Vishvamitra's yagna at night.
-   - Three waves come down the forest lanes. Torch-bearing raiders run for the **sacred fire**;
-     its bar is on the HUD.
-   - The waves teach Varunastra (put out a burning hut) and Vayavyastra (hurl a crowd back).
+5. **Six Nights at Siddhashrama:** guard Vishvamitra's yagna for six nights. Each night is a
+   checkpoint with its own threat:
+   1. Torches, and the Varunastra lesson.
+   2. Maya fog and **Mayavi** illusionists with decoys.
+   3. Archers in the dark and a flood of raiders (Vayavyastra).
+   4. **Shield-bearers** going for the sages.
+   5. The siege, led by **brutes**.
+   6. Maricha and Subahu.
+
+   Torch-bearing raiders run for the **sacred fire**, whose bar is on the HUD.
    - **Maricha and Subahu** attack from the sky, circling, raining fire and blood shards, and
      swooping.
    - Subahu hides in smoke at the end, and only the **Agneyastra** can end him.
@@ -64,6 +75,15 @@ Play from the Journey menu to get the story:
      the sea (+20 Dharma).
    - Keep the fire strong and the sages unhurt for a Dharma bonus. Dawn follows, then a
      "coming soon" card for the next mission.
+
+**Progression and replay:**
+- **Skills:** spend Punya on 12 skills in three branches:
+  - Archery: faster draw, longer perfect window, piercing and twin arrows;
+  - Astras: cooldowns, Agni's burn, Varuna's reach, Vayu's force;
+  - Dharma: Rama's health, Lakshmana's toughness and fire rate, healing on Dharma.
+- **Stars:** every mission has three star goals and ends with a summary.
+- **Missions:** the list on the Journey menu replays any mission you've reached.
+- **Mode:** *Story* (gentler battles) or *Warrior*, asked on first Play and changeable any time.
 
 **Lakshmana fights beside Rama** from the forest onward:
 - He shoots rakshasas and shoves back any that close in.
@@ -145,8 +165,9 @@ tests/        headless test runner and unit tests
 | Phase | Deliverable |
 |---|---|
 | 0. Pre-production | GDD, art bible, Bala Kanda script, project skeleton ✅ (skeleton) |
-| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI |
+| 1. Prototype | Rama's movement, bow and auto-aim ✅ · animated, dressed Rama ✅ · draw-hold-release archery ✅ · Agneyastra ✅ · rakshasa grunts and archers ✅ · Lakshmana AI ✅ |
 | 1c. Part 1 story | Missions 1–4: trials, Vishvamitra, the Silent Forest, the Tataka boss, astra ceremony ✅ |
+| 1d. Part 1 to 2–3 h | **M1 ✅:** skills, stars and summary, Missions replay, Story mode, Ayodhya hub + 4 side quests, Six Nights (shield-bearers, Mayavi, brutes) · **M2:** mission *Bala and Atibala*, more quests and lore · **M3:** Silent Forest chapters, Trial Arena, boss rematches, Hard · **M4:** *The Stone and the Dawn* (Ahalya), Vishala hub · **M5:** Mithila, Shiva's bow, Parashurama |
 | 1b. Surroundings | Ayodhya training grounds at golden hour ✅ (gopuram, colonnades, garden, kalyani, sky); Stylised / Realistic looks ✅ |
 | 2. Vertical slice | Bala Kanda at final quality: Tataka boss, Shiva's bow finale, menus, saves |
 | 3. Soft launch | Bala Kanda free on Android (India), then iOS |

@@ -31,6 +31,15 @@ enum TargetMode { PLAYER, NEAREST, OBJECTIVE }
 @export var target_mode := TargetMode.PLAYER
 ## Raiders carry a burning torch to defile the sacred fire.
 @export var carries_torch := false
+## OBJECTIVE mode heads for this group ("objective" = the sacred fire,
+## "bystanders" = the sages).
+@export var objective_group := &"objective"
+## Shield-bearer: arrows from the front (within 60 degrees) are turned aside.
+@export var shield := false
+## Mayavi: blinks around the field and conjures decoys.
+@export var blinks := false
+## A conjured decoy: dies to one hit, does no harm, gives nothing.
+@export var is_decoy := false
 
 @onready var health: Health = $Health
 @onready var state_machine: StateMachine = $StateMachine
@@ -48,18 +57,36 @@ var _retarget_left := 0.0
 func _ready() -> void:
 	add_to_group(&"enemies")
 	model.scale = Vector3.ONE * data.model_scale
-	health.max_health = data.max_health
+	health.max_health = data.max_health * Settings.enemy_health_scale()
 	health.revive()
 	health.damaged.connect(_on_damaged)
 	health.died.connect(_on_died)
 	strafe_sign = 1.0 if randf() < 0.5 else -1.0
 	if carries_torch:
 		_add_torch()
+	if shield:
+		_add_shield()
+		health.damage_filter = _shield_filter
+	if blinks:
+		_blink_left = randf_range(2.0, 3.5)
+		_add_shimmer()
+	if is_decoy:
+		health.max_health = 1.0
+		health.revive()
+		# Illusions fade on their own.
+		get_tree().create_timer(14.0, false).timeout.connect(func() -> void:
+			if is_inside_tree() and not health.is_dead():
+				health.take_damage(1.0, null))
 	attack_cooldown_left = randf_range(0.3, 1.2)
 
 
 func _physics_process(delta: float) -> void:
 	attack_cooldown_left = maxf(attack_cooldown_left - delta, 0.0)
+	shield_down_left = maxf(shield_down_left - delta, 0.0)
+	if blinks and not health.is_dead() and not is_decoy:
+		_blink_left -= delta
+		if _blink_left <= 0.0 and not state_machine.is_in(&"Telegraph"):
+			blink()
 	_retarget_left -= delta
 	knockback = knockback.move_toward(Vector3.ZERO, 18.0 * delta)
 
@@ -85,7 +112,7 @@ func find_target() -> Node3D:
 	_retarget_left = 1.0
 	match target_mode:
 		TargetMode.OBJECTIVE:
-			target = _nearest_in([&"objective"])
+			target = _nearest_in([objective_group])
 			if target == null:
 				target = _nearest_in([&"player"])
 		TargetMode.NEAREST:
@@ -203,6 +230,8 @@ func perform_attack() -> void:
 	model.anim.speed_scale = 1.0
 	if target == null or not target_alive():
 		return
+	if is_decoy:
+		return  # an illusion: its blows and arrows are nothing
 	if is_ranged():
 		_fire_arrow()
 		return
@@ -268,6 +297,11 @@ func _on_died() -> void:
 	release_attack_token()
 	remove_from_group(&"enemies")
 	collision_layer = 0
+	if is_decoy:
+		FX.burst(get_parent(), global_position + Vector3.UP, Color(0.45, 0.25, 0.7, 0.8), 20, 3.0, 0.8, 0.7, 0.5, true)
+		died.emit(self)
+		queue_free()
+		return
 	state_machine.transition_to(&"Dead")
 	GameState.add_punya(data.punya_reward)
 	died.emit(self)
@@ -300,4 +334,107 @@ func _add_torch() -> void:
 	flame.mesh = FX.glow_quad(Color(1.0, 0.55, 0.15, 0.9), 0.18)
 	flame.position = Vector3(0.38, 1.75, -0.25) * data.model_scale
 	model.add_child(flame)
+
+
+# --- Shield-bearer -------------------------------------------------------------
+
+var shield_down_left := 0.0
+var _shield_mesh: MeshInstance3D
+
+
+func _shield_filter(amount: float, source: Node) -> float:
+	if Health.from_astra or shield_down_left > 0.0 or not (source is Node3D):
+		return amount
+	var to_src := (source as Node3D).global_position - global_position
+	to_src.y = 0.0
+	var facing := -model.global_basis.z
+	facing.y = 0.0
+	if to_src.length() > 0.01 and facing.normalized().dot(to_src.normalized()) > cos(deg_to_rad(60.0)):
+		FX.sparks(get_parent(), global_position + Vector3.UP * 1.3 + facing.normalized() * 0.6, Color(0.9, 0.85, 0.7), 16, 4.0)
+		return amount * 0.1
+	return amount
+
+
+## Lakshmana's shove (or a stagger) knocks the shield aside for a while.
+func break_shield(seconds := 4.0) -> void:
+	if shield:
+		shield_down_left = seconds
+		if _shield_mesh:
+			var t := create_tween()
+			t.tween_property(_shield_mesh, "rotation:z", 1.2, 0.2)
+			t.tween_interval(seconds - 0.4)
+			t.tween_property(_shield_mesh, "rotation:z", 0.0, 0.2)
+
+
+func _add_shield() -> void:
+	_shield_mesh = MeshInstance3D.new()
+	_shield_mesh.name = "Shield"
+	var disc := CylinderMesh.new()
+	disc.top_radius = 0.55
+	disc.bottom_radius = 0.55
+	disc.height = 0.08
+	disc.radial_segments = 16
+	_shield_mesh.mesh = disc
+	_shield_mesh.material_override = load("res://assets/materials/env/dark_stone.tres")
+	_shield_mesh.rotation = Vector3(PI / 2, 0, 0)
+	_shield_mesh.position = Vector3(-0.15, 1.25, -0.5) * data.model_scale
+	model.add_child(_shield_mesh)
+	var boss := MeshInstance3D.new()
+	var s := SphereMesh.new()
+	s.radius = 0.12
+	s.height = 0.12
+	boss.mesh = s
+	boss.material_override = load("res://assets/materials/env/gold.tres")
+	boss.position = Vector3(0, 0.06, 0)
+	_shield_mesh.add_child(boss)
+
+
+# --- Mayavi ----------------------------------------------------------------------
+
+const DECOY_SCENE := "res://characters/enemies/rakshasa/rakshasa_mayavi.tscn"
+var _blink_left := 4.0
+var _decoys_made := false
+
+
+## Vanishes in violet smoke and reappears elsewhere round its target; the first
+## time, two decoys appear with it.
+func blink() -> void:
+	_blink_left = randf_range(3.5, 5.0)
+	var t := find_target()
+	if t == null:
+		return
+	FX.burst(get_parent(), global_position + Vector3.UP, Color(0.45, 0.25, 0.7, 0.8), 24, 3.5, 0.9, 0.8, 0.5, true)
+	var a := randf() * TAU
+	var p := t.global_position + Vector3(cos(a), 0, sin(a)) * randf_range(7.0, 10.0)
+	p.y = global_position.y
+	global_position = p
+	FX.burst(get_parent(), global_position + Vector3.UP, Color(0.45, 0.25, 0.7, 0.8), 24, 3.5, 0.9, 0.8, 0.5, true)
+	if not _decoys_made:
+		_decoys_made = true
+		for i in 2:
+			var d := (load(DECOY_SCENE) as PackedScene).instantiate() as Rakshasa
+			d.is_decoy = true
+			d.blinks = false
+			var b := a + (i * 2 - 1) * 0.9
+			d.position = t.global_position + Vector3(cos(b), 0, sin(b)) * 8.0
+			get_parent().add_child(d)
+
+
+func _add_shimmer() -> void:
+	var p := CPUParticles3D.new()
+	p.name = "Shimmer"
+	p.amount = 14
+	p.lifetime = 0.8
+	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	p.emission_sphere_radius = 0.6
+	p.gravity = Vector3(0, 0.8, 0)
+	p.mesh = FX.glow_quad(Color(0.7, 0.45, 1.0, 0.6), 0.12)
+	p.position = Vector3.UP * 1.2
+	add_child(p)
+
+
+## Astras always shake a rakshasa (brutes too, whom arrows barely stagger).
+func on_astra(_astra: AstraResource, _source: Node) -> void:
+	if not health.is_dead() and not is_fleeing():
+		state_machine.transition_to.call_deferred(&"Stagger")
 

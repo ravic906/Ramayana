@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"blessing"
+branch = 2
+tier = 4
+cost = 250
+requires = &"lakshmanas_volley"
+display_name = "Blessing"
+description = "Whenever Dharma rises, Rama is healed."
+effects = {"dharma_heal": true}

@@ -12,3 +12,7 @@ extends Resource
 ## Where in the scene the mission starts (level-specific).
 @export var checkpoint := &""
 @export var available := true
+## Up to three goals, each "kind[:param]|label". Kinds:
+##   finish, no_fall, perfect:N, damage_under:N, fact:key, fire:P (percent)
+## Missions without goals (pure cutscenes) show no summary.
+@export var star_goals: PackedStringArray = []

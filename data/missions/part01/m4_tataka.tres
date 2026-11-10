@@ -11,3 +11,4 @@ narration = "In a ruined grove waited the one who had emptied the land."
 scene_path = "res://kandas/01_bala/forest.tscn"
 checkpoint = &"grove"
 available = true
+star_goals = PackedStringArray("finish|Defeat Tataka", "fact:boulder_shot|Shoot a boulder out of the air", "no_fall|Never fall")

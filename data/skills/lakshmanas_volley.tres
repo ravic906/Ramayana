@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"lakshmanas_volley"
+branch = 2
+tier = 3
+cost = 200
+requires = &"brothers_shield"
+display_name = "Lakshmana's Volley"
+description = "Lakshmana shoots 30% faster."
+effects = {"lakshmana_shot_interval_mult": 0.77}

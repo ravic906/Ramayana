@@ -55,7 +55,7 @@ func _ready() -> void:
 	if health == null:
 		health = Health.new()
 		health.name = "Health"
-		health.max_health = 120.0
+		health.max_health = 120.0 * Skills.mult("lakshmana_health")
 		add_child(health)
 	health.died.connect(_on_downed)
 	health.damaged.connect(func(_a: float, _s: Node) -> void: model.play_hit())
@@ -71,7 +71,7 @@ func can_be_targeted() -> bool:
 func on_attacked(damage: float, source: Node) -> bool:
 	if is_downed:
 		return false
-	health.take_damage(damage, source)
+	health.take_damage(damage * Settings.incoming_damage_scale(), source)
 	return true
 
 
@@ -185,7 +185,7 @@ func _fight(delta: float) -> void:
 
 
 func _shoot() -> void:
-	_shot_left = SHOT_INTERVAL * randf_range(0.85, 1.15)
+	_shot_left = SHOT_INTERVAL * Skills.mult("lakshmana_shot_interval") * randf_range(0.85, 1.15)
 	model.play_shoot()
 	var origin := global_position + Vector3.UP * 1.45 + visual.global_basis * Vector3(0, 0, -0.6)
 	var aim: Vector3 = foe.get_aim_point() if foe.has_method("get_aim_point") else foe.global_position + Vector3.UP
@@ -205,6 +205,8 @@ func _shove(dir: Vector3) -> void:
 		h.take_damage(6.0, self)
 	if foe.has_method("apply_knockback"):
 		foe.apply_knockback(dir * 9.0)
+	if foe.has_method("break_shield"):
+		foe.break_shield()  # a shoulder-charge knocks a shield-bearer's guard aside
 
 
 func _follow(delta: float) -> void:
@@ -229,7 +231,7 @@ func _follow(delta: float) -> void:
 
 func _on_downed() -> void:
 	is_downed = true
-	_downed_left = DOWNED_TIME
+	_downed_left = DOWNED_TIME * Skills.mult("lakshmana_downed")
 	foe = null
 	model.set_locomotion(0.0)
 	model.play_hit()

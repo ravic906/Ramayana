@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"deep_waters"
+branch = 1
+tier = 3
+cost = 200
+requires = &"agnis_wrath"
+display_name = "Deep Waters"
+description = "Varunastra's wave reaches 30% farther."
+effects = {"water_radius_mult": 1.3}

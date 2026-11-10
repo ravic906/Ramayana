@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"gale"
+branch = 1
+tier = 4
+cost = 250
+requires = &"deep_waters"
+display_name = "Gale"
+description = "Vayavyastra hurls foes 40% farther."
+effects = {"wind_knockback_mult": 1.4}

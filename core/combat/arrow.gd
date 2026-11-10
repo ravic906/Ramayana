@@ -17,6 +17,9 @@ const SFX_IMPACT := preload("res://assets/audio/sfx/impact.wav")
 
 var direction := Vector3.FORWARD
 var shooter: Node = null
+## Piercing Shot: how many foes this arrow may pass through.
+var pierce := 0
+var _passed: Array[RID] = []
 ## A perfect release: brighter trail, bigger impact.
 var perfect := false
 ## Leave the arrow stuck in what it hits (off for arrows aimed at Rama).
@@ -94,8 +97,10 @@ func _physics_process(delta: float) -> void:
 	var to := from + direction * speed * delta
 	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask)
 	query.collide_with_areas = true
+	var excluded: Array[RID] = _passed.duplicate()
 	if shooter is CollisionObject3D:
-		query.exclude = [(shooter as CollisionObject3D).get_rid()]
+		excluded.append((shooter as CollisionObject3D).get_rid())
+	query.exclude = excluded
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	if not hit.is_empty():
 		global_position = hit["position"]
@@ -134,6 +139,13 @@ func _on_hit(other: Object, at: Vector3) -> void:
 		if tfx:
 			tfx.hitstop(0.09 if (perfect or killed) else 0.05)
 		Haptics.pulse(45, 0.9 if killed else 0.6)
+		if pierce > 0 and astra == null and other is CollisionObject3D:
+			# Passes through and flies on.
+			pierce -= 1
+			_passed.append((other as CollisionObject3D).get_rid())
+			FX.sparks(get_parent(), at, Color(1.0, 0.8, 0.35), 18, 5.0)
+			impacted.emit(at, other, killed)
+			return
 	var parent := get_parent()
 	if astra != null:
 		Explosion.detonate(parent, at - direction * 0.2, astra, shooter)

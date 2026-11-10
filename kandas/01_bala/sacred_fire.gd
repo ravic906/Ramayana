@@ -91,7 +91,7 @@ func can_be_targeted() -> bool:
 
 ## Struck by a raider (melee) or a bolt.
 func on_attacked(damage: float, source: Node) -> bool:
-	health.take_damage(damage, source)
+	health.take_damage(damage * Settings.incoming_damage_scale(), source)
 	return true
 
 

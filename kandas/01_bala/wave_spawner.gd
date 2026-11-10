@@ -14,6 +14,9 @@ const SCENES := {
 	"grunt": "res://characters/enemies/rakshasa/rakshasa_grunt.tscn",
 	"archer": "res://characters/enemies/rakshasa/rakshasa_archer.tscn",
 	"raider": "res://characters/enemies/rakshasa/rakshasa_raider.tscn",
+	"shield": "res://characters/enemies/rakshasa/rakshasa_shield_bearer.tscn",
+	"mayavi": "res://characters/enemies/rakshasa/rakshasa_mayavi.tscn",
+	"brute": "res://characters/enemies/rakshasa/rakshasa_brute.tscn",
 }
 
 @export var auto_start := true

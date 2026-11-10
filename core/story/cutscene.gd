@@ -18,6 +18,11 @@ const SPEAKER_COLORS := {
 	"Herald": Color(0.85, 0.85, 0.85),
 	"The Astras": Color(1.0, 0.92, 0.6),
 	"Subahu": Color(1.0, 0.35, 0.2),
+	"Scribe": Color(0.9, 0.88, 0.75),
+	"Sumantra": Color(0.55, 0.7, 1.0),
+	"Grandfather": Color(0.85, 0.75, 0.6),
+	"Chandu": Color(1.0, 0.85, 0.4),
+	"Gardener": Color(0.6, 0.85, 0.5),
 	"Maricha": Color(0.75, 0.55, 1.0),
 }
 const CHARS_PER_SECOND := 45.0

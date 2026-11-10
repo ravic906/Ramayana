@@ -63,9 +63,13 @@ func _on_trials_complete() -> void:
 	hud.show_banner("The vision fades. \"This is not yet yours.\"", Color(1, 0.75, 0.45), 3.5)
 	if story_enabled():
 		await get_tree().create_timer(4.0).timeout
+		if not is_inside_tree():
+			return
+		await complete_mission(1)
 		if is_inside_tree():
 			await cutscene(D + "trials_complete.tres")
-			_play_sage_at_gate()
+			if is_inside_tree():
+				go_to_mission(2)  # Ayodhya: walk the palace grounds, then the gate
 
 
 func _play_sage_at_gate() -> void:

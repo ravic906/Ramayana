@@ -80,6 +80,7 @@ func _process(delta: float) -> void:
 	mat.set_shader_parameter(&"fire", _fire)
 	_update_agni(real_delta)
 	_update_command()
+	_update_interact()
 	shoot_button.progress = _draw if aiming else 0.0
 	shoot_button.progress_color = Color(1.0, 0.95, 0.6) if _perfect else Color(1.0, 0.82, 0.3)
 
@@ -111,6 +112,66 @@ func _ensure_astra_buttons(count: int) -> void:
 
 
 var _command_button: ActionButton
+var _interact_button: ActionButton
+var _interact_target: Interactable
+var _tracker: Label
+
+
+## Shows the Interact button (with its prompt) near something Rama can use.
+func _update_interact() -> void:
+	var rama := _player as Rama
+	_interact_target = null
+	if rama and not rama.controls_locked and not rama.health.is_dead():
+		var best_d := INF
+		for n in get_tree().get_nodes_in_group(&"interactables"):
+			var it := n as Interactable
+			if it == null or not it.enabled or not it.is_visible_in_tree():
+				continue
+			var d := it.global_position.distance_to(rama.global_position)
+			if d <= it.radius and d < best_d:
+				best_d = d
+				_interact_target = it
+	if _interact_target == null:
+		if _interact_button:
+			_interact_button.visible = false
+		return
+	if _interact_button == null:
+		_interact_button = ActionButton.new()
+		_interact_button.name = "InteractButton"
+		_interact_button.action = &"interact"
+		_interact_button.color = Color(0.25, 0.5, 0.45, 0.9)
+		_interact_button.anchor_left = 1.0
+		_interact_button.anchor_top = 1.0
+		_interact_button.anchor_right = 1.0
+		_interact_button.anchor_bottom = 1.0
+		# Above the subtitles, clear of the astra buttons.
+		_interact_button.offset_left = -780
+		_interact_button.offset_top = -450
+		_interact_button.offset_right = -620
+		_interact_button.offset_bottom = -290
+		$Root.add_child(_interact_button)
+	_interact_button.visible = true
+	_interact_button.label = _interact_target.prompt
+	_interact_button.queue_redraw()
+	if Input.is_action_just_pressed(&"interact"):
+		_interact_target.interact()
+
+
+## The active quest's objective, small along the top (empty hides it).
+func set_tracker(text: String) -> void:
+	if _tracker == null:
+		_tracker = PartCard._label("", 26, Color(1, 0.9, 0.65), true)
+		_tracker.name = "QuestTracker"
+		_tracker.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		_tracker.offset_left = -600
+		_tracker.offset_right = 600
+		_tracker.offset_top = 22
+		_tracker.offset_bottom = 70
+		_tracker.add_theme_color_override(&"font_outline_color", Color(0.1, 0.05, 0.03))
+		_tracker.add_theme_constant_override(&"outline_size", 8)
+		$Root.add_child(_tracker)
+	_tracker.text = text
+	_tracker.visible = text != ""
 
 
 ## The Command button toggles Lakshmana between Attack and Guard.
@@ -229,8 +290,8 @@ func _build_pause() -> void:
 	_pause_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_pause_panel.offset_left = -260
 	_pause_panel.offset_right = 260
-	_pause_panel.offset_top = -340
-	_pause_panel.offset_bottom = 340
+	_pause_panel.offset_top = -440
+	_pause_panel.offset_bottom = 440
 	_pause_panel.visible = false
 	$Root.add_child(_pause_panel)
 	var box := VBoxContainer.new()
@@ -240,14 +301,19 @@ func _build_pause() -> void:
 	var part := PartCatalog.by_number(GameState.current_part)
 	box.add_child(PartCard._label("Part %d: %s" % [part.number, part.title] if part else "Paused", 30, PartCard.INK, true))
 	var look := ["Look: %s" % Settings.style_name(), func() -> void: pass]
-	for entry in [["Resume", set_paused.bind(false)], look, ["Back to the Journey", back_to_journey]]:
+	var mode := ["Mode: %s" % Settings.mode_name(), func() -> void: pass]
+	for entry in [["Resume", set_paused.bind(false)], ["Skills", func() -> void: SkillsScreen.open(self)], ["Journal", func() -> void: JournalScreen.open(self)], mode, look, ["Back to the Journey", back_to_journey]]:
 		var b := Button.new()
 		b.text = entry[0]
 		b.custom_minimum_size = Vector2(0, 80)
 		b.add_theme_font_size_override(&"font_size", 30)
 		b.add_theme_stylebox_override(&"normal", PartCard._style(Color(0.85, 0.42, 0.1), PartCard.GOLD, 3, 14))
 		b.add_theme_color_override(&"font_color", Color(1, 0.97, 0.9))
-		if entry == look:
+		if entry == mode:
+			b.pressed.connect(func() -> void:
+				Settings.set_story_mode(not Settings.story_mode)
+				b.text = "Mode: %s" % Settings.mode_name())
+		elif entry == look:
 			b.pressed.connect(func() -> void:
 				Settings.toggle_visual_style()
 				b.text = "Look: %s" % Settings.style_name())
@@ -448,7 +514,7 @@ func show_boss(boss_name: String, health: Health) -> void:
 
 ## Hides gameplay controls during cutscenes.
 func set_cinematic(on: bool) -> void:
-	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel", "ObjectiveBox", "CommandButton"]:
+	for n in ["Joystick", "ShootButton", "DodgeButton", "Reticle", "EnemyBars", "PauseButton", "HealthBar", "PunyaLabel", "ObjectiveBox", "CommandButton", "InteractButton", "QuestTracker"]:
 		var c := $Root.get_node_or_null(n) as CanvasItem
 		if c:
 			c.visible = not on

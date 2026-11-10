@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"brothers_shield"
+branch = 2
+tier = 2
+cost = 150
+requires = &"steadfast"
+display_name = "Brother's Shield"
+description = "Lakshmana is tougher and rises sooner when struck down."
+effects = {"lakshmana_health_mult": 1.4, "lakshmana_downed_mult": 0.67}

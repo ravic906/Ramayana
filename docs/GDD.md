@@ -156,6 +156,15 @@ New Game+.
 
 ## 7. Progression
 
+**Implemented:**
+- the skill tree (12 skills, Punya);
+- three star goals per mission, with a summary;
+- the Missions replay list;
+- Story / Warrior modes;
+- side quests with a palm-leaf codex (the Ayodhya hub).
+
+**Part 1 target:** 2–3 hours (see the roadmap in the README).
+
 - **Punya (XP):** from missions, bosses, Dharma actions.
 - **Skill tree:** three branches — *Archery* (charge speed, multishot, pierce), *Astras*
   (cooldown, power, new forms), *Dharma* (companion buffs, summon power).

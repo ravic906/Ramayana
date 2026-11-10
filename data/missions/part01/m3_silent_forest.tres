@@ -11,3 +11,4 @@ narration = "They walked into lands where no bird sang, the lands of Malada and 
 scene_path = "res://kandas/01_bala/forest.tscn"
 checkpoint = &""
 available = true
+star_goals = PackedStringArray("finish|Reach Tataka's grove", "fact:spared|Spare the fleeing rakshasa", "damage_under:60|Take less than 60 damage")

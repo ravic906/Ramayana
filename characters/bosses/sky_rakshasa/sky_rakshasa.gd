@@ -54,7 +54,7 @@ var _shield: CPUParticles3D
 
 func _ready() -> void:
 	model.scale = Vector3.ONE * SCALE
-	health.max_health = max_health
+	health.max_health = max_health * (0.75 if Settings.story_mode else 1.0)
 	health.revive()
 	health.damaged.connect(_on_damaged)
 	health.died.connect(_on_died)

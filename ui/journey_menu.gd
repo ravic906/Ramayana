@@ -60,6 +60,9 @@ func show_message(text: String) -> void:
 
 
 func play(part: PartResource) -> void:
+	if not Settings.difficulty_chosen:
+		choose_mode(func() -> void: play(part))
+		return
 	if not PartLoader.mount(part):
 		show_message("%s could not be loaded." % part.title)
 		return
@@ -177,6 +180,39 @@ func _build() -> void:
 	credits.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
 	credits.pressed.connect(show_credits)
 	bottom.add_child(credits)
+	var skills := Button.new()
+	skills.name = "SkillsButton"
+	skills.text = "Skills"
+	skills.custom_minimum_size = Vector2(0, 72)
+	skills.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		skills.add_theme_stylebox_override(s, PartCard._style(Color(0.35, 0.28, 0.12), PartCard.GOLD, 4, 16))
+	skills.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	skills.pressed.connect(func() -> void: SkillsScreen.open(self))
+	bottom.add_child(skills)
+	var missions := Button.new()
+	missions.name = "MissionsButton"
+	missions.text = "Missions"
+	missions.custom_minimum_size = Vector2(0, 72)
+	missions.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		missions.add_theme_stylebox_override(s, PartCard._style(Color(0.2, 0.32, 0.25), PartCard.GOLD, 4, 16))
+	missions.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	missions.pressed.connect(func() -> void:
+		MissionsScreen.open(self, 1).mission_chosen.connect(play_mission))
+	bottom.add_child(missions)
+	var mode := Button.new()
+	mode.name = "ModeButton"
+	mode.text = "Mode: %s" % Settings.mode_name()
+	mode.custom_minimum_size = Vector2(0, 72)
+	mode.add_theme_font_size_override(&"font_size", 26)
+	for s in [&"normal", &"hover", &"pressed", &"focus"]:
+		mode.add_theme_stylebox_override(s, PartCard._style(Color(0.4, 0.15, 0.2), PartCard.GOLD, 4, 16))
+	mode.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+	mode.pressed.connect(func() -> void:
+		Settings.set_story_mode(not Settings.story_mode)
+		mode.text = "Mode: %s" % Settings.mode_name())
+	bottom.add_child(mode)
 	_message = _title("", 24, Color(1, 0.97, 0.9))
 	_message.modulate.a = 0.0
 	root.add_child(_message)
@@ -253,3 +289,68 @@ func show_credits() -> void:
 	close.offset_bottom = -36
 	close.pressed.connect(layer.queue_free)
 	layer.add_child(close)
+
+
+## Replays a mission of Part 1 (from the Missions list).
+func play_mission(number: int) -> void:
+	var part := PartCatalog.by_number(1)
+	var m := PartFlow.get_mission(1, number)
+	if m == null or not m.available:
+		return
+	if not Settings.difficulty_chosen:
+		choose_mode(func() -> void: play_mission(number))
+		return
+	GameState.set_part(1)
+	GameState.story_session = true
+	GameState.current_mission = number
+	GameState.checkpoint = ""
+	if part:
+		PartLoader.mount(part)
+	get_tree().change_scene_to_file(m.scene_path)
+
+
+## Asked once, on the first Play: how would you like to journey?
+func choose_mode(then: Callable) -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "ModeChoice"
+	layer.layer = 55
+	add_child(layer)
+	var bg := ColorRect.new()
+	bg.color = Color(0.07, 0.045, 0.03, 0.95)
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(bg)
+	var box := VBoxContainer.new()
+	box.set_anchors_preset(Control.PRESET_CENTER)
+	box.offset_left = -760
+	box.offset_right = 760
+	box.offset_top = -330
+	box.offset_bottom = 330
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override(&"separation", 28)
+	layer.add_child(box)
+	box.add_child(PartCard._label("How would you walk the path?", 46, Color(1, 0.85, 0.5), true))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override(&"separation", 40)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_child(row)
+	for spec in [["Story", "For the tale.\nGentler battles, a steadier aim,\nmore time for a perfect shot.", true, Color(0.3, 0.5, 0.35)],
+			["Warrior", "The full challenge.\nRakshasas strike hard;\nmastery is rewarded.", false, Color(0.7, 0.3, 0.12)]]:
+		var b := Button.new()
+		b.name = spec[0] + "Choice"
+		b.text = "%s\n\n%s" % [spec[0], spec[1]]
+		b.custom_minimum_size = Vector2(620, 360)
+		b.add_theme_font_size_override(&"font_size", 30)
+		for st in [&"normal", &"hover", &"pressed", &"focus"]:
+			b.add_theme_stylebox_override(st, PartCard._style(spec[3], PartCard.GOLD, 4, 20))
+		b.add_theme_color_override(&"font_color", Color(1, 0.96, 0.88))
+		var story: bool = spec[2]
+		b.pressed.connect(func() -> void:
+			Settings.set_story_mode(story)
+			var mb := find_child("ModeButton", true, false) as Button
+			if mb:
+				mb.text = "Mode: %s" % Settings.mode_name()
+			layer.queue_free()
+			then.call())
+		row.add_child(b)
+	box.add_child(PartCard._label("You can change this any time.", 24, Color(0.85, 0.8, 0.7), true))
+

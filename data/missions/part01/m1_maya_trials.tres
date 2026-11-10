@@ -11,3 +11,4 @@ narration = "In golden Ayodhya, the princes trained beneath their guru's eye, an
 scene_path = "res://kandas/01_bala/training_grounds.tscn"
 checkpoint = &""
 available = true
+star_goals = PackedStringArray("finish|Pass Vasishtha's trials", "no_fall|Never fall", "perfect:3|Loose 3 perfect shots")

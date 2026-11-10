@@ -47,7 +47,17 @@ static func scene_for(part: PartResource) -> String:
 ## Moves the player on to `mission_number` and autosaves.
 static func advance_to(mission_number: int) -> void:
 	GameState.current_mission = mission_number
+	reach(mission_number)
 	SaveSystem.save_game()
+
+
+## The furthest mission reached in Part 1 (what the Missions list offers).
+static func reach(mission_number: int) -> void:
+	GameState.set_flag("furthest_1", maxi(furthest(), mission_number))
+
+
+static func furthest() -> int:
+	return int(GameState.get_flag("furthest_1", maxi(GameState.current_mission, 1)))
 
 
 static func next_available(part_number: int, mission_number: int) -> MissionResource:

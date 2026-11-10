@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"long_breath"
+branch = 0
+tier = 2
+cost = 150
+requires = &"steady_draw"
+display_name = "Long Breath"
+description = "The golden moment for a perfect shot lasts longer."
+effects = {"perfect_window_add": 0.15}

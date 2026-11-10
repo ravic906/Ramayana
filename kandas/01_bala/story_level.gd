@@ -10,6 +10,41 @@ const LAKSHMANA := preload("res://characters/companions/lakshmana/lakshmana.tscn
 
 ## Camera shots for cutscenes: id -> [position, look_at].
 var shots := {}
+## What happens during the current mission (stars, summary).
+var stats: MissionStats
+
+
+func _enter_tree() -> void:
+	_begin_stats.call_deferred()
+
+
+func _begin_stats() -> void:
+	if stats == null and is_instance_valid(rama):
+		stats = MissionStats.new()
+		stats.track(rama)
+
+
+## A mission is over: record its stars and, in story play, show the summary
+## card (stars, Punya, Dharma, the way to the skill tree). Awaitable.
+func complete_mission(number: int) -> void:
+	_begin_stats()
+	var m := PartFlow.get_mission(1, number)
+	if m == null or stats == null:
+		return
+	PartFlow.reach(number + 1)
+	GameState.checkpoint = ""
+	if story_enabled() and not m.star_goals.is_empty():
+		hud.set_cinematic(true)
+		rama.controls_locked = true
+		var card := MissionSummary.open(self, m, stats)
+		await card.done
+		if is_inside_tree():
+			hud.set_cinematic(false)
+			rama.controls_locked = false
+	else:
+		GameState.record_stars(1, number, stats.stars(m.star_goals))
+	stats = MissionStats.new()
+	stats.track(rama)
 
 
 func story_enabled() -> bool:

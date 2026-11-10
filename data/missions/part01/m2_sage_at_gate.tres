@@ -6,8 +6,8 @@
 script = ExtResource("1_m")
 number = 2
 id = &"sage_at_gate"
-title = "The Sage at the Gate"
+title = "Ayodhya: The Sage at the Gate"
 narration = "Then came a sage to the palace gate, and with him the first step of a long road."
-scene_path = "res://kandas/01_bala/training_grounds.tscn"
+scene_path = "res://kandas/01_bala/ayodhya_hub.tscn"
 checkpoint = &"sage"
 available = true

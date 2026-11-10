@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/progress/skill_resource.gd" id="1_s"]
+
+[resource]
+script = ExtResource("1_s")
+id = &"steady_draw"
+branch = 0
+tier = 1
+cost = 100
+requires = &""
+display_name = "Steady Draw"
+description = "Kodanda bends faster: full draw in 15% less time."
+effects = {"draw_time_mult": 0.85}

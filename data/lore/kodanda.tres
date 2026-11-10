@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"kodanda"
+title = "The Kodanda"
+text = "Rama's great bow is called the Kodanda. In the tradition it is so strong that only a hand trained in dharma as well as in archery can draw it to the full."

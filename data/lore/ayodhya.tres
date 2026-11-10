@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"ayodhya"
+title = "Ayodhya"
+text = "The name Ayodhya means 'the unconquerable', a city that cannot be fought. Valmiki describes it as wide and well-ordered, with broad streets, gardens, and gates guarded day and night."

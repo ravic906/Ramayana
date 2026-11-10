@@ -23,28 +23,34 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 		FX.sparks(parent, at, astra.glow_color, 50, 9.0)
 		_feedback(parent, 0.15, 200, 0.8)
 		return hit
+	# Skills: Deep Waters (Varuna reach), Agni's Wrath (burn), Gale (Vayu's force).
+	var radius := astra.radius * (Skills.mult("water_radius") if astra.effect == AstraResource.Effect.WATER else 1.0)
+	var burn_dps := astra.burn_dps * Skills.mult("burn")
+	var knockback := astra.knockback * (Skills.mult("wind_knockback") if astra.effect == AstraResource.Effect.WIND else 1.0)
 	for enemy in parent.get_tree().get_nodes_in_group(&"enemies"):
 		var e := enemy as Node3D
 		if e == null:
 			continue
 		var p: Vector3 = e.get_aim_point() if e.has_method("get_aim_point") else e.global_position
 		var d := p.distance_to(at)
-		if d > astra.radius:
+		if d > radius:
 			continue
-		var falloff := 1.0 - d / astra.radius
+		var falloff := 1.0 - d / radius
 		if e.has_method("on_astra"):
 			e.on_astra(astra, source)  # e.g. Subahu, whom only the Agneyastra can end
 		var h := e.get_node_or_null("Health") as Health
 		if h:
+			Health.from_astra = true
 			h.take_damage(astra.impact_damage * lerpf(0.4, 1.0, falloff), source)
+			Health.from_astra = false
 		if astra.effect == AstraResource.Effect.FIRE:
-			Burn.apply(e, astra.burn_dps, astra.burn_duration, source)
+			Burn.apply(e, burn_dps, astra.burn_duration, source)
 		elif astra.effect == AstraResource.Effect.WATER and e.has_node("Burn"):
 			e.get_node("Burn").queue_free()
 		if e.has_method("apply_knockback"):
 			var away := e.global_position - at
 			away.y = 0.0
-			e.apply_knockback(away.normalized() * astra.knockback * (0.4 + 0.6 * falloff))
+			e.apply_knockback(away.normalized() * knockback * (0.4 + 0.6 * falloff))
 		hit.append(e)
 
 	var ground := _ground_point(parent, at)
@@ -52,7 +58,7 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 	if astra.effect == AstraResource.Effect.WATER:
 		# Varunastra quenches burning ground nearby.
 		for node in parent.get_children():
-			if node is FirePatch and (node as Node3D).global_position.distance_to(ground) < astra.radius + (node as FirePatch).radius:
+			if node is FirePatch and (node as Node3D).global_position.distance_to(ground) < radius + (node as FirePatch).radius:
 				node.queue_free()
 	if astra.effect != AstraResource.Effect.FIRE:
 		_feedback(parent, 0.08, 120, 0.7)
@@ -61,7 +67,7 @@ static func detonate(parent: Node, at: Vector3, astra: AstraResource, source: No
 	patch.radius = astra.radius * 0.6
 	patch.dps = astra.patch_dps
 	patch.duration = astra.patch_duration
-	patch.burn_dps = astra.burn_dps
+	patch.burn_dps = burn_dps
 	patch.source = source
 	patch.position = (parent as Node3D).to_local(ground) if parent is Node3D else ground
 	parent.add_child(patch)
