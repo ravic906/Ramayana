@@ -8,7 +8,7 @@ text = "|camp_wide||
 Narration|camp_wide||They walked until the sun lay low over the Sarayu, and there, on the southern bank, the sage stopped.
 Vishvamitra|close||Rama. Go down to the water. Sip it, and wash your hands and face. What I give now must be received clean.|calm
 |water|rama_sip|
-Rama|close||It is done, Guru-dev.|reverence
+Rama|water||It is done, Guru-dev.|reverence
 Vishvamitra|close||These are Bala and Atibala, born of Brahma himself. Hold them in mind, and you will know no hunger, no thirst, no weariness.|reverence
 Vishvamitra|close||While you keep them, no one in the three worlds will be your equal, not in strength, not in wisdom, not in answer.|reverence
 |camp_wide|grant_bala|

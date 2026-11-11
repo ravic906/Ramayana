@@ -387,6 +387,11 @@ func _on_story_action(action_name: StringName) -> void:
 			_unseat(lakshmana)
 			_unseat(rama)
 			Music.play("bloom")
+		&"rise":
+			for who: Node3D in [rama, lakshmana]:
+				_unseat(who)
+				var d := sage.global_position - who.global_position
+				(who.get("visual") as Node3D).rotation.y = atan2(-d.x, -d.z)
 		&"morning_rites":
 			for who: Node3D in [rama, lakshmana]:
 				who.set_physics_process(false)
