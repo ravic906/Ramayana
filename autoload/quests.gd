@@ -14,7 +14,7 @@ const LORE_PATHS := [
 	"res://data/lore/ikshvaku.tres", "res://data/lore/sarayu.tres", "res://data/lore/vasishtha.tres",
 	"res://data/lore/kodanda.tres", "res://data/lore/ayodhya.tres",
 	"res://data/lore/kaushika.tres", "res://data/lore/bala_atibala.tres", "res://data/lore/confluence.tres",
-	"res://data/lore/kama_ashrama.tres",
+	"res://data/lore/kama_ashrama.tres", "res://data/lore/karusha_shrine.tres",
 ]
 
 var all: Array[QuestResource] = []

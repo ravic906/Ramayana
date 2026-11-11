@@ -6,7 +6,7 @@ extends SceneTree
 
 const MAPS := [
 	["ayodhya", "Ayodhya, the palace grounds", "res://kandas/01_bala/env/ayodhya_grounds.scn", "res://kandas/01_bala/ayodhya_hub.tscn", Rect2(-48, -62, 96, 92)],
-	["forest", "The Silent Forest", "res://kandas/01_bala/env/tataka_forest.scn", "res://kandas/01_bala/forest.tscn", Rect2(-40, -150, 80, 166)],
+	["forest", "The Silent Forest", "res://kandas/01_bala/env/tataka_forest.scn", "res://kandas/01_bala/forest.tscn", Rect2(-40, -150, 80, 346), 5.0],
 	["sarayu", "The Road along the Sarayu", "res://kandas/01_bala/env/sarayu_road.scn", "res://kandas/01_bala/sarayu_road.tscn", Rect2(-46, -346, 124, 360), 4.0],
 	["siddhashrama", "Siddhashrama", "res://kandas/01_bala/env/siddhashrama.scn", "res://kandas/01_bala/siddhashrama.tscn", Rect2(-50, -50, 100, 72)],
 ]

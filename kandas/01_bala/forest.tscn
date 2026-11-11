@@ -111,7 +111,7 @@ shape = SubResource("Shape_trigger")
 [node name="Encounter2" type="Node3D" parent="."]
 script = ExtResource("8_spawner")
 auto_start = false
-waves = Array[PackedStringArray]([PackedStringArray("grunt", "grunt", "grunt", "archer")])
+waves = Array[PackedStringArray]([PackedStringArray("grunt", "mayavi", "grunt", "archer")])
 
 [node name="A" type="Marker3D" parent="Encounter2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -71)

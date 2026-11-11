@@ -1,10 +1,11 @@
 [gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_q1qut"]
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_5sbhm"]
 
 [resource]
-script = ExtResource("1_q1qut")
+script = ExtResource("1_5sbhm")
 title = "The Silent Forest"
 level_scene = "res://kandas/01_bala/forest.tscn"
+other_scenes = PackedStringArray()
 image_path = "res://assets/maps/forest.png"
-world_rect = Rect2(-40, -150, 80, 166)
+world_rect = Rect2(-40, -150, 80, 346)

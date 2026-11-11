@@ -1,8 +1,11 @@
 extends StoryLevel
-## Bala Kanda, missions 3-4: Tataka's forest. The silent path (two ambushes,
-## the Dharma moment of sparing a fleeing rakshasa) leads to the ruined grove
-## where Tataka waits. After her defeat the forest blooms and Vishvamitra
-## grants the astras for real.
+## Bala Kanda, missions 3-4: Tataka's forest, in three chapters.
+##   I   The Empty Fields of Malada: a ruined village and its rakshasa scouts.
+##   II  The Deep Wood: thorns choke the path until the forest shrine's bells are
+##       rung in the carved order; then two ambushes (Mayavi in the second) and
+##       the Dharma moment of sparing a fleeing rakshasa.
+##   III Tataka's Grove: the boss. After her defeat the forest blooms and
+##       Vishvamitra grants the astras for real.
 
 const D := "res://data/dialogue/part01/"
 const ASTRAS: Array[StringName] = [&"agneyastra", &"varunastra", &"vayavyastra"]
@@ -19,15 +22,21 @@ var boss_started := false
 var boss_defeated := false
 var _sage: Node3D
 var _fleeing_one: Rakshasa
+var scouts: WaveSpawner
+var shrine: ShrinePuzzle
+var thorns: StaticBody3D
+var chapter := 1
+const CHAPTERS := ["The Empty Fields of Malada", "The Deep Wood", "Tataka's Grove"]
 
 
 func _ready() -> void:
 	hud.get_node("Root/HintLabel").visible = false
 	Settings.apply_to_sun(sun)
 	var grove := (env.get_node("GroveCenter") as Node3D).global_position
+	var start := m("ForestStart")
 	shots = {
-		&"sage": [Vector3(2.5, 1.9, -3.0), Vector3(0.5, 1.6, -7.0)],
-		&"brothers": [Vector3(-2.0, 1.8, 2.5), Vector3(0.0, 1.4, -2.0)],
+		&"sage": [start + Vector3(2.5, 1.9, -3.0), start + Vector3(0.5, 1.6, -7.0)],
+		&"brothers": [start + Vector3(-2.0, 1.8, 2.5), start + Vector3(0.0, 1.4, -2.0)],
 		&"grove_wide": [grove + Vector3(6.0, 7.0, 24.0), grove + Vector3(0, 3.0, -6.0)],
 		&"tataka": [grove + Vector3(2.0, 3.5, 4.0), grove + Vector3(0, 4.5, -8.0)],
 	}
@@ -51,10 +60,17 @@ func _ready() -> void:
 	tataka.phase_changed.connect(func(_p: int) -> void:
 		hud.show_banner("Tataka weaves her maya!\nWatch for the dust.", Color(0.85, 0.55, 0.95), 2.5))
 	tataka.staggered.connect(func() -> void: lakshmana.say("She's down, brother! Now!", 2.0))
+	_build_chapter_one()
+	_build_shrine()
 	if GameState.current_mission >= 4:
+		chapter = 3
 		_place_at_grove_entry()
+	elif GameState.checkpoint == "forest_c2":
+		_place(m("Chapter2") + Vector3(0, 0, 4))
+		_enter_chapter(2)
 	else:
-		set_objective("Follow the path north into the silent forest", $Trigger1)
+		_place(start)
+		set_objective("Cross the empty fields of Malada", env.get_node("VillageCenter"))
 	encounter1.all_cleared.connect(func() -> void:
 		set_objective("Press on toward the heart of the forest", $Trigger2))
 	encounter2.all_cleared.connect(func() -> void:
@@ -71,10 +87,155 @@ func _intro() -> void:
 	if GameState.current_mission >= 4:
 		_start_boss()
 		return
-	_sage = spawn_npc("res://characters/npc/vishvamitra.tscn", Vector3(0.5, 0, -7.0), Vector3(0, 0, 0))
+	if GameState.checkpoint == "forest_c2":
+		return
+	var start := m("ForestStart")
+	_sage = spawn_npc("res://characters/npc/vishvamitra.tscn", start + Vector3(0.5, 0, -7.0), start)
 	await cutscene(D + "forest_intro.tres")
 	if is_instance_valid(_sage):
 		_sage.queue_free()
+
+
+func m(marker: String) -> Vector3:
+	return (env.get_node(marker) as Node3D).global_position
+
+
+func _place(at: Vector3) -> void:
+	rama.global_position = at
+	rama.spawn_point = at
+	lakshmana.global_position = at + Vector3(-1.5, 0, 2.0)
+
+
+# --- Chapters -----------------------------------------------------------------------
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	if chapter == 1 and rama.global_position.z < m("Chapter2").z:
+		_enter_chapter(2)
+	elif chapter == 2 and rama.global_position.z < $BossTrigger.global_position.z + 14.0 and not boss_started:
+		_enter_chapter(3)
+
+
+func _enter_chapter(n: int) -> void:
+	chapter = n
+	hud.show_banner("Chapter %s\n%s" % [["I", "II", "III"][n - 1], CHAPTERS[n - 1]], Color(1.0, 0.88, 0.6), 3.0)
+	if n == 2 and GameState.current_mission == 3:
+		GameState.checkpoint = "forest_c2"
+		SaveSystem.save_game()
+		rama.spawn_point = rama.global_position
+		if shrine and not shrine.is_solved:
+			set_objective("A wall of thorns chokes the path. Look for a way at the old shrine", env.get_node("ShrineTablet"))
+			lakshmana.say("Thorns, brother, thick as a wall. There was a shrine back there, to the west.", 3.5)
+
+
+## Chapter I: rakshasa scouts pick over the ruined village.
+func _build_chapter_one() -> void:
+	scouts = WaveSpawner.new()
+	scouts.name = "Scouts"
+	scouts.auto_start = false
+	var w: Array[PackedStringArray] = [PackedStringArray(["grunt", "grunt", "archer"])]
+	scouts.waves = w
+	for i in 3:
+		var mk := Marker3D.new()
+		mk.name = "S%d" % i
+		scouts.add_child(mk)
+	add_child(scouts)
+	for i in 3:
+		(scouts.get_child(i) as Marker3D).global_position = m("Scout%d" % (i + 1))
+	scouts.wave_started.connect(func(_i: int, _n: int) -> void:
+		Music.set_intensity(1.0)
+		set_objective("Rakshasa scouts in the village! Defend yourselves"))
+	scouts.all_cleared.connect(func() -> void:
+		Music.set_intensity(0.0)
+		lakshmana.say("Scouts. Whoever sent them knows we are coming.", 3.0)
+		set_objective("Follow the path into the deep wood", env.get_node("Chapter2")))
+	var trigger := Area3D.new()
+	trigger.name = "VillageTrigger"
+	trigger.collision_layer = 0
+	trigger.collision_mask = 2
+	trigger.monitorable = false
+	var cs := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(30, 5, 6)
+	cs.shape = box
+	trigger.add_child(cs)
+	add_child(trigger)
+	trigger.global_position = m("VillageCenter") + Vector3(0, 2, 8)
+	trigger.body_entered.connect(func(body: Node3D) -> void:
+		if body is Rama and scouts.current_wave < 0 and GameState.current_mission == 3:
+			scouts.spawn_wave(0)
+			rama.spawn_point = rama.global_position
+			lakshmana.say("Movement in the huts, brother!", 2.0))
+
+
+## Chapter II: the shrine's bells and the thorn wall on the path.
+func _build_shrine() -> void:
+	shrine = ShrinePuzzle.new()
+	shrine.name = "ShrinePuzzle"
+	add_child(shrine)
+	var pts: Array[Vector3] = [m("Bell1"), m("Bell2"), m("Bell3")]
+	shrine.setup(pts)
+	shrine.rung.connect(_on_bell)
+	shrine.solved.connect(_on_shrine_solved)
+	var tablet := Interactable.new()
+	tablet.name = "Tablet"
+	tablet.prompt = "Read the carving"
+	tablet.radius = 3.0
+	tablet.glint = true
+	add_child(tablet)
+	tablet.global_position = m("ShrineTablet")
+	tablet.interacted.connect(func() -> void:
+		hud.show_banner("Carved in the old stone:\n\"%s\"" % ShrinePuzzle.CARVING, Color(1.0, 0.9, 0.65), 5.0)
+		GameState.find_lore(&"karusha_shrine")
+		if not shrine.is_solved:
+			set_objective("Ring the bells in the carved order: shoot them", shrine.bells[ShrinePuzzle.ORDER[0]], false))
+	thorns = StaticBody3D.new()
+	thorns.name = "Thorns"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(16, 4, 1.5)
+	shape.shape = box
+	shape.position.y = 2.0
+	thorns.add_child(shape)
+	var bramble := StandardMaterial3D.new()
+	bramble.albedo_color = Color(0.16, 0.12, 0.09)
+	bramble.roughness = 1.0
+	var r := RandomNumberGenerator.new()
+	r.seed = 41
+	for i in 70:
+		var stem := MeshInstance3D.new()
+		stem.mesh = MeshKit.cyl(0.015, 0.05, r.randf_range(1.2, 3.2), 5)
+		stem.material_override = bramble
+		stem.position = Vector3(r.randf_range(-7.5, 7.5), 0.8, r.randf_range(-0.6, 0.6))
+		stem.rotation = Vector3(r.randf_range(-0.7, 0.7), r.randf() * TAU, r.randf_range(-0.9, 0.9))
+		thorns.add_child(stem)
+	add_child(thorns)
+	thorns.global_position = m("Thorns")
+	if GameState.current_mission >= 4 or GameState.get_flag("shrine_rung", false):
+		thorns.queue_free()
+		thorns = null
+
+
+func _on_bell(_bell: int, correct: bool) -> void:
+	if not correct and not shrine.is_solved and shrine.progress == 0:
+		lakshmana.say("The bells fall silent. Read the carving again, brother.", 2.5)
+
+
+func _on_shrine_solved() -> void:
+	GameState.set_flag("shrine_rung", true)
+	GameState.add_punya(30)
+	if stats:
+		stats.facts["shrine"] = true
+	hud.show_banner("The shrine wakes.  +30 Punya", Color(1.0, 0.85, 0.5), 3.0)
+	if thorns:
+		var t := create_tween()
+		t.tween_property(thorns, "scale", Vector3(1, 0.05, 1), 2.5).set_trans(Tween.TRANS_SINE)
+		t.tween_callback(thorns.queue_free)
+		FX.burst(self, thorns.global_position + Vector3.UP, Color(1.0, 0.8, 0.45), 40, 2.0, 0.4, 1.4, 0.4)
+	await say_lines([["Lakshmana", "Listen, brother. The thorns are falling back."],
+		["Rama", "Someone kept this shrine once. The forest still remembers them."]])
+	if is_inside_tree():
+		set_objective("Press on through the deep wood", $Trigger1)
 
 
 func _place_at_grove_entry() -> void:

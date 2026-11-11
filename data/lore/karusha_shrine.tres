@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"karusha_shrine"
+title = "The Shrine in the Deep Wood"
+text = "Before Tataka came, the people of Karusha kept small shrines in the forest and rang their bells at dawn and dusk. Valmiki tells only that the lands of Malada and Karusha were once rich and were laid waste. The shrine and its bells are this game's telling: a reminder of the people who lived there."

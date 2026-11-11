@@ -6,14 +6,24 @@ extends SceneTree
 ##   (needs a real renderer: MultiMesh data lives in the RenderingServer)
 ##
 ## Output: res://kandas/01_bala/env/tataka_forest.scn
-## Layout: Rama starts at the origin facing -Z; the path winds north to the
-## grove (Tataka's arena) centred at GROVE, radius GROVE_RADIUS.
+## Layout (three chapters, north = -Z):
+##   I   The Empty Fields of Malada: from START (z +185) past a ruined village.
+##   II  The Deep Wood: the shrine clearing (SHRINE) and its thorn wall, then the
+##       two ambushes (z 0 .. -100).
+##   III Tataka's Grove, centred at GROVE, radius GROVE_RADIUS.
 
 const OUT_SCENE := "res://kandas/01_bala/env/tataka_forest.scn"
 const M := "res://assets/materials/env/"
 const NATURE := "res://assets/env/nature/"
 const SEED := 2207
-const PATH_POINTS := [Vector3(0, 0, 4), Vector3(-5, 0, -16), Vector3(4, 0, -36), Vector3(-4, 0, -56), Vector3(3, 0, -76), Vector3(0, 0, -98)]
+const START := Vector3(2, 0, 185)
+const VILLAGE := Vector3(-4, 0, 135)
+const VILLAGE_RADIUS := 17.0
+const SHRINE := Vector3(-13, 0, 32)
+const THORNS_Z := 22.0
+const CHAPTER2_Z := 60.0
+const PATH_POINTS := [Vector3(2, 0, 190), Vector3(-5, 0, 160), Vector3(-2, 0, 125), Vector3(4, 0, 95),
+	Vector3(-3, 0, 62), Vector3(2, 0, 34), Vector3(0, 0, 4), Vector3(-5, 0, -16), Vector3(4, 0, -36), Vector3(-4, 0, -56), Vector3(3, 0, -76), Vector3(0, 0, -98)]
 const GROVE := Vector3(0, 0, -122)
 const GROVE_RADIUS := 21.0
 const CLEAR_HALF_WIDTH := 6.5
@@ -308,15 +318,15 @@ func dist_to_path(p: Vector3) -> float:
 
 func _ground() -> void:
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(220, 240)
+	plane.size = Vector2(220, 430)
 	var floor_mi := MeshInstance3D.new()
 	floor_mi.name = "ForestFloor"
 	floor_mi.mesh = plane
-	floor_mi.position = Vector3(0, 0, -70)
+	floor_mi.position = Vector3(0, 0, 25)
 	floor_mi.material_override = mat("forest_floor")
 	floor_mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	env_root.add_child(floor_mi)
-	collider_box(Vector3(220, 1, 240), at(0, -0.5, -70))
+	collider_box(Vector3(220, 1, 430), at(0, -0.5, 25))
 	# Dirt path ribbon (soft edges), slightly above the floor.
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -355,9 +365,9 @@ func _ground() -> void:
 	grove_mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	env_root.add_child(grove_mi)
 	# Boundary.
-	collider_box(Vector3(1, 12, 240), at(-50, 6, -70))
-	collider_box(Vector3(1, 12, 240), at(50, 6, -70))
-	collider_box(Vector3(110, 12, 1), at(0, 6, 22))
+	collider_box(Vector3(1, 12, 430), at(-50, 6, 25))
+	collider_box(Vector3(1, 12, 430), at(50, 6, 25))
+	collider_box(Vector3(110, 12, 1), at(0, 6, 198))
 	collider_box(Vector3(110, 12, 1), at(0, 6, -160))
 
 
@@ -385,7 +395,72 @@ func _ruins() -> void:
 	_ruin(Vector3(10, 0, -70), -0.5)
 	# Broken shrine at the far side of the grove.
 	_ruin(GROVE + Vector3(0, 0, -GROVE_RADIUS + 3.0), 0.0)
+	_village()
+	_shrine()
 
+
+## Chapter I: a village of Malada, abandoned. Mud walls stand without roofs;
+## thatch lies where it fell; the well is dry.
+func _village() -> void:
+	var huts := [[Vector3(-14, 0, 128), 0.3], [Vector3(-12, 0, 145), -0.4], [Vector3(6, 0, 142), 0.6],
+		[Vector3(9, 0, 124), -0.2], [Vector3(-2, 0, 150), 0.1], [Vector3(-18, 0, 138), 1.2]]
+	for spec in huts:
+		var c: Vector3 = VILLAGE + (spec[0] as Vector3) - Vector3(-4, 0, 135)
+		var b := Basis(Vector3.UP, spec[1])
+		var w := 4.0
+		var d := 3.4
+		for side in [[Vector3(0, 0, -d * 0.5), Vector3(w, 1.0, 0.3)], [Vector3(0, 0, d * 0.5), Vector3(w * 0.55, 1.6, 0.3)],
+				[Vector3(-w * 0.5, 0, 0), Vector3(0.3, 1.8, d)], [Vector3(w * 0.5, 0, 0), Vector3(0.3, 1.2, d)]]:
+			var off: Vector3 = b * (side[0] as Vector3)
+			var size: Vector3 = side[1]
+			put(MeshKit.box(size), Transform3D(b, c + off + Vector3.UP * size.y * 0.5), "forest_path")
+			collider_box(size, Transform3D(b, c + off + Vector3.UP * size.y * 0.5))
+		# The fallen roof.
+		put(MeshKit.box(Vector3(w * 0.9, 0.18, d * 0.7)), Transform3D(Basis(Vector3.RIGHT, 0.5) * b, c + Vector3(0.4, 0.6, 0.6)), "thatch")
+		# A broken pot by the door.
+		put(MeshKit.sphere(0.28, 10), Transform3D(Basis().scaled(Vector3(1, 0.8, 1)), c + b * Vector3(w * 0.5 + 0.8, 0.2, 1.0)), "red_sandstone")
+	# The dry well at the centre.
+	for k in 14:
+		var a := TAU * k / 14.0
+		put(MeshKit.box(Vector3(0.5, 0.7, 0.35)), Transform3D(Basis(Vector3.UP, -a), VILLAGE + Vector3(cos(a) * 1.2, 0.35, sin(a) * 1.2)), "dark_stone")
+	collider_cyl(VILLAGE, 1.45, 0.7)
+	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(VILLAGE.x - 1.2, 0.9, VILLAGE.z), "wood")
+	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(VILLAGE.x + 1.2, 0.9, VILLAGE.z), "wood")
+	put(MeshKit.box(Vector3(2.6, 0.12, 0.12)), at(VILLAGE.x, 1.8, VILLAGE.z), "wood")
+	# An abandoned cart, one wheel off.
+	var cart := VILLAGE + Vector3(7, 0, -6)
+	put(MeshKit.box(Vector3(1.6, 0.15, 2.6)), Transform3D(Basis(Vector3.BACK, 0.25), cart + Vector3.UP * 0.6), "wood")
+	put(MeshKit.torus(0.42, 0.55, 14), Transform3D(Basis(Vector3.BACK, PI / 2), cart + Vector3(0.9, 0.55, 0.6)), "wood")
+	put(MeshKit.torus(0.42, 0.55, 14), Transform3D(Basis(Vector3.RIGHT, PI / 2), cart + Vector3(-1.6, 0.06, 1.4)), "wood")
+	collider_box(Vector3(1.8, 1.0, 2.8), at(cart.x, 0.5, cart.z))
+
+
+## Chapter II: a forest shrine of Karusha's people in a clearing west of the
+## path. Three bells hang from a beam (the level makes them ring); a carved
+## stone tells their order.
+func _shrine() -> void:
+	var c := SHRINE
+	put(MeshKit.box(Vector3(7, 0.4, 6)), at(c.x, 0.2, c.z), "dark_stone")
+	collider_box(Vector3(7, 0.4, 6), at(c.x, 0.2, c.z))
+	# The shrine: a small stone cell with a stepped roof, moss-dark.
+	var cell := c + Vector3(0, 0, -1.8)
+	put(MeshKit.box(Vector3(2.4, 2.0, 2.0)), at(cell.x, 1.4, cell.z), "dark_stone")
+	collider_box(Vector3(2.4, 2.0, 2.0), at(cell.x, 1.4, cell.z))
+	for k in 4:
+		var s := 2.8 - k * 0.55
+		put(MeshKit.box(Vector3(s, 0.35, s * 0.85)), at(cell.x, 2.55 + k * 0.35, cell.z), "sandstone")
+	put(MeshKit.sphere(0.3, 10), at(cell.x, 4.1, cell.z), "sandstone")
+	put(MeshKit.box(Vector3(1.0, 1.4, 0.1)), at(cell.x, 1.1, cell.z + 1.01), "dark_stone")  # the dark doorway
+	# Bell beam on two posts, east of the cell.
+	var beam := c + Vector3(1.8, 0, 1.2)
+	for dx in [-1.6, 1.6]:
+		put(MeshKit.cyl(0.1, 0.12, 3.0, 8), at(beam.x + dx, 1.9, beam.z), "wood")
+		collider_cyl(Vector3(beam.x + dx, 0.4, beam.z), 0.15, 3.0)
+	put(MeshKit.box(Vector3(3.6, 0.16, 0.16)), at(beam.x, 3.4, beam.z), "wood")
+	# The carved stone, at the clearing's mouth.
+	var tablet := c + Vector3(3.2, 0, 3.0)
+	put(MeshKit.box(Vector3(1.2, 1.4, 0.25)), Transform3D(Basis(Vector3.UP, -0.6), tablet + Vector3.UP * 1.1), "sandstone")
+	collider_box(Vector3(1.2, 1.4, 0.25), Transform3D(Basis(Vector3.UP, -0.6), tablet + Vector3.UP * 1.1))
 
 func _bones() -> void:
 	var bone := "marble"
@@ -413,12 +488,16 @@ func _trees() -> void:
 	var hero := {"a": [], "b": []}
 	var x := -46.0
 	while x <= 46.0:
-		var z := 18.0
+		var z := 194.0
 		while z >= -156.0:
 			var p := Vector3(x + rng.randf_range(-2.5, 2.5), 0, z + rng.randf_range(-2.5, 2.5))
 			var dp := dist_to_path(p)
 			var dg := Vector2(p.x - GROVE.x, p.z - GROVE.z).length()
-			if dp > CLEAR_HALF_WIDTH and dg > GROVE_RADIUS + 5.0:
+			var dv := Vector2(p.x - VILLAGE.x, p.z - VILLAGE.z).length()
+			var ds := Vector2(p.x - SHRINE.x, p.z - SHRINE.z).length()
+			# Chapter I is open, abandoned farmland: trees only in thin lines.
+			var fields := p.z > CHAPTER2_Z + 10.0 and rng.randf() < 0.75
+			if dp > CLEAR_HALF_WIDTH and dg > GROVE_RADIUS + 5.0 and dv > VILLAGE_RADIUS and ds > 11.0 and not fields:
 				var key := "a" if rng.randf() < 0.5 else "b"
 				if dp < 11.0 and rng.randf() < 0.3:
 					hero[key].append(rand_xf(p, Vector2(1.1, 1.5)))
@@ -495,7 +574,7 @@ func _undergrowth() -> void:
 # --- Atmosphere ------------------------------------------------------------------------------
 
 func _atmosphere() -> void:
-	var mist_points := [Vector3(-3, 0, -12), Vector3(2, 0, -42), Vector3(-2, 0, -66), Vector3(1, 0, -90), GROVE]
+	var mist_points := [Vector3(-2, 0, 150), Vector3(1, 0, 90), SHRINE, Vector3(-3, 0, -12), Vector3(2, 0, -42), Vector3(-2, 0, -66), Vector3(1, 0, -90), GROVE]
 	for i in mist_points.size():
 		var p := CPUParticles3D.new()
 		p.name = "Mist%d" % i
@@ -595,7 +674,12 @@ func _grove_gate() -> void:
 
 
 func _markers() -> void:
-	for spec in [["GroveEntry", GROVE + Vector3(0, 0, GROVE_RADIUS - 3.0)], ["TatakaSpot", GROVE + Vector3(0, 0, -8.0)], ["GroveCenter", GROVE]]:
+	var beam := SHRINE + Vector3(1.8, 0, 1.2)
+	for spec in [["GroveEntry", GROVE + Vector3(0, 0, GROVE_RADIUS - 3.0)], ["TatakaSpot", GROVE + Vector3(0, 0, -8.0)], ["GroveCenter", GROVE],
+			["ForestStart", START], ["VillageCenter", VILLAGE], ["Chapter2", Vector3(-3, 0, CHAPTER2_Z)],
+			["Shrine", SHRINE], ["ShrineTablet", SHRINE + Vector3(3.2, 0, 3.0)], ["Thorns", Vector3(1.5, 0, THORNS_Z)],
+			["Bell1", beam + Vector3(-1.1, 2.9, 0)], ["Bell2", beam + Vector3(0, 2.9, 0)], ["Bell3", beam + Vector3(1.1, 2.9, 0)],
+			["Scout1", VILLAGE + Vector3(6, 0, -14)], ["Scout2", VILLAGE + Vector3(-8, 0, -16)], ["Scout3", VILLAGE + Vector3(2, 0, -20)]]:
 		var m := Marker3D.new()
 		m.name = spec[0]
 		m.position = spec[1]
