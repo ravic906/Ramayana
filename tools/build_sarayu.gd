@@ -616,7 +616,10 @@ func _reeds_and_rocks() -> void:
 			if rng.randf() < 0.85:
 				reeds.append(rand_xf(Vector3(x, height(x, z), z), Vector2(0.8, 1.4), 0.15))
 		var xr := road_x(z)
+		var near_camp := absf(z - CAMP.z) < 18.0
 		for side in [-1.0, 1.0]:
+			if near_camp:
+				continue  # the camp stays open, for the close-ups
 			if rng.randf() < 0.3:
 				var x2: float = xr + side * rng.randf_range(4.0, 12.0)
 				if river_d(x2, z) > RIVER_HALF + BANK + 1.0:
@@ -625,7 +628,7 @@ func _reeds_and_rocks() -> void:
 				var x3: float = xr + side * rng.randf_range(3.0, 9.0)
 				if river_d(x3, z) > RIVER_HALF + BANK:
 					flowers.append(rand_xf(Vector3(x3, height(x3, z), z), Vector2(0.7, 1.0)))
-		if rng.randf() < 0.18:
+		if rng.randf() < 0.18 and not near_camp:
 			var x4 := river_x(z) - RIVER_HALF - rng.randf_range(1.0, 5.0)
 			rocks.append(rand_xf(Vector3(x4, height(x4, z) - 0.1, z), Vector2(0.6, 1.4), 0.4))
 		z -= 1.6
@@ -728,7 +731,7 @@ func _markers() -> void:
 		["Start", Vector3(0, 0, 2)],
 		["CityLook", Vector3(0, 0, 40)],
 		["Ghat", Vector3(river_x(GHAT_Z) - RIVER_HALF - BANK - 1.5, 0, GHAT_Z)],
-		["GhatWater", Vector3(river_x(GHAT_Z) - RIVER_HALF + 1.0, 0, GHAT_Z)],
+		["GhatWater", Vector3(river_x(GHAT_Z) - RIVER_HALF - 1.0, 0, GHAT_Z)],
 		["Shrine", Vector3(river_x(GHAT_Z) - RIVER_HALF - BANK - 6.5, 0, GHAT_Z - 9.0)],
 		["Widow", Vector3(river_x(GHAT_Z) - RIVER_HALF - BANK - 3.0, 0, GHAT_Z - 4.0)],
 		["Boatman", Vector3(river_x(GHAT_Z + 11.0) - RIVER_HALF - 2.5, 0, GHAT_Z + 11.0)],
@@ -741,7 +744,7 @@ func _markers() -> void:
 		["SageSeat", CAMP + Vector3(2.3, 0, 0.2)],
 		["RamaSeat", CAMP + Vector3(-2.2, 0, 1.4)],
 		["LakshmanaSeat", CAMP + Vector3(-2.1, 0, -1.6)],
-		["CampWater", Vector3(river_x(CAMP.z) - RIVER_HALF + 1.0, 0, CAMP.z)],
+		["CampWater", Vector3(river_x(CAMP.z) - RIVER_HALF - 2.2, 0, CAMP.z)],
 		["End", Vector3(road_x(-338.0), 0, -338.0)],
 	]
 	# Talk points along the road and the lamps for the side quest.

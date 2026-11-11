@@ -85,7 +85,7 @@ func _ready() -> void:
 		&"city": [m("Start") + Vector3(3.0, 2.2, -10.0), m("Start") + Vector3(0, 7.0, 70.0)],
 		&"camp_wide": [camp + Vector3(1.0, 2.6, 8.5), camp + Vector3(0, 0.6, 0)],
 		&"water": [m("CampWater") + Vector3(-3.5, 1.6, 4.0), m("CampWater") + Vector3(0, 0.6, 0)],
-		&"dawn_wide": [camp + Vector3(-7.0, 2.4, 6.0), camp + Vector3(6.0, 1.0, -4.0)],
+		&"dawn_wide": [m("CampWater") + Vector3(-6.5, 2.0, 5.5), m("CampWater") + Vector3(1.5, 0.7, -1.0)],
 	}
 	_build_people()
 	_build_lamps()
@@ -375,12 +375,14 @@ func _on_story_action(action_name: StringName) -> void:
 			_seat(rama, m("RamaSeat"), &"sit")
 		&"nightfall":
 			_tween_light(2.0, 0.08, Color(0.5, 0.55, 0.85), 3.0)
+			_tween_sky(0.25, 3.0)
 		&"dawn":
 			_fire.visible = false
 			_fireflies.emitting = false
 			sun.rotation = Vector3(deg_to_rad(-6.0), deg_to_rad(-75.0), 0)  # the sun rises over the river, east
 			sun.light_color = Color(1.0, 0.72, 0.62)
 			sun.light_energy = _sun_energy * 0.6 if _sun_energy > 0.0 else 0.8
+			_tween_sky(1.0, 0.1)
 			sage.play(&"idle")
 			_unseat(lakshmana)
 			_unseat(rama)
@@ -412,6 +414,21 @@ func _tween_light(pitch_deg: float, energy_mult: float, color: Color, seconds: f
 	t.tween_property(sun, "rotation:x", deg_to_rad(pitch_deg), seconds)
 	t.tween_property(sun, "light_energy", _sun_energy * energy_mult, seconds)
 	t.tween_property(sun, "light_color", color, seconds)
+
+
+## Dims the sky and ambient light with the night (1.0 = as authored).
+var _sky_base := {}
+
+
+func _tween_sky(mult: float, seconds: float) -> void:
+	var e := world_env.environment
+	if e == null:
+		return
+	if _sky_base.is_empty() or _sky_base.get("env") != e:
+		_sky_base = {"env": e, "bg": e.background_energy_multiplier, "amb": e.ambient_light_energy}
+	var t := create_tween().set_parallel(true)
+	t.tween_property(e, "background_energy_multiplier", _sky_base["bg"] * mult, seconds)
+	t.tween_property(e, "ambient_light_energy", _sky_base["amb"] * mult, seconds)
 
 
 func _fade(out: bool) -> void:
