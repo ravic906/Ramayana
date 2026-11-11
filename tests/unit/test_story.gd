@@ -138,7 +138,7 @@ func test_part_flow_resumes_missions() -> void:
 	GameState.current_mission = 0
 	assert_true(SaveSystem.load_game())
 	assert_eq(GameState.current_mission, 3, "saved by advance_to")
-	GameState.current_mission = 6  # The Stone and the Dawn: not yet available
+	GameState.current_mission = 7  # The Bow of Shiva: not yet available
 	assert_eq(PartFlow.current(part).number, 1, "replays from the start")
 
 

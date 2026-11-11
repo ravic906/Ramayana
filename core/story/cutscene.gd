@@ -26,6 +26,12 @@ const SPEAKER_COLORS := {
 	"Maricha": Color(0.75, 0.55, 1.0),
 	"Widow": Color(0.9, 0.88, 0.82),
 	"Boatman": Color(0.75, 0.6, 0.45),
+	"Sumati": Color(1.0, 0.7, 0.45),
+	"Weaver": Color(0.6, 0.8, 0.9),
+	"Oil-seller": Color(0.85, 0.75, 0.55),
+	"Priest": Color(0.95, 0.9, 0.75),
+	"Ahalya": Color(1.0, 0.92, 0.75),
+	"Gautama": Color(0.9, 0.85, 0.6),
 }
 const CHARS_PER_SECOND := 45.0
 

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|heart||
+Narration|heart||For years beyond counting, Ahalya had kept her penance here, unseen by any eye, like a flame veiled in smoke.
+Vishvamitra|close||Rama. The one who lives here has waited a long time for a guest. Go in.|reverence
+|heart|reveal|
+Ahalya|close||So many seasons. I had forgotten the sound of footsteps.|wonder
+Rama|close||Mother, your penance is complete. It is we who are blessed to see it.|reverence
+|heart|pranam|
+Narration|heart||The brothers touched her feet, and she, remembering her husband's words, received them as honoured guests.
+Ahalya|close||Sit, sons of Raghu. Water for your feet, and for your hands. A guest is the first worship of a home.|smile
+|heart|flowers|
+Narration|heart||Flowers fell from the sky, and far away the drums of the gods sounded.
+|heart|gautama|
+Gautama|close||Ahalya.|joy
+Ahalya|close||You have come home.|joy
+Gautama|close||Rama, son of Dasharatha. What my words began, your coming has finished. Go to Mithila with my blessing.|reverence
+Vishvamitra|close||Come, princes. King Janaka's sacrifice begins at dawn.|calm
+Narration|||So the princes went on toward Mithila, where a bow waited that no one had ever strung."

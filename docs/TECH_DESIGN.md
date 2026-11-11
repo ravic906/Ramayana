@@ -436,6 +436,22 @@ through Play Games Services and iCloud later.
   - The trials hand off to it; its gate leads to the sage scene (`training_grounds`, mission 2).
   - Practice targets give no Punya there (`TargetDummy.punya_reward`).
 
+### Mission 6: Vishala and Gautama's ashram
+- **Builders:** `tools/build_kit.gd` (extends SceneTree) holds the shared helpers (merged meshes
+  per material, arch masks, colliders, multimeshes, LOD nature meshes, lamps, markers);
+  `build_vishala.gd` and `build_gautama_ashram.gd` extend it and override `out_scene()` and
+  `build()`.
+- **Two bodies:** `tools/build_rama.gd female` builds `characters/npc/model/woman_body.scn`
+  (same skeleton and animations; garments as geometry from `garment_builder.gd`; scalp hair
+  from the head mesh plus a bun). `face_rig_builder.gd` takes landmarks per body (`MALE`,
+  `FEMALE`). `npc_woman.tscn` uses `NpcModel` with `ornaments`.
+- **Ashram waking:** overgrowth multimeshes (group `overgrowth`, meta `place`) flatten and hide;
+  hidden `bloom` multimeshes (flowers, short grass) grow in; the sun rises and warms per place.
+  `stage_ahalya()` places the cast; the cutscene actions `reveal`, `pranam`, `flowers`,
+  `gautama` drive the scene.
+- **Mission select:** `PartFlow.start_at(mission, chapter)` and `ensure_story_state(n)`;
+  checkpoints `gate`, `sarayu`, `camp`, `forest_c2`, `night_N`, `ashram`.
+
 ### New enemies (Rakshasa variants)
 - **Shield-bearer:** `shield`. A `Health.damage_filter` cuts frontal hits to 10%; astras
   (`Health.from_astra`) and flank shots pass. Lakshmana's shove calls `break_shield()`.

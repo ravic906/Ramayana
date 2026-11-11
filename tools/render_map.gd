@@ -1,7 +1,7 @@
 extends SceneTree
 ## Renders the top-down map image of each level's environment (once, at build
 ## time) to assets/maps/<id>.png and writes data/maps/<id>.tres.
-##   xvfb-run godot --rendering-driver opengl3 -s res://tools/render_map.gd
+##   xvfb-run godot --rendering-driver opengl3 -s res://tools/render_map.gd [-- <id>...]
 ## Lighting is neutral daylight so night levels read on the map too.
 
 const MAPS := [
@@ -9,6 +9,8 @@ const MAPS := [
 	["forest", "The Silent Forest", "res://kandas/01_bala/env/tataka_forest.scn", "res://kandas/01_bala/forest.tscn", Rect2(-40, -150, 80, 346), 5.0],
 	["sarayu", "The Road along the Sarayu", "res://kandas/01_bala/env/sarayu_road.scn", "res://kandas/01_bala/sarayu_road.tscn", Rect2(-46, -346, 124, 360), 4.0],
 	["siddhashrama", "Siddhashrama", "res://kandas/01_bala/env/siddhashrama.scn", "res://kandas/01_bala/siddhashrama.tscn", Rect2(-50, -50, 100, 72)],
+	["vishala", "Vishala", "res://kandas/01_bala/env/vishala.scn", "res://kandas/01_bala/vishala.tscn", Rect2(-60, -90, 120, 140), 6.0],
+	["gautama_ashram", "Gautama's ashram", "res://kandas/01_bala/env/gautama_ashram.scn", "res://kandas/01_bala/gautama_ashram.tscn", Rect2(-36, -56, 72, 70), 8.0],
 ]
 const PX_PER_M := 10.0
 
@@ -18,7 +20,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Optional: -- <id> [<id>...] renders only those maps.
+	var only := OS.get_cmdline_user_args()
 	for spec in MAPS:
+		if not only.is_empty() and not (spec[0] in only):
+			continue
 		await _render(spec[0], spec[1], spec[2], spec[3], spec[4], spec[5] if spec.size() > 5 else PX_PER_M)
 	quit()
 

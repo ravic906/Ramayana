@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"churning_ocean"
+title = "The Churning of the Ocean"
+text = "In the first age the sons of Diti and of Aditi churned the ocean of milk for amrita, the nectar of immortality, with Mount Mandara for a churning rod and the serpent Vasuki for a rope. The first thing to rise was poison, and Shiva held it in his throat to save the worlds. Valmiki has Vishvamitra tell the story at Vishala, built where Diti later kept her long penance."

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|||
+Narration|||That night, as the lamps burned low, Rama asked the sage the story of this place.
+Rama|close||Guru-dev, who built Vishala? It feels older than its walls.|wonder
+Vishvamitra|close||Long ago, the sons of Diti and of Aditi churned the ocean of milk for amrita, the nectar that does not die.|calm
+Vishvamitra|close||Mount Mandara was their churning rod, the serpent Vasuki their rope. First rose a poison, and Shiva drank it to save the worlds.|reverence
+Vishvamitra|close||Then the amrita rose, and with it, war. On this ground Diti grieved for her sons, and here she began her long penance.|concern
+Vishvamitra|close||This city stands where she sat. Every stone remembers a mother's sorrow.|grief
+Lakshmana|close||And tomorrow, Guru-dev?|wonder
+Vishvamitra|close||Tomorrow, Mithila. But on the way there is an ashram you must see. Sleep now.|calm"

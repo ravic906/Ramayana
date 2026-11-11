@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"gautama"
+title = "The Sage Gautama"
+text = "Gautama was one of the great rishis, author of hymns and teacher of a long line of students. After the events at his ashram he went to the Himalayas for his own austerities, returning when Ahalya's penance was complete."

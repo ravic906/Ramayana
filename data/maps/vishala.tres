@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_ljx3x"]
+
+[resource]
+script = ExtResource("1_ljx3x")
+title = "Vishala"
+level_scene = "res://kandas/01_bala/vishala.tscn"
+other_scenes = PackedStringArray()
+image_path = "res://assets/maps/vishala.png"
+world_rect = Rect2(-60, -90, 120, 140)

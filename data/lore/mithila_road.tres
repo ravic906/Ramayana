@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"mithila_road"
+title = "The Road to Mithila"
+text = "From Vishala the sage and the princes went north to Mithila, King Janaka's city, where a great sacrifice was being prepared and where Shiva's bow was kept, which no one had ever been able to lift."

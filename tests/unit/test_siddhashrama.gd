@@ -26,14 +26,14 @@ func _frames(n: int) -> void:
 		await get_tree().physics_frame
 
 
-func test_mission_five_is_playable_and_six_shows_the_end_card() -> void:
+func test_mission_five_is_playable_and_seven_shows_the_end_card() -> void:
 	var m := PartFlow.get_mission(1, 5)
 	assert_true(m.available)
 	assert_eq(m.scene_path, "res://kandas/01_bala/siddhashrama.tscn")
 	_ashram()
 	await _frames(2)
-	level.go_to_mission(6)
-	assert_eq(GameState.current_mission, 6, "progress saved")
+	level.go_to_mission(7)
+	assert_eq(GameState.current_mission, 7, "progress saved")
 	assert_true(level.end_card != null, "a 'coming soon' card, not a silent return to the menu")
 
 

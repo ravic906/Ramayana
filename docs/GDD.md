@@ -133,7 +133,14 @@ short "vision" sequences framed by Rama's perspective, then returns to Rama.
   - **Trials** (from the Missions screen): the Gauntlet (endless waves, score) and rematches
     with Tataka and with Maricha & Subahu (timed); bronze, silver and gold medals with Punya.
   - **Difficulty:** Story, Warrior, and Maharathi (hard, unlocked after Tataka).
-  - Mission 6 shows a "coming soon" card.
+  - mission 6, *The Stone and the Dawn*: the city of Vishala at evening (King Sumati's
+    welcome, the churning of the ocean told at night, the weaver's and the temple lamp's
+    quests, four palm leaves), then Gautama's silent ashram at dawn: three places woken in
+    stillness, the overgrowth drawing back and flowers returning, and Ahalya revealed,
+    radiant, and reunited with Gautama. No combat.
+  - **Any mission, any chapter, at will** from the Missions screen; jumping ahead grants
+    the story state that mission needs.
+  - Mission 7 (Mithila and the bow of Shiva) shows a "coming soon" card.
 - **Prologue:** Guru Vasishtha's maya trials in the Ayodhya training grounds. The
   final trial grants a temporary *glimpse* of the Agneyastra.
 - **Unlocks:** Agneyastra, Varunastra and Vayavyastra (from Vishvamitra after Tataka), and

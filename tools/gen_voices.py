@@ -50,6 +50,12 @@ CAST = {
     "Maricha": {"spk": "p345", "speed": 1.1, "pitch": -3.5, "reverb": (1.8, 0.24)},
     "Widow": {"spk": "p248", "speed": 1.15, "pitch": -1.0, "reverb": (0.7, 0.07)},
     "Boatman": {"spk": "p360", "speed": 1.05, "pitch": -1.5, "reverb": (0.7, 0.07)},
+    "Sumati": {"spk": "p334", "speed": 1.08, "pitch": -1.0, "reverb": (1.0, 0.1)},
+    "Weaver": {"spk": "p229", "speed": 1.12, "pitch": -1.0, "reverb": (0.6, 0.06)},
+    "Oil-seller": {"spk": "p316", "speed": 1.0, "pitch": -0.5, "reverb": (0.6, 0.06)},
+    "Priest": {"spk": "p311", "speed": 1.12, "pitch": -1.0, "reverb": (1.2, 0.12)},
+    "Ahalya": {"spk": "p228", "speed": 1.15, "pitch": -0.5, "reverb": (1.3, 0.13)},
+    "Gautama": {"spk": "p374", "speed": 1.15, "pitch": -2.0, "reverb": (1.4, 0.15)},
 }
 
 ## Sanskrit names, spelled the way the English voice should say them
@@ -63,7 +69,8 @@ PRONOUNCE = {
     "astra": "aastra", "Siddhashrama": "Siddhaashrama", "Kodanda": "Kodunda",
     "Sarayu": "Sarayoo", "Ayodhya": "Uh-yoad-yah", "rakshasas": "raakshasas", "rakshasa": "raakshasa",
     "rakshasi": "raakshasi", "dharma": "dharma", "Kausalya": "Kaushalya", "Raghu": "Ragu",
-    "yakshini": "yakshini", "Lava": "Lava", "Kusha": "Kusha", "Mithila": "Mitilaa",
+    "yakshini": "yakshini", "Ahalya": "Ahulyaa", "Sumati": "Sumuti", "Gautama": "Gowtuma", "Vishala": "Vishaalaa",
+    "kusumbha": "kusoombha", "Mandara": "Mundaara", "Vasuki": "Vaasuki", "amrita": "umrita", "Diti": "Ditee", "Lava": "Lava", "Kusha": "Kusha", "Mithila": "Mitilaa",
 }
 
 TRES_TEXT = re.compile(r'^text = "((?:[^"\\]|\\.)*)"', re.S | re.M)

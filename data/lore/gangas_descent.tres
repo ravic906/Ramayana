@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"gangas_descent"
+title = "The Descent of the Ganga"
+text = "On the way to Mithila Vishvamitra told how King Bhagiratha brought the heavenly Ganga down to earth to free the souls of his ancestors, how Shiva caught her fall in his matted locks, and how she followed Bhagiratha's chariot to the sea. Rama was of Bhagiratha's line."

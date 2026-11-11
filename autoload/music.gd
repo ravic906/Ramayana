@@ -20,6 +20,8 @@ const TRACKS := {
 	"sky_bosses": {"explore": "sky_bosses"},
 	"sarayu": {"explore": "sarayu", "combat": "forest_combat"},
 	"sarayu_dusk": {"explore": "sarayu_dusk"},
+	"vishala": {"explore": "vishala", "combat": "forest_combat"},
+	"ashram_dawn": {"explore": "ashram_dawn"},
 }
 const STINGERS := ["sting_reveal", "sting_blessing"]
 const SILENT_DB := -60.0

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"ahalya"
+title = "Ahalya"
+text = "Ahalya was the wife of the sage Gautama. By his word she lived for many years in the ashram unseen, living on air, until Rama should come; when she received him as a guest, her penance would be complete. In Valmiki she is not turned to stone: the stone is a later tradition, told in many regional retellings. Valmiki also records why Gautama spoke as he did, an episode involving Indra's deception, which the game leaves to the text itself."

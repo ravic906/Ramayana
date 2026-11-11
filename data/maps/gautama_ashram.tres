@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_82fay"]
+
+[resource]
+script = ExtResource("1_82fay")
+title = "Gautama's ashram"
+level_scene = "res://kandas/01_bala/gautama_ashram.tscn"
+other_scenes = PackedStringArray()
+image_path = "res://assets/maps/gautama_ashram.png"
+world_rect = Rect2(-36, -56, 72, 70)

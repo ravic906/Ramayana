@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|court||
+Narration|court||By evening they came to Vishala, a fair city of lamps, ruled by Sumati of the line of Ikshvaku.
+Sumati|close||Great sage, you honour my city. Who could have hoped to see Vishvamitra at our gate?|joy
+Sumati|close||And who are these two, who walk like young lions and carry their bows as if born with them?|wonder
+Vishvamitra|close||The sons of Dasharatha of Ayodhya: Rama and Lakshmana. They kept my yagna, and the forest of Tataka is green again.|smile
+Sumati|close||Then Vishala is twice blessed. Rest tonight in my guest house, princes. The city is yours.|reverence
+Rama|close||We thank you, King Sumati. Your lamps were a welcome sight after the forest.|calm
+Lakshmana|close||Brother, the market is still open. Shall we see the city before we sleep?|smile"

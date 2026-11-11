@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"temple_lamp"
+title = "The Temple Lamp"
+giver = "The Temple Priest"
+summary = "The evening lamp before the shrine has burned dry, and the oil-seller in the market keeps the temple's share."
+objective = "Fetch the lamp oil from the oil-seller in the market"
+goal_count = 1
+reward_punya = 30
+reward_dharma = 4
+return_text = "Bring the oil to the priest and light the lamp"

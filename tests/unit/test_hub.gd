@@ -30,7 +30,7 @@ func test_the_hub_has_people_and_things_to_find() -> void:
 	await _frames(3)
 	for k in ["scribe", "sumantra", "grandfather", "gardener", "vasishtha", "child"]:
 		assert_true(level.npcs.has(k), k)
-	assert_eq(Quests.all.size(), 6)
+	assert_eq(Quests.all.size(), 8)
 	var leaves := 0
 	for n in get_tree().get_nodes_in_group(&"interactables"):
 		if String(n.name).begins_with("Leaf_"):

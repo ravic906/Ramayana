@@ -164,6 +164,15 @@ approaches. Punya reward for finding all palm leaves.
 *Lines:*
 - Ahalya: "So many seasons. I had forgotten the sound of footsteps."
 - Rama: "Mother, your penance is complete. It is we who are blessed to see it."
+*As built (M4):* the mission opens in Vishala at evening. King Sumati (Valmiki: descended from
+Ikshvaku's son Vishala) comes out to honour the sage; that night Vishvamitra tells of the
+churning of the ocean, which Valmiki places there. Side quests: the weaver's dye flowers, the
+temple's evening lamp. At dawn, the ashram: Rama pauses at the altar, the well and the tulasi;
+each wakes (the overgrowth draws back, flowers return, the light warms), then the light gathers
+at the heart. Ahalya becomes visible "like a flame veiled by smoke", the brothers touch her
+feet, she receives them as guests, flowers fall from the sky, Gautama returns. The
+transgression is not retold; the codex leaf *Ahalya* states it briefly and neutrally and notes
+the later stone tradition.
 
 **7. The Bow of Shiva.**
 *Beat:* King Janaka welcomes them and tells how Shiva's bow came to his family, and that whoever

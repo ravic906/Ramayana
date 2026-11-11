@@ -1,4 +1,76 @@
 {
+ "fd2d848277b5bfd1af7ae79aee294b9e": {
+  "speaker": "Narration",
+  "text": "For years beyond counting, Ahalya had kept her penance here, unseen by any eye, like a flame veiled in smoke.",
+  "source": "ahalya",
+  "seconds": 6.5
+ },
+ "205679aa732b55e9cf93ef5a016dd9d3": {
+  "speaker": "Vishvamitra",
+  "text": "Rama. The one who lives here has waited a long time for a guest. Go in.",
+  "source": "ahalya",
+  "seconds": 6.13
+ },
+ "00d7a75cbb4061598fe124797a7d0ad2": {
+  "speaker": "Ahalya",
+  "text": "So many seasons. I had forgotten the sound of footsteps.",
+  "source": "ahalya",
+  "seconds": 5.0
+ },
+ "e3058958b01e02755169b0dddf48014d": {
+  "speaker": "Rama",
+  "text": "Mother, your penance is complete. It is we who are blessed to see it.",
+  "source": "ahalya",
+  "seconds": 3.97
+ },
+ "ed12adb079d56646b112ca174ecdd07a": {
+  "speaker": "Narration",
+  "text": "The brothers touched her feet, and she, remembering her husband's words, received them as honoured guests.",
+  "source": "ahalya",
+  "seconds": 6.49
+ },
+ "a63924ec300c5caae3375984f79fbcb8": {
+  "speaker": "Ahalya",
+  "text": "Sit, sons of Raghu. Water for your feet, and for your hands. A guest is the first worship of a home.",
+  "source": "ahalya",
+  "seconds": 7.44
+ },
+ "4e62218e869a8992f76445f060c8a46d": {
+  "speaker": "Narration",
+  "text": "Flowers fell from the sky, and far away the drums of the gods sounded.",
+  "source": "ahalya",
+  "seconds": 4.68
+ },
+ "af26d88e690caaeb6228afe11d04d871": {
+  "speaker": "Gautama",
+  "text": "Ahalya.",
+  "source": "ahalya",
+  "seconds": 2.44
+ },
+ "4917bc68b0dc1a77d8a17665f95e8bbb": {
+  "speaker": "Ahalya",
+  "text": "You have come home.",
+  "source": "ahalya",
+  "seconds": 2.3
+ },
+ "2bc1712706725a597be95bff9d6db823": {
+  "speaker": "Gautama",
+  "text": "Rama, son of Dasharatha. What my words began, your coming has finished. Go to Mithila with my blessing.",
+  "source": "ahalya",
+  "seconds": 8.1
+ },
+ "d6f06785a0fcc40d7be983c2026c76b8": {
+  "speaker": "Vishvamitra",
+  "text": "Come, princes. King Janaka's sacrifice begins at dawn.",
+  "source": "ahalya",
+  "seconds": 5.08
+ },
+ "bd34006d034f95de9b43150b91b22235": {
+  "speaker": "Narration",
+  "text": "So the princes went on toward Mithila, where a bow waited that no one had ever strung.",
+  "source": "ahalya",
+  "seconds": 5.16
+ },
  "636d4a4e7f3e2ab72820216f99e1f626": {
   "speaker": "Narration",
   "text": "Vishvamitra led the princes to Siddhashrama, where the sages would keep a sacred fire for six nights.",
@@ -106,6 +178,54 @@
   "text": "The princes slept on beds of grass beside the river, and the sage sat awake under the stars.",
   "source": "bala_atibala",
   "seconds": 6.0
+ },
+ "f05b646474b066577b7e80ef3feabf8e": {
+  "speaker": "Narration",
+  "text": "That night, as the lamps burned low, Rama asked the sage the story of this place.",
+  "source": "churning",
+  "seconds": 4.77
+ },
+ "27a7b5bd1cba4ad4ccffa00b2ce174e0": {
+  "speaker": "Rama",
+  "text": "Guru-dev, who built Vishala? It feels older than its walls.",
+  "source": "churning",
+  "seconds": 4.08
+ },
+ "7791ed4b5a19f54739f071e2f85b85fe": {
+  "speaker": "Vishvamitra",
+  "text": "Long ago, the sons of Diti and of Aditi churned the ocean of milk for amrita, the nectar that does not die.",
+  "source": "churning",
+  "seconds": 6.76
+ },
+ "1f72ab444dcef8f55e9f7911030baf70": {
+  "speaker": "Vishvamitra",
+  "text": "Mount Mandara was their churning rod, the serpent Vasuki their rope. First rose a poison, and Shiva drank it to save the worlds.",
+  "source": "churning",
+  "seconds": 8.45
+ },
+ "399bffffd31b443f29914c2f7d2dc87b": {
+  "speaker": "Vishvamitra",
+  "text": "Then the amrita rose, and with it, war. On this ground Diti grieved for her sons, and here she began her long penance.",
+  "source": "churning",
+  "seconds": 8.36
+ },
+ "8d19dc2f1267f76d0c700e81f973ec35": {
+  "speaker": "Vishvamitra",
+  "text": "This city stands where she sat. Every stone remembers a mother's sorrow.",
+  "source": "churning",
+  "seconds": 5.34
+ },
+ "8287c7d48b778208067ba1f7ab0931f6": {
+  "speaker": "Lakshmana",
+  "text": "And tomorrow, Guru-dev?",
+  "source": "churning",
+  "seconds": 1.85
+ },
+ "e145bddecb0e825d3242a02c0708f61d": {
+  "speaker": "Vishvamitra",
+  "text": "Tomorrow, Mithila. But on the way there is an ashram you must see. Sleep now.",
+  "source": "churning",
+  "seconds": 6.03
  },
  "dd7aef7f403dfce52cae0865ce6780ce": {
   "speaker": "Narration",
@@ -611,6 +731,48 @@
   "source": "trials_complete",
   "seconds": 5.97
  },
+ "f2c0d3a3935cbf819ec6567e00397ff5": {
+  "speaker": "Narration",
+  "text": "By evening they came to Vishala, a fair city of lamps, ruled by Sumati of the line of Ikshvaku.",
+  "source": "vishala_welcome",
+  "seconds": 6.03
+ },
+ "55994574501cb5fe39ffbad8937af44b": {
+  "speaker": "Sumati",
+  "text": "Great sage, you honour my city. Who could have hoped to see Vishvamitra at our gate?",
+  "source": "vishala_welcome",
+  "seconds": 4.66
+ },
+ "371c50e5e89f5e30559781f32ef33fb4": {
+  "speaker": "Sumati",
+  "text": "And who are these two, who walk like young lions and carry their bows as if born with them?",
+  "source": "vishala_welcome",
+  "seconds": 5.12
+ },
+ "7a0bad6545f751c1b0291bafb28e5dab": {
+  "speaker": "Vishvamitra",
+  "text": "The sons of Dasharatha of Ayodhya: Rama and Lakshmana. They kept my yagna, and the forest of Tataka is green again.",
+  "source": "vishala_welcome",
+  "seconds": 7.76
+ },
+ "155b65cc766923f1e0294ad57e9d5780": {
+  "speaker": "Sumati",
+  "text": "Then Vishala is twice blessed. Rest tonight in my guest house, princes. The city is yours.",
+  "source": "vishala_welcome",
+  "seconds": 5.86
+ },
+ "1b5336124e99f76f31eca6e8d56218f1": {
+  "speaker": "Rama",
+  "text": "We thank you, King Sumati. Your lamps were a welcome sight after the forest.",
+  "source": "vishala_welcome",
+  "seconds": 4.44
+ },
+ "2b99b2da2ecd71021ab0821efc5b6391": {
+  "speaker": "Lakshmana",
+  "text": "Brother, the market is still open. Shall we see the city before we sleep?",
+  "source": "vishala_welcome",
+  "seconds": 3.79
+ },
  "166e0f308c86e2bed7ef9c61ae36b708": {
   "speaker": "Lakshmana",
   "text": "With you, brother!",
@@ -863,6 +1025,42 @@
   "source": "forest",
   "seconds": 3.92
  },
+ "f72fc6cbdf8cbda32ab7fbb7053d604f": {
+  "speaker": "Lakshmana",
+  "text": "The ash is old, brother, but the stones are warm.",
+  "source": "gautama_ashram",
+  "seconds": 3.19
+ },
+ "bcadf949467e577e29b3e322427b3356": {
+  "speaker": "Vishvamitra",
+  "text": "Someone drew water here every morning for a very long time.",
+  "source": "gautama_ashram",
+  "seconds": 4.12
+ },
+ "43ab2f7bbeed05361a0afee771d60989": {
+  "speaker": "Rama",
+  "text": "The tulasi is alive. Someone has tended it, unseen.",
+  "source": "gautama_ashram",
+  "seconds": 3.94
+ },
+ "9173b32b74228cfe7a2664f2b6b09f1c": {
+  "speaker": "Vishvamitra",
+  "text": "This was the ashram of the sage Gautama. No one has kept it for many years.",
+  "source": "gautama_ashram",
+  "seconds": 5.69
+ },
+ "8fc0846de2cc0cf3e245bf107231051e": {
+  "speaker": "Rama",
+  "text": "And yet it does not feel empty, Guru-dev.",
+  "source": "gautama_ashram",
+  "seconds": 2.97
+ },
+ "49fc4422c0447f0f7da35003fd32c1ee": {
+  "speaker": "Vishvamitra",
+  "text": "Walk through it, Rama. Gently.",
+  "source": "gautama_ashram",
+  "seconds": 3.68
+ },
  "3a40f2a0fb6e2ad4c4bb9078b8d0c8e5": {
   "speaker": "Lakshmana",
   "text": "Not past me!",
@@ -1102,5 +1300,83 @@
   "text": "Good. The hand is ready. Now let us see the heart.",
   "source": "training_grounds",
   "seconds": 4.94
+ },
+ "4c9838c1f63cb693828176cba2a080c4": {
+  "speaker": "Sumati",
+  "text": "The city is yours tonight, princes. Ask, and it is given.",
+  "source": "vishala",
+  "seconds": 4.2
+ },
+ "5ab3c87b87683a132637d98b311faf5d": {
+  "speaker": "Weaver",
+  "text": "The bride will wear your kindness in every thread, my prince.",
+  "source": "vishala",
+  "seconds": 3.75
+ },
+ "4c51b5c7564846d836aca592e98b9b6c": {
+  "speaker": "Weaver",
+  "text": "Kusumbha, and so fresh! The red will be deep as the evening. Bless you.",
+  "source": "vishala",
+  "seconds": 4.79
+ },
+ "e2516c5860c52527fd124cb83a667927": {
+  "speaker": "Weaver",
+  "text": "The kusumbha grows in the temple garden, to the east. Three handfuls is all I need.",
+  "source": "vishala",
+  "seconds": 5.57
+ },
+ "8d5c68a49b94432f98d38d4ee75fa4c8": {
+  "speaker": "Weaver",
+  "text": "Forgive an old weaver, my prince. A bride's sari waits on my loom, and I have run short of red.",
+  "source": "vishala",
+  "seconds": 5.77
+ },
+ "1b584c248255c2a4dad1c9e21efd68c9": {
+  "speaker": "Weaver",
+  "text": "The kusumbha flowers grow in the temple garden. My legs will not take me there before dark.",
+  "source": "vishala",
+  "seconds": 4.97
+ },
+ "f6c043854d20a9a46c98532e69cca503": {
+  "speaker": "Rama",
+  "text": "Then ours will, mother. Keep the loom warm.",
+  "source": "vishala",
+  "seconds": 3.05
+ },
+ "187b42fd574ba43495116bd983160772": {
+  "speaker": "Priest",
+  "text": "The lamp burns. The deity sees, and so do I. Go well, princes of Raghu.",
+  "source": "vishala",
+  "seconds": 5.74
+ },
+ "1a9206cffd5001efb59f97aa7f83d56e": {
+  "speaker": "Priest",
+  "text": "Light comes back to the shrine, carried by a prince. That is how it should be.",
+  "source": "vishala",
+  "seconds": 5.17
+ },
+ "d4f50287472c82a5e7ed5eadf22d9bcb": {
+  "speaker": "Priest",
+  "text": "The oil-seller in the market keeps the temple's share.",
+  "source": "vishala",
+  "seconds": 3.7
+ },
+ "e2256a74867c71557fafde8b2ae582ce": {
+  "speaker": "Priest",
+  "text": "Welcome, young princes. Forgive the dark: the evening lamp has burned dry.",
+  "source": "vishala",
+  "seconds": 5.09
+ },
+ "38c02bdac5a0124e7e879fbf15d8eb22": {
+  "speaker": "Priest",
+  "text": "The oil-seller in the market keeps the temple's share, but I may not leave the shrine.",
+  "source": "vishala",
+  "seconds": 5.52
+ },
+ "5f052fe6af1fc67580834b4a82baf35d": {
+  "speaker": "Lakshmana",
+  "text": "We will bring it, sir.",
+  "source": "vishala",
+  "seconds": 1.68
  }
 }

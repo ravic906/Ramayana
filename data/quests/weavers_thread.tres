@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"weavers_thread"
+title = "The Weaver's Thread"
+giver = "A Weaver of Vishala"
+summary = "A weaver is dyeing thread for a bride's sari and has run short of kusumbha flowers, which grow in the temple garden."
+objective = "Gather kusumbha flowers in the temple garden"
+goal_count = 3
+reward_punya = 40
+reward_dharma = 2
+return_text = "Bring the flowers to the weaver in the market"

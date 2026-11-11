@@ -21,6 +21,10 @@ Status:
 | 10 | **Review the Sarayu road's words** | New scenes: the departure, Bala and Atibala, the dawn verse, the widow and the boatman (`data/dialogue/part01/`, `kandas/01_bala/sarayu_road.gd`) | **Review** (and for the cultural consultant) | 2026-11-11 |
 | 11 | **Review M3's new words** | Vasishtha's range lines, the forest's new lines (the scouts, the thorns, the shrine) and the shrine's lore leaf (an invented shrine, labelled as such) | **Review** | 2026-11-11 |
 | 12 | **Hair** | Rama's hair is now gathered into the crown, face open (portraits sent) | **Review** | 2026-11-11 |
+| 13 | **Ahalya's portrayal** | Reverence: the first woman on screen, and a sacred episode. Following Valmiki: she has lived unseen in penance and becomes visible, radiant, at Rama's coming; the brothers touch her feet; she receives them; flowers fall; Gautama returns. No retelling of the transgression in the scene; one neutral codex leaf (`data/lore/ahalya.tres`) | **Review** (and for the cultural consultant). Stills and a video of the scene sent | 2026-11-11 |
+| 14 | **The woman's body** | Taste: sari, blouse and pallu as real geometry, hair gathered into a bun, ornaments (portraits and expression sheet sent) | **Review** | 2026-11-11 |
+| 15 | **Review Vishala's and the ashram's words** | King Sumati's welcome, the churning of the ocean told by the sage, the weaver, the oil-seller, the priest, the ashram lines (`data/dialogue/part01/{vishala_welcome,churning,ahalya}.tres`, `kandas/01_bala/{vishala,gautama_ashram}.gd`) | **Review** | 2026-11-11 |
+| 16 | **Music for Vishala and the ashram** | Taste | **Review**. Claude picked *Eastern Thought* (Vishala at evening) and *That Zen Moment* (the silent ashram); Ahalya's moment uses *Peaceful Desolation*. Options: *Dhaka*, *Mystery Bazaar*, *Tabuk*; *Ishikari Lore*, *Nu Flute*, *Healing* | 2026-11-11 |
 | 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review
@@ -39,7 +43,9 @@ Status:
 | Bloom and dawn | **Peaceful Desolation** (new) | Calm, sombre, uplifting brass and strings |
 | Stingers | Discovery Hit, Our Story Begins | |
 | The road along the Sarayu | **The Parting** (new) | Leaving home: calm, sombre, uplifting strings and winds |
-| The dusk camp (Bala and Atibala) | **River Flute** (new) | Calm, meditative flute with the sound of the river |
+| The dusk camp (Bala and Atibala) | **River Flute** | Calm, meditative flute with the sound of the river |
+| Vishala at evening | **Eastern Thought** (new) | Strings, metals and soft percussion: a city at lamp-time, mystical, relaxed |
+| Gautama's silent ashram | **That Zen Moment** (new) | Strings and a bowl drum: hushed, calm; the bloom cue follows when Ahalya appears |
 
 ### Pronunciation (how the voice is told to say it; subtitles unchanged)
 | Name | Now said as | Was |
@@ -51,4 +57,5 @@ Status:
 | Raghu | RAA-gu | RAG-hoo |
 | Mithila | MI-ti-laa | mi-THI-la (English "th") |
 | Ayodhya | uh-YODE-yah | EYE-uh-dee-uh |
+| Ahalya, Gautama, Sumati, Vishala | uh-HUL-yaa, GOW-tuma, SU-muti, vi-SHAA-laa (new) | |
 | Rama, Sita, dharma, Subahu, Vishvamitra, Vasishtha, Dasharatha, Tataka, the astras | unchanged (they already sound right) | |

@@ -47,4 +47,7 @@ owner before it ships.
 | Animals | The pack is low-poly and flat-shaded (toy-like beside the cast) | Welded and smooth-shaded, life-sized, colours muted; never harmed (arrows pass them; near arrows startle) |
 | Boatman's name | "Guha" would clash with the Nishada king of Ayodhya Kanda | Left unnamed |
 | Mouth | Interior poked through the chin in the idle pose | Interior made smaller and set deeper; checked in a close-up render |
+| Women | Only a male body existed; a painted sari read as a bodysuit | A woman's body with garments as real geometry (sari, blouse, pallu), hair gathered into a bun, a face rig of its own |
+| Ahalya | Risk of a sensational retelling | Valmiki's version: unseen penance ended, radiance, reverence; the past only in a neutral codex leaf |
+| Ashram huts | Mud walls the colour of the ground: roofs seemed to float | Ochre plaster on a stone plinth |
 | Score | Licensed placeholders | A commissioned score (Indian classical + orchestra + choir) is the goal for launch |

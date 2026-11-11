@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"vishala_founding"
+title = "Vishala, Son of Ikshvaku"
+text = "Valmiki says the city was founded by Vishala, a son of Ikshvaku and Alambusa, and named for him. Its kings, down to Sumati who welcomed Vishvamitra and the princes, were cousins of Rama's own line."

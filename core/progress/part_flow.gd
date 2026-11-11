@@ -10,6 +10,7 @@ const MISSIONS := {
 		"res://data/missions/part01/m4_tataka.tres",
 		"res://data/missions/part01/m5_siddhashrama.tres",
 		"res://data/missions/part01/m6_stone_and_dawn.tres",
+		"res://data/missions/part01/m7_bow_of_shiva.tres",
 	],
 }
 
@@ -45,6 +46,7 @@ const CHECKPOINT_SCENES := {
 	"gate": [2, "res://kandas/01_bala/training_grounds.tscn"],
 	"sarayu": [2, "res://kandas/01_bala/sarayu_road.tscn"],
 	"camp": [2, "res://kandas/01_bala/sarayu_road.tscn"],
+	"ashram": [6, "res://kandas/01_bala/gautama_ashram.tscn"],
 }
 
 ## Chapters that can be started directly (Missions screen): mission -> [[title,
@@ -57,6 +59,7 @@ const CHAPTERS := {
 	4: [["Tataka's Grove", ""]],
 	5: [["Night 1", "night_1"], ["Night 2", "night_2"], ["Night 3", "night_3"], ["Night 4", "night_4"], ["Night 5", "night_5"],
 		["Maricha and Subahu", "night_6"]],
+	6: [["Vishala", ""], ["Gautama's Ashram", "ashram"]],
 }
 
 

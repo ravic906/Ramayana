@@ -43,6 +43,8 @@ LOOPS = {
     "sky_bosses": ("Black Vortex", 40.0, (55, 85)),
     "sarayu": ("The Parting", 8.0, (70, 110)),
     "sarayu_dusk": ("River Flute", 90.0, (90, 130)),
+    "vishala": ("Eastern Thought", 20.0, (60, 100)),
+    "ashram_dawn": ("That Zen Moment", 30.0, (70, 110)),
 }
 ## stinger -> (track title, start s, length s): one-shots, faded out.
 STINGERS = {
@@ -62,6 +64,8 @@ AUDITION = {
     "forest": ("The Silent Forest", "calm", ["Oppressive Gloom", "Lost Frontier", "Intrepid", "Past the Edge"]),
     "boss": ("Boss battles", "action", ["Final Battle of the Dark Wizards", "Black Vortex", "Corruption", "Unlight"]),
     "sarayu": ("The road along the Sarayu", "calm", ["The Parting", "On the Shore", "Healing", "River Flute"]),
+    "vishala": ("Vishala at evening", "calm", ["Eastern Thought", "Dhaka", "Mystery Bazaar", "Tabuk"]),
+    "ashram_dawn": ("Gautama's silent ashram", "calm", ["That Zen Moment", "Ishikari Lore", "Nu Flute", "Healing"]),
     "blessing": ("Bloom, dawn and blessings", "calm", ["Tempting Secrets", "Peaceful Desolation", "On the Shore", "Heart of Nowhere"]),
 }
 TARGET_DB = -21.0     # loudness above ~200 Hz (what a phone speaker plays)
