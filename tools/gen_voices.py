@@ -53,13 +53,15 @@ CAST = {
 ## Sanskrit names, spelled the way the English voice should say them
 ## (subtitles keep the proper spelling).
 PRONOUNCE = {
+    "Ikshvaku": "Ikshvaaku",
+    "Maricha": "Maareecha",
     "Vishvamitra": "Vishwaamitra", "Vasishtha": "Vasishta", "Dasharatha": "Dasharata",
-    "Lakshmana": "Lakshmana", "Tataka": "Taataka", "Agneyastra": "Aagnayaastra",
+    "Lakshmana": "Lukshmana", "Tataka": "Taataka", "Agneyastra": "Aagnayaastra",
     "Varunastra": "Vaaroonaastra", "Vayavyastra": "Vaayavyaastra", "astras": "aastras",
-    "astra": "aastra", "Siddhashrama": "Siddhaashrama", "Kodanda": "Kodanda",
-    "Sarayu": "Sarayoo", "Ayodhya": "Ayodya", "rakshasas": "raakshasas", "rakshasa": "raakshasa",
-    "rakshasi": "raakshasi", "dharma": "dharma", "Kausalya": "Kaushalya", "Raghu": "Ragoo",
-    "yakshini": "yakshini", "Lava": "Lava", "Kusha": "Kusha", "Mithila": "Mitila",
+    "astra": "aastra", "Siddhashrama": "Siddhaashrama", "Kodanda": "Kodunda",
+    "Sarayu": "Sarayoo", "Ayodhya": "Uh-yoad-yah", "rakshasas": "raakshasas", "rakshasa": "raakshasa",
+    "rakshasi": "raakshasi", "dharma": "dharma", "Kausalya": "Kaushalya", "Raghu": "Ragu",
+    "yakshini": "yakshini", "Lava": "Lava", "Kusha": "Kusha", "Mithila": "Mitilaa",
 }
 
 TRES_TEXT = re.compile(r'^text = "((?:[^"\\]|\\.)*)"', re.S | re.M)
@@ -213,6 +215,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True, help="folder holding en_GB-vctk-medium.onnx(.json)")
     ap.add_argument("--force", action="store_true", help="re-voice lines that already have audio")
+    ap.add_argument("--only-containing", default="",
+                    help="with --force: re-voice only lines containing one of these comma-separated words")
     ap.add_argument("--preview", help="also write a listening reel (gate scene + Tataka intro) to this .mp3")
     args = ap.parse_args()
     from piper import PiperVoice, SynthesisConfig  # noqa: imported here so --help works without piper
@@ -233,7 +237,9 @@ def main():
             print(f"! no voice cast for {speaker!r}: {text}")
             continue
         k = key(speaker, text)
-        if not args.force and not args.preview and (OUT / f"{k}.ogg").exists() and k in old_manifest:
+        words = [w.strip() for w in args.only_containing.split(",") if w.strip()]
+        forced = args.force and (not words or any(re.search(r"\b" + re.escape(w), text) for w in words))
+        if not forced and not args.preview and (OUT / f"{k}.ogg").exists() and k in old_manifest:
             # Piper's synthesis is not deterministic: keep existing takes stable.
             manifest[k] = old_manifest[k]
             continue
