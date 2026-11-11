@@ -152,8 +152,7 @@ var gauntlet_over := false
 ## plus a bonus per wave. One life.
 func _start_gauntlet() -> void:
 	spawner.all_cleared.disconnect(_on_trials_complete)
-	sun.light_energy *= 0.35
-	sun.light_color = Color(0.62, 0.68, 1.0)
+	_gauntlet_night.call_deferred()
 	var waves: Array[PackedStringArray] = []
 	for n in range(1, GAUNTLET_WAVES + 1):
 		var pool := ["grunt"]
@@ -181,6 +180,46 @@ func _start_gauntlet() -> void:
 	Music.play("ayodhya")
 	Music.set_intensity(1.0)
 	spawner.start()
+
+
+## Night over the grounds (after the visual style has applied its sky): a dim
+## sky and moonlight, and braziers ringing the arena.
+func _gauntlet_night() -> void:
+	await get_tree().create_timer(0.2).timeout
+	if not is_inside_tree():
+		return
+	sun.light_energy *= 0.3
+	sun.light_color = Color(0.62, 0.68, 1.0)
+	var we := get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if we and we.environment:
+		var e := we.environment.duplicate() as Environment
+		e.background_energy_multiplier *= 0.22
+		e.ambient_light_energy *= 0.35
+		e.fog_light_color = Color(0.25, 0.28, 0.42)
+		we.environment = e
+	for i in 6:
+		var a := TAU * i / 6.0
+		var p := Vector3(cos(a) * 14.0, 0, -12.0 + sin(a) * 12.0)
+		var bowl := MeshInstance3D.new()
+		bowl.mesh = MeshKit.cyl(0.35, 0.2, 0.3, 12)
+		bowl.material_override = load("res://assets/materials/gold.tres")
+		bowl.position = p + Vector3.UP * 1.2
+		add_child(bowl)
+		var post := MeshInstance3D.new()
+		post.mesh = MeshKit.cyl(0.06, 0.08, 1.1, 8)
+		post.material_override = load("res://assets/materials/wood.tres")
+		post.position = p + Vector3.UP * 0.55
+		add_child(post)
+		var flame := MeshInstance3D.new()
+		flame.mesh = FX.glow_quad(Color(1.0, 0.6, 0.2, 0.9), 0.6)
+		flame.position = p + Vector3.UP * 1.6
+		add_child(flame)
+		var l := OmniLight3D.new()
+		l.light_color = Color(1.0, 0.62, 0.3)
+		l.light_energy = 1.6
+		l.omni_range = 11.0
+		l.position = p + Vector3.UP * 2.0
+		add_child(l)
 
 
 func _end_gauntlet() -> void:
@@ -246,6 +285,9 @@ func _face_rama(point: Vector3) -> void:
 
 ## In the final trial Vasishtha grants a glimpse of the Agneyastra.
 func _on_wave_started(index: int, total: int) -> void:
+	if GameState.trial == "gauntlet":
+		set_objective("The Gauntlet: wave %d" % (index + 1))
+		return
 	set_objective("Vasishtha's maya trials: defeat the illusions (%d of %d)" % [index + 1, total])
 	if index == total - 1:
 		rama.grant_temporary_astra(0)

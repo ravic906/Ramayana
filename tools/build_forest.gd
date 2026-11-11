@@ -403,7 +403,7 @@ func _ruins() -> void:
 ## thatch lies where it fell; the well is dry.
 func _village() -> void:
 	var huts := [[Vector3(-14, 0, 128), 0.3], [Vector3(-12, 0, 145), -0.4], [Vector3(6, 0, 142), 0.6],
-		[Vector3(9, 0, 124), -0.2], [Vector3(-2, 0, 150), 0.1], [Vector3(-18, 0, 138), 1.2]]
+		[Vector3(9, 0, 124), -0.2], [Vector3(-17, 0, 154), 0.1], [Vector3(-18, 0, 138), 1.2]]
 	for spec in huts:
 		var c: Vector3 = VILLAGE + (spec[0] as Vector3) - Vector3(-4, 0, 135)
 		var b := Basis(Vector3.UP, spec[1])
@@ -419,14 +419,15 @@ func _village() -> void:
 		put(MeshKit.box(Vector3(w * 0.9, 0.18, d * 0.7)), Transform3D(Basis(Vector3.RIGHT, 0.5) * b, c + Vector3(0.4, 0.6, 0.6)), "thatch")
 		# A broken pot by the door.
 		put(MeshKit.sphere(0.28, 10), Transform3D(Basis().scaled(Vector3(1, 0.8, 1)), c + b * Vector3(w * 0.5 + 0.8, 0.2, 1.0)), "red_sandstone")
-	# The dry well at the centre.
+	# The dry well, beside the road through the village.
+	var well := VILLAGE + Vector3(-7.5, 0, -2.0)
 	for k in 14:
 		var a := TAU * k / 14.0
-		put(MeshKit.box(Vector3(0.5, 0.7, 0.35)), Transform3D(Basis(Vector3.UP, -a), VILLAGE + Vector3(cos(a) * 1.2, 0.35, sin(a) * 1.2)), "dark_stone")
-	collider_cyl(VILLAGE, 1.45, 0.7)
-	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(VILLAGE.x - 1.2, 0.9, VILLAGE.z), "wood")
-	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(VILLAGE.x + 1.2, 0.9, VILLAGE.z), "wood")
-	put(MeshKit.box(Vector3(2.6, 0.12, 0.12)), at(VILLAGE.x, 1.8, VILLAGE.z), "wood")
+		put(MeshKit.box(Vector3(0.5, 0.7, 0.35)), Transform3D(Basis(Vector3.UP, -a), well + Vector3(cos(a) * 1.2, 0.35, sin(a) * 1.2)), "dark_stone")
+	collider_cyl(well, 1.45, 0.7)
+	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(well.x - 1.2, 0.9, well.z), "wood")
+	put(MeshKit.box(Vector3(0.12, 1.8, 0.12)), at(well.x + 1.2, 0.9, well.z), "wood")
+	put(MeshKit.box(Vector3(2.6, 0.12, 0.12)), at(well.x, 1.8, well.z), "wood")
 	# An abandoned cart, one wheel off.
 	var cart := VILLAGE + Vector3(7, 0, -6)
 	put(MeshKit.box(Vector3(1.6, 0.15, 2.6)), Transform3D(Basis(Vector3.BACK, 0.25), cart + Vector3.UP * 0.6), "wood")

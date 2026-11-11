@@ -12,7 +12,7 @@ static func open(host: Node) -> TrialsScreen:
 func _ready() -> void:
 	layer = 59
 	var bg := ColorRect.new()
-	bg.color = Color(0.07, 0.045, 0.03, 0.97)
+	bg.color = Color(0.07, 0.045, 0.03, 1.0)
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var root := VBoxContainer.new()
