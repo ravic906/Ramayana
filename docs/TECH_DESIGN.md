@@ -171,6 +171,16 @@ tests/           Headless test runner + unit tests
   - medal thresholds are in `Trials.LIST`; Punya for each new medal tier; the best result is
     kept in `flags`.
 
+### Choosing any mission or chapter
+- The Missions screen offers every available mission, and chapters for each
+  (`PartFlow.CHAPTERS`): the Range or the Maya Trials; the palace, the gate, the Sarayu road,
+  the camp; the fields or the Deep Wood; the grove; each Siddhashrama night, or the sky battle.
+- `PartFlow.start_at(mission, chapter)` sets the mission and the checkpoint the level honours,
+  and returns the scene. `ensure_story_state()` grants what the story would have given by then
+  (the Bala and Atibala blessing for 3+; the astras and Tataka's defeat for 5+; the yagna for
+  6+) and marks the mission reached; it never takes anything away. The Journey's Play still
+  continues the story.
+
 ### Difficulty
 - `Settings.difficulty`: STORY / WARRIOR / MAHARATHI (`story_mode` remains a property for
   older code; configs with only `story_mode` migrate).

@@ -42,8 +42,69 @@ static func current(part: PartResource) -> MissionResource:
 ## Mid-mission places to resume (GameState.checkpoint) that live in another
 ## scene than the mission's own: checkpoint -> [mission number, scene].
 const CHECKPOINT_SCENES := {
+	"gate": [2, "res://kandas/01_bala/training_grounds.tscn"],
 	"sarayu": [2, "res://kandas/01_bala/sarayu_road.tscn"],
+	"camp": [2, "res://kandas/01_bala/sarayu_road.tscn"],
 }
+
+## Chapters that can be started directly (Missions screen): mission -> [[title,
+## checkpoint]]. An empty checkpoint is the mission's own start. "range" and
+## "trials" are mission 1's two halves (the range is played or skipped).
+const CHAPTERS := {
+	1: [["The Range", "range"], ["The Maya Trials", "trials"]],
+	2: [["The Palace Grounds", ""], ["The Sage at the Gate", "gate"], ["The Sarayu Road", "sarayu"], ["The Camp", "camp"]],
+	3: [["The Empty Fields", ""], ["The Deep Wood", "forest_c2"]],
+	4: [["Tataka's Grove", ""]],
+	5: [["Night 1", "night_1"], ["Night 2", "night_2"], ["Night 3", "night_3"], ["Night 4", "night_4"], ["Night 5", "night_5"],
+		["Maricha and Subahu", "night_6"]],
+}
+
+
+static func chapters(mission_number: int) -> Array:
+	return CHAPTERS.get(mission_number, [])
+
+
+## Prepares any mission (and chapter) of Part 1 to be played at will, granting
+## what the story would have given by then, and returns the scene to load.
+static func start_at(mission_number: int, chapter := 0) -> String:
+	var m := get_mission(1, mission_number)
+	if m == null or not m.available:
+		return ""
+	ensure_story_state(mission_number)
+	GameState.set_part(1)
+	GameState.current_mission = mission_number
+	GameState.checkpoint = ""
+	var list := chapters(mission_number)
+	var cp := ""
+	if chapter > 0 and chapter < list.size():
+		cp = list[chapter][1]
+	elif not list.is_empty():
+		cp = list[0][1]
+	match cp:
+		"range":
+			GameState.set_flag("range_done", false)
+			cp = ""
+		"trials":
+			GameState.set_flag("range_done", true)
+			cp = ""
+	GameState.checkpoint = cp
+	var hop: Array = CHECKPOINT_SCENES.get(cp, [])
+	return hop[1] if not hop.is_empty() and hop[0] == mission_number else m.scene_path
+
+
+## What the story has given by the start of `mission_number`, for players who
+## jump ahead: the Bala and Atibala blessing (mission 3+), the astras and
+## Tataka's defeat (5+), the yagna kept (6+). Never takes anything away.
+static func ensure_story_state(mission_number: int) -> void:
+	if mission_number >= 3:
+		GameState.set_flag("bala_atibala", true)
+	if mission_number >= 5:
+		for id: StringName in [&"agneyastra", &"varunastra", &"vayavyastra"]:
+			GameState.unlock_astra(id)
+		GameState.set_flag("tataka_defeated", true)
+	if mission_number >= 6:
+		GameState.set_flag("yagna_protected", true)
+	reach(mission_number)
 
 
 static func scene_for(part: PartResource) -> String:

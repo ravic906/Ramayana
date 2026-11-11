@@ -305,22 +305,21 @@ func show_credits() -> void:
 	layer.add_child(close)
 
 
-## Replays a mission of Part 1 (from the Missions list).
-func play_mission(number: int) -> void:
+## Plays any mission of Part 1, from any of its chapters (the Missions list).
+func play_mission(number: int, chapter := 0) -> void:
 	var part := PartCatalog.by_number(1)
 	var m := PartFlow.get_mission(1, number)
 	if m == null or not m.available:
 		return
 	if not Settings.difficulty_chosen:
-		choose_mode(func() -> void: play_mission(number))
+		choose_mode(func() -> void: play_mission(number, chapter))
 		return
-	GameState.set_part(1)
-	GameState.story_session = true
-	GameState.current_mission = number
-	GameState.checkpoint = ""
 	if part:
 		PartLoader.mount(part)
-	get_tree().change_scene_to_file(m.scene_path)
+	GameState.story_session = true
+	var scene := PartFlow.start_at(number, chapter)
+	SaveSystem.save_game()
+	get_tree().change_scene_to_file(scene)
 
 
 ## Asked once, on the first Play: how would you like to journey?

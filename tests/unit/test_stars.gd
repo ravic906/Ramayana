@@ -58,8 +58,8 @@ func test_missions_list_offers_what_was_reached() -> void:
 	var row3 := screen.find_child("Mission3", true, false)
 	var row5 := screen.find_child("Mission5", true, false)
 	assert_false((row3.find_child("Play", true, false) as Button).disabled)
-	assert_true((row5.find_child("Play", true, false) as Button).disabled, "not reached yet")
+	assert_false((row5.find_child("Play", true, false) as Button).disabled, "any mission can be chosen at will")
 	var chosen := [0]
-	screen.mission_chosen.connect(func(n: int) -> void: chosen[0] = n)
+	screen.mission_chosen.connect(func(n: int, _c: int) -> void: chosen[0] = n)
 	(row3.find_child("Play", true, false) as Button).pressed.emit()
 	assert_eq(chosen[0], 3)

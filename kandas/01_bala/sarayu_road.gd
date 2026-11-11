@@ -77,7 +77,8 @@ func _ready() -> void:
 	lakshmana.command = Lakshmana.Command.FOLLOW
 	_begin_stats()
 	stats.facts["sage_unharmed"] = true
-	if GameState.current_part == 1 and GameState.current_mission <= 2:
+	var at_camp_start := GameState.checkpoint == "camp"
+	if GameState.current_part == 1 and GameState.current_mission <= 2 and not at_camp_start:
 		GameState.checkpoint = "sarayu"
 		SaveSystem.save_game()
 	var camp := m("CampCenter")
@@ -97,14 +98,36 @@ func _ready() -> void:
 	rama.visual.rotation.y = 0.0
 	lakshmana.global_position = m("Start") + Vector3(-1.4, 0, 2.0)
 	sage = spawn_npc(SAGE, m("Start") + Vector3(1.2, 0, -5.0), m("Talk1")) as NpcModel
-	Music.play("sarayu")
-	set_objective("Walk with Vishvamitra along the Sarayu", sage)
 	Quests.changed.connect(_refresh_markers)
 	_refresh_markers()
+	if at_camp_start:
+		_start_at_camp()
+		return
+	Music.play("sarayu")
+	set_objective("Walk with Vishvamitra along the Sarayu", sage)
 	if story_enabled():
 		_intro.call_deferred()
 	else:
 		_next_leg.call_deferred()
+
+
+## Chapter "The Camp" (chosen from the Missions list): dusk at the sandbank,
+## the sage already seated, the walk and the stampede behind them.
+func _start_at_camp() -> void:
+	_leg = WALK_LINES.size() + 1
+	stampede_done = true
+	var camp := m("CampCenter")
+	rama.global_position = camp + Vector3(-4.0, 0, 3.0)
+	lakshmana.global_position = camp + Vector3(-5.0, 0, 2.0)
+	sage.global_position = m("SageSeat")
+	sage.face(camp)
+	sage.play(&"sit_talk")
+	at_camp = true
+	_fire.visible = true
+	camp_seat.enabled = true
+	sun.rotation.x = deg_to_rad(SUN_PITCH_CAMP)
+	Music.play("sarayu_dusk")
+	set_objective("Rest by the fire at the camp", camp_seat)
 
 
 func _intro() -> void:
