@@ -137,7 +137,17 @@ func record_stars(part: int, mission: int, stars: int) -> int:
 	var k := "%d:%d" % [part, mission]
 	var best := maxi(int(mission_stars.get(k, 0)), stars)
 	mission_stars[k] = best
+	# Stars won on Maharathi are remembered apart (shown as a red seal).
+	var settings := get_node_or_null("/root/Settings")
+	if settings and settings.difficulty == 2:
+		var hard: Dictionary = flags.get("hard_stars", {})
+		hard[k] = maxi(int(hard.get(k, 0)), stars)
+		flags["hard_stars"] = hard
 	return best
+
+
+func hard_stars_for(part: int, mission: int) -> int:
+	return int((flags.get("hard_stars", {}) as Dictionary).get("%d:%d" % [part, mission], 0))
 
 
 func stars_for(part: int, mission: int) -> int:

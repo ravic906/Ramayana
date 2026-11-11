@@ -59,6 +59,11 @@ func _ready() -> void:
 			stars.size_px = 20.0
 			stars.custom_minimum_size = Vector2(170, 64)
 			row.add_child(stars)
+			var hard := GameState.hard_stars_for(part_number, m.number)
+			if hard > 0:
+				var seal := PartCard._label("Maharathi %d/3" % hard, 20, Color(1.0, 0.45, 0.35), true)
+				seal.name = "HardSeal"
+				row.add_child(seal)
 		var play := Button.new()
 		play.name = "Play"
 		play.text = "Play" if reached else "Locked"

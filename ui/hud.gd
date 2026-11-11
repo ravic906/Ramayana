@@ -429,7 +429,7 @@ func _build_pause() -> void:
 				b.text = "Quality: %s" % Settings.quality_name())
 		elif entry == mode:
 			b.pressed.connect(func() -> void:
-				Settings.set_story_mode(not Settings.story_mode)
+				Settings.set_difficulty(Settings.next_difficulty())
 				b.text = "Mode: %s" % Settings.mode_name())
 		elif entry == look:
 			b.pressed.connect(func() -> void:

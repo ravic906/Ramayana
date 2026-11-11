@@ -147,6 +147,15 @@ tests/           Headless test runner + unit tests
 - **Story poses:** `RamaModel.play_pose()/clear_pose()` bypass the gameplay AnimationTree. New
   clips: `sit_down`, `sit`, `sit_talk`, `stand_up`, `kneel`, `talk`, `walk_formal`, `interact`.
 
+### Difficulty
+- `Settings.difficulty`: STORY / WARRIOR / MAHARATHI (`story_mode` remains a property for
+  older code; configs with only `story_mode` migrate).
+- Scales per mode: incoming damage 0.5 / 1.0 / 1.5, enemy health 0.8 / 1.0 / 1.3, rakshasa
+  wind-up 1.15 / 1.0 / 0.85 (`Rakshasa.telegraph_time()`), perfect window +0.2 / 0 / −0.05 s,
+  aim-assist cone ×1.6 / 1 / 0.8. Tataka and the sky bosses take 1.3× health on Maharathi.
+- Maharathi unlocks with the `tataka_defeated` flag; toggles skip it until then. Stars won on
+  Maharathi are kept apart (`flags.hard_stars`) and shown as a red seal in the Missions list.
+
 ### Faces and close-up dialogue
 - **The rig (build time, `tools/face_rig_builder.gd`, run by `tools/build_rama.gd`).** The
   Quaternius base has no facial rig, so the build makes one:

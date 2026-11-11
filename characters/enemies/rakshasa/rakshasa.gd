@@ -238,7 +238,12 @@ func begin_wind_up() -> void:
 	if is_ranged():
 		model.play(&"shoot", 0.15, 0.0)
 	else:
-		model.play(&"strike", 0.12, STRIKE_HIT_TIME / maxf(data.telegraph_time, 0.05))
+		model.play(&"strike", 0.12, STRIKE_HIT_TIME / maxf(telegraph_time(), 0.05))
+
+
+## Wind-up length for this difficulty.
+func telegraph_time() -> float:
+	return data.telegraph_time * Settings.telegraph_scale()
 
 
 ## The telegraphed blow lands (melee arc) or the arrow flies (ranged).

@@ -17,10 +17,10 @@ func exit() -> void:
 func physics_update(delta: float) -> void:
 	var r := actor as Rakshasa
 	_t += delta
-	var k := _t / r.data.telegraph_time
+	var k := _t / r.telegraph_time()
 	r.model.set_glow(0.4 + 1.2 * k + sin(_t * 30.0) * 0.25)
 	var face := r.flat_to_target() if (k < 0.6 and r.target != null) else Vector3.ZERO
 	r.steer(Vector3.ZERO, 0.0, delta, face)
-	if _t >= r.data.telegraph_time:
+	if _t >= r.telegraph_time():
 		r.perform_attack()
 		machine.transition_to(&"Recover")

@@ -2,9 +2,11 @@ extends Node
 ## Player-facing settings, saved to user://settings.cfg.
 ##   visual_style: Realistic (default: physically based materials + photographed
 ##                 sky) or Stylised (toon, the original Art Bible look).
-##   story_mode:   Story difficulty, for the tale: Rama takes half damage, foes
-##                 are weaker, aim assist is wider, the perfect window longer.
-##                 Off = Warrior (the full challenge).
+##   difficulty:   Story (for the tale: Rama takes half damage, foes are weaker,
+##                 aim assist is wider, the perfect window longer), Warrior (the
+##                 full challenge) or Maharathi (hard: foes hit harder, last
+##                 longer and strike sooner; unlocked once Tataka is defeated).
+##                 `story_mode` reads/writes Story vs Warrior for older code.
 ##   difficulty_chosen: the player picked a mode (asked once, on first Play).
 ##   quality:      Battery saver / Balanced (default) / High: frame cap, 3D render
 ##                 scale (FSR upscaling, the UI stays sharp), shadows, glow and
@@ -27,7 +29,13 @@ enum Quality { BATTERY, BALANCED, HIGH }
 var quality := Quality.BALANCED
 ## "menu" / "game" / "cinematic": menus and cutscenes need fewer frames.
 var fps_context := "game"
-var story_mode := false
+enum Difficulty { STORY, WARRIOR, MAHARATHI }
+var difficulty := Difficulty.WARRIOR
+var story_mode: bool:
+	get:
+		return difficulty == Difficulty.STORY
+	set(value):
+		difficulty = Difficulty.STORY if value else (Difficulty.WARRIOR if difficulty == Difficulty.STORY else difficulty)
 var difficulty_chosen := false
 var music_volume := 0.8
 var sfx_volume := 1.0
@@ -50,23 +58,58 @@ func _ready() -> void:
 
 
 func set_story_mode(on: bool) -> void:
-	story_mode = on
+	set_difficulty(Difficulty.STORY if on else Difficulty.WARRIOR)
+
+
+func set_difficulty(d: Difficulty) -> void:
+	if d == Difficulty.MAHARATHI and not maharathi_unlocked():
+		d = Difficulty.WARRIOR
+	difficulty = d
 	difficulty_chosen = true
 	save_settings()
 
 
+## Maharathi opens once Tataka has been defeated in the story.
+func maharathi_unlocked() -> bool:
+	var gs := get_node_or_null("/root/GameState")
+	return gs != null and bool(gs.get_flag("tataka_defeated", false))
+
+
+## The next mode for a toggle button (skips Maharathi while it is locked).
+func next_difficulty() -> Difficulty:
+	var n := (difficulty + 1) % 3 as Difficulty
+	if n == Difficulty.MAHARATHI and not maharathi_unlocked():
+		n = Difficulty.STORY
+	return n
+
+
 func mode_name() -> String:
-	return "Story" if story_mode else "Warrior"
+	return ["Story", "Warrior", "Maharathi"][difficulty]
 
 
 ## Scales damage Rama (and what he protects) receives.
 func incoming_damage_scale() -> float:
-	return 0.5 if story_mode else 1.0
+	return [0.5, 1.0, 1.5][difficulty]
 
 
-## Scales enemy health.
+## Scales enemy (and boss) health.
 func enemy_health_scale() -> float:
-	return 0.8 if story_mode else 1.0
+	return [0.8, 1.0, 1.3][difficulty]
+
+
+## Scales how long foes wind up an attack (shorter = less time to react).
+func telegraph_scale() -> float:
+	return [1.15, 1.0, 0.85][difficulty]
+
+
+## Added to the perfect-release window (seconds).
+func perfect_window_bonus() -> float:
+	return [0.2, 0.0, -0.05][difficulty]
+
+
+## Scales the aim-assist cone.
+func assist_scale() -> float:
+	return [1.6, 1.0, 0.8][difficulty]
 
 
 func is_realistic() -> bool:
@@ -94,7 +137,7 @@ func save_settings() -> Error:
 	cfg.set_value("graphics", "visual_style", visual_style)
 	cfg.set_value("graphics", "low_quality", low_quality)
 	cfg.set_value("graphics", "quality", quality)
-	cfg.set_value("gameplay", "story_mode", story_mode)
+	cfg.set_value("gameplay", "difficulty", difficulty)
 	cfg.set_value("gameplay", "difficulty_chosen", difficulty_chosen)
 	cfg.set_value("audio", "music_volume", music_volume)
 	cfg.set_value("audio", "sfx_volume", sfx_volume)
@@ -110,7 +153,9 @@ func load_settings() -> void:
 	low_quality = bool(cfg.get_value("graphics", "low_quality", false))
 	quality = int(cfg.get_value("graphics", "quality", Quality.BATTERY if low_quality else Quality.BALANCED))
 	low_quality = quality == Quality.BATTERY
-	story_mode = bool(cfg.get_value("gameplay", "story_mode", false))
+	# Older configs saved only story_mode.
+	var legacy := Difficulty.STORY if bool(cfg.get_value("gameplay", "story_mode", false)) else Difficulty.WARRIOR
+	difficulty = clampi(int(cfg.get_value("gameplay", "difficulty", legacy)), 0, 2) as Difficulty
 	difficulty_chosen = bool(cfg.get_value("gameplay", "difficulty_chosen", false))
 	music_volume = clampf(float(cfg.get_value("audio", "music_volume", 0.8)), 0.0, 1.0)
 	sfx_volume = clampf(float(cfg.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)

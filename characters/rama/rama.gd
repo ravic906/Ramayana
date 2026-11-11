@@ -332,7 +332,7 @@ func is_in_perfect_window() -> bool:
 
 ## The perfect window with skills and Story mode applied.
 func perfect_window_now() -> float:
-	return perfect_window + Skills.add("perfect_window") + (0.2 if Settings.story_mode else 0.0)
+	return perfect_window + Skills.add("perfect_window") + Settings.perfect_window_bonus()
 
 
 ## Fires the drawn arrow (or a snap shot for a quick tap) and ends the draw.
@@ -423,7 +423,7 @@ func _update_aim() -> void:
 		origin = ray[0]
 		dir = ray[1]
 	var target := AutoAim.find_best_target(origin, dir, get_tree().get_nodes_in_group(&"enemies"),
-		assist_range, assist_cone_degrees * (1.6 if Settings.story_mode else 1.0))
+		assist_range, assist_cone_degrees * Settings.assist_scale())
 	if target != null:
 		aim_point = AutoAim.aim_point_of(target)
 	else:

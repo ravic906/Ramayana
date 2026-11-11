@@ -54,7 +54,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9
 
 func _ready() -> void:
 	model.scale = Vector3.ONE * SCALE
-	health.max_health = max_health
+	health.max_health = max_health * (1.3 if Settings.difficulty == Settings.Difficulty.MAHARATHI else 1.0)
 	health.revive()
 	health.damaged.connect(_on_damaged)
 	health.died.connect(_on_died)
@@ -92,7 +92,7 @@ func apply_knockback(impulse: Vector3) -> void:
 
 
 func damage_scale() -> float:
-	return 0.5 if Settings.story_mode else 1.0
+	return 0.5 if Settings.story_mode else 1.0  # Rama also applies Settings.incoming_damage_scale()
 
 
 func _physics_process(delta: float) -> void:

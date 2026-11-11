@@ -211,7 +211,7 @@ func _build() -> void:
 		mode.add_theme_stylebox_override(s, PartCard._style(Color(0.4, 0.15, 0.2), PartCard.GOLD, 4, 16))
 	mode.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
 	mode.pressed.connect(func() -> void:
-		Settings.set_story_mode(not Settings.story_mode)
+		Settings.set_difficulty(Settings.next_difficulty())
 		mode.text = "Mode: %s" % Settings.mode_name())
 	bottom.add_child(mode)
 	var quality := Button.new()
