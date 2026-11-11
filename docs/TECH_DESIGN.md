@@ -190,6 +190,22 @@ tests/           Headless test runner + unit tests
 - Maharathi unlocks with the `tataka_defeated` flag; toggles skip it until then. Stars won on
   Maharathi are kept apart (`flags.hard_stars`) and shown as a red seal in the Missions list.
 
+### The woman's body (NPCs: Ahalya, townswomen, later Sita)
+- `tools/build_rama.gd -- <UBC> <UAL> female` builds `characters/npc/model/woman_body.scn` from
+  `Superhero_Female_FullBody`, with the same skeleton and animations as the man's body.
+- **Face rig:** the same shapes, on her landmarks (`face_rig_builder.gd` `FEMALE`; the lip
+  line is found from the mesh's open seam between the lips). Lower-lip vertices are found by
+  a flood from the chin that cannot cross the slit (welded by position and normal), which is
+  robust for lips that curl inward.
+- **Clothes are geometry** (`tools/garment_builder.gd`), not paint on the close-fitting base:
+  - a cloth shell over the torso and upper arms (the body's own triangles pushed out,
+    sharing its skin), coloured as the blouse with the pallu across it;
+  - a flared, pleated skirt skinned to the pelvis and blending toward each leg;
+  - region masks, so `NpcModel` palettes apply (`FaceController.set_skin` covers `Garment`).
+- **Hair:** a scalp built from the head mesh above a natural hairline, the back strands
+  gathered to a bun at the nape (`Hair`); `HairLong` is the pack's long hair, refitted.
+- `characters/npc/npc_woman.tscn` (`NpcModel`, with `ornaments`: earrings, nose ring, bangles).
+
 ### Faces and close-up dialogue
 - **The rig (build time, `tools/face_rig_builder.gd`, run by `tools/build_rama.gd`).** The
   Quaternius base has no facial rig, so the build makes one:

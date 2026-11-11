@@ -206,7 +206,7 @@ func _update_shapes(delta: float) -> void:
 
 ## Puts `mat` on every skin surface of the rig (body, head, eyelids).
 static func set_skin(skeleton: Skeleton3D, mat: Material) -> void:
-	for n in ["Body", "Head", "HeadAttachment/EyeL/UpperLid", "HeadAttachment/EyeR/UpperLid"]:
+	for n in ["Body", "Head", "Garment", "HeadAttachment/EyeL/UpperLid", "HeadAttachment/EyeR/UpperLid"]:
 		var mi := skeleton.get_node_or_null(n) as MeshInstance3D
 		if mi:
 			mi.material_override = mat

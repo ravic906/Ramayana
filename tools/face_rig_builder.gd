@@ -14,12 +14,16 @@ extends RefCounted
 ##
 ## Coordinates are the rig's rest pose: metres, face toward +Z, X to the left.
 
-const LIP_Y := 1.6229
-const MOUTH_CORNER_X := 0.0259
-const MOUTH_FRONT_Z := 0.0912
-const JAW_PIVOT := Vector3(0.0, 1.645, -0.005)
+## Face landmarks per base body (rest pose), measured from the centre-line
+## profile of each mesh (the lip line is the dip between the lips) and the
+## Eyes mesh. Everything else is placed relative to these.
+const MALE := {"lip_y": 1.6229, "front_z": 0.0912, "corner": Vector3(0.0259, 1.6239, 0.0776),
+	"jaw_pivot": Vector3(0.0, 1.645, -0.005), "eye_r": 0.0150, "cheek_z": 0.075}
+const FEMALE := {"lip_y": 1.5838, "front_z": 0.0930, "corner": Vector3(0.0245, 1.5848, 0.0800),
+	"jaw_pivot": Vector3(0.0, 1.606, -0.003), "eye_r": 0.0165, "cheek_z": 0.078}
+## The landmarks in use (build_rama sets FEMALE for the woman's body).
+static var L: Dictionary = MALE
 const JAW_MAX_DEG := 10.0
-const EYE_RADIUS := 0.0150
 const LID_OPEN_DEG := -58.0
 const FACE_SHAPES := ["jaw_open", "mouth_smile", "mouth_frown", "mouth_wide", "mouth_round", "lips_press", "cheek_raise"]
 const BROW_SHAPES := ["brow_raise", "brow_furrow", "brow_sad"]
@@ -131,22 +135,59 @@ static func _shape_arrays(arrays: Array, moved: PackedVector3Array) -> Array:
 ## For vertices near the lip line, which lip they belong to: the side their
 ## neighbouring triangles lie on (the slit makes the line itself ambiguous).
 static func _lower_lip_side(arrays: Array) -> PackedByteArray:
+	# The lower lip is what a flood from the chin reaches without crossing the
+	# slit between the lips (an open seam in the mesh). Vertices are welded
+	# across UV seams by position and normal, so the closed lips (same place,
+	# opposite normals) stay apart. Away from the mouth, height decides.
 	var v: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var n: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
 	var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
-	var sum := PackedFloat32Array()
-	var cnt := PackedInt32Array()
-	sum.resize(v.size())
-	cnt.resize(v.size())
+	var lip: float = L.lip_y
+	var corner_x: float = (L.corner as Vector3).x - 0.001
+	var keyed := {}
+	var weld := PackedInt32Array()
+	weld.resize(v.size())
+	for i in v.size():
+		var k := [Vector3i(roundi(v[i].x * 1e4), roundi(v[i].y * 1e4), roundi(v[i].z * 1e4)),
+			Vector3i(roundi(n[i].x * 4), roundi(n[i].y * 4), roundi(n[i].z * 4))]
+		var ks := str(k)
+		if not keyed.has(ks):
+			keyed[ks] = i
+		weld[i] = keyed[ks]
+	var near_mouth := func(p: Vector3) -> bool:
+		# The lips' outer surface only: not the mouth's inner cavity, which joins the lips.
+		return absf(p.x) < corner_x and p.y < lip + 0.004 and p.y > lip - 0.06 and p.z > float(L.front_z) - 0.016
+	var adj := {}
 	for t in range(0, idx.size(), 3):
-		var cy := (v[idx[t]].y + v[idx[t + 1]].y + v[idx[t + 2]].y) / 3.0
-		for k in 3:
-			sum[idx[t + k]] += cy
-			cnt[idx[t + k]] += 1
+		for e in [[0, 1], [1, 2], [2, 0]]:
+			var a: int = weld[idx[t + e[0]]]
+			var b: int = weld[idx[t + e[1]]]
+			if not adj.has(a):
+				adj[a] = []
+			if not adj.has(b):
+				adj[b] = []
+			adj[a].append(b)
+			adj[b].append(a)
+	var reached := {}
+	var queue: Array = []
+	for i in v.size():
+		var p := v[i]
+		if near_mouth.call(p) and p.y < lip - 0.02 and absf(p.x) < 0.012 and p.z > 0.05:
+			reached[weld[i]] = true
+			queue.append(weld[i])
+	while not queue.is_empty():
+		var cur: int = queue.pop_back()
+		for nb: int in adj.get(cur, []):
+			if not reached.has(nb) and near_mouth.call(v[nb]):
+				reached[nb] = true
+				queue.append(nb)
 	var out := PackedByteArray()
 	out.resize(v.size())
 	for i in v.size():
-		var avg := sum[i] / maxf(cnt[i], 1)
-		out[i] = 1 if (v[i].y < LIP_Y - 0.0012 or (absf(v[i].y - LIP_Y) <= 0.0012 and avg < v[i].y)) else 0
+		if near_mouth.call(v[i]):
+			out[i] = 1 if reached.has(weld[i]) else 0
+		else:
+			out[i] = 1 if v[i].y < lip else 0
 	return out
 
 
@@ -163,20 +204,22 @@ static func _face_delta(shape: String, p: Vector3, lower: int) -> Vector3:
 	if p.z < 0.02:
 		return Vector3.ZERO  # only the face, never the back of the head
 	var side := signf(p.x) if absf(p.x) > 0.0001 else 1.0
-	var corner := Vector3(side * MOUTH_CORNER_X, LIP_Y, 0.0776)
-	var near_lips := _gauss(p, Vector3(0, LIP_Y, MOUTH_FRONT_Z - 0.006), 0.016)
+	var lip: float = L.lip_y
+	var c0: Vector3 = L.corner
+	var corner := Vector3(side * c0.x, lip, c0.z)
+	var near_lips := _gauss(p, Vector3(0, lip, float(L.front_z) - 0.006), 0.016)
 	var at_corner := _gauss(p, corner, 0.011)
 	match shape:
 		"jaw_open":
 			if lower == 0:
 				return Vector3.ZERO
-			var w := (1.0 - _smooth(0.035, 0.062, absf(p.x))) * _smooth(1.572, 1.592, p.y)
-			var rel := p - JAW_PIVOT
+			var w := (1.0 - _smooth(0.035, 0.062, absf(p.x))) * _smooth(lip - 0.0509, lip - 0.0309, p.y)
+			var rel := p - (L.jaw_pivot as Vector3)
 			var a := deg_to_rad(JAW_MAX_DEG) * w
 			var rotated := Vector3(rel.x, rel.y * cos(a) - rel.z * sin(a), rel.y * sin(a) + rel.z * cos(a))
 			return rotated - rel
 		"mouth_smile":
-			return Vector3(side * 0.0028, 0.0042, -0.0018) * at_corner + Vector3(0, 0.0012, 0) * _gauss(p, Vector3(side * 0.035, 1.645, 0.075), 0.012)
+			return Vector3(side * 0.0028, 0.0042, -0.0018) * at_corner + Vector3(0, 0.0012, 0) * _gauss(p, Vector3(side * 0.035, lip + 0.0221, float(L.cheek_z)), 0.012)
 		"mouth_frown":
 			return Vector3(side * 0.0008, -0.0038, 0.0) * at_corner
 		"mouth_wide":
@@ -189,7 +232,7 @@ static func _face_delta(shape: String, p: Vector3, lower: int) -> Vector3:
 			var dir := 1.0 if lower == 1 else -1.0
 			return Vector3(0, dir * 0.0006, -0.0010) * near_lips * mid
 		"cheek_raise":
-			return Vector3(0, 0.0028, 0.0010) * _gauss(p, Vector3(side * 0.036, 1.650, 0.074), 0.011)
+			return Vector3(0, 0.0028, 0.0010) * _gauss(p, Vector3(side * 0.036, lip + 0.0271, float(L.cheek_z) - 0.001), 0.011)
 	return Vector3.ZERO
 
 
@@ -243,7 +286,7 @@ static func split_eyes(arrays: Array, material: Material) -> Array:
 static func lid_mesh(material: Material) -> ArrayMesh:
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var r := EYE_RADIUS + 0.0013
+	var r: float = float(L.eye_r) + 0.0013
 	var rings := 10
 	var segs := 14
 	var theta_max := deg_to_rad(132.0)

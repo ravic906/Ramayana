@@ -12,6 +12,8 @@ extends Node3D
 @export var beard := false
 ## Long loose hair (sages, the king); princes and townsfolk wear the gathered style.
 @export var long_hair := false
+## A woman's jewellery: earrings, a nose ring, bangles (on the woman's body).
+@export var ornaments := false
 @export var crown := false
 @export var topknot := false
 @export var staff := false
@@ -41,7 +43,7 @@ func _ready() -> void:
 	if gathered and long:
 		gathered.visible = not long_hair
 		long.visible = long_hair
-	for n in ["Hair", "HairLong", "Beard"]:
+	for n in ["Hair", "HairLong", "Beard", "Scalp"]:
 		var mi := skeleton.find_child(n, true, false) as MeshInstance3D
 		if mi:
 			mi.material_override = hair_mat
@@ -123,6 +125,23 @@ func _build_props() -> void:
 		hair.albedo_color = hair_color
 		batch.add("Head", MeshKit.sphere(0.085, 10), hair, Transform3D(Basis().scaled(Vector3(1, 1.2, 1)), Vector3(0, 1.84, -0.03)))
 		batch.add("Head", MeshKit.torus(0.05, 0.075, 12), load("res://assets/materials/wood.tres"), Transform3D(Basis(), Vector3(0, 1.79, -0.03)))
+	if ornaments:
+		var head_y := skeleton.get_bone_global_rest(skeleton.find_bone("Head")).origin.y
+		var lip := head_y + 0.034  # the woman's lip line sits ~3.4 cm above her head bone
+		for side in [-1.0, 1.0]:
+			batch.add("Head", MeshKit.torus(0.008, 0.016, 12), gold,
+				Transform3D(Basis(Vector3.FORWARD, PI / 2), Vector3(0.071 * side, lip + 0.012, -0.004)))
+			batch.add("Head", MeshKit.sphere(0.007, 8), gold, Transform3D(Basis(), Vector3(0.071 * side, lip - 0.006, -0.004)))
+		batch.add("Head", MeshKit.torus(0.005, 0.008, 10), gold,
+			Transform3D(Basis(Vector3.UP, 0.4) * Basis(Vector3.FORWARD, PI / 2), Vector3(0.013, lip + 0.019, 0.098)))
+		# Bangles at each wrist (arms lie along X in the rest pose).
+		for side in ["l", "r"]:
+			var fore := skeleton.get_bone_global_rest(skeleton.find_bone("lowerarm_" + side)).origin
+			var wrist := skeleton.get_bone_global_rest(skeleton.find_bone("hand_" + side)).origin
+			for k in 3:
+				var p := fore.lerp(wrist, 0.8 + k * 0.05)
+				batch.add("lowerarm_" + side, MeshKit.torus(0.028, 0.034, 14), gold,
+					Transform3D(Basis(Vector3.BACK, PI / 2), p))
 	batch.commit()
 	if staff:
 		_staff = Node3D.new()

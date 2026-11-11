@@ -1,7 +1,7 @@
 # Asset Credits
 
 ## Rama's body and animations: Quaternius (CC0)
-- **Universal Base Characters [Standard]** (`Superhero_Male_FullBody`, `Hair_Long`, `Hair_SimpleParted`, `Hair_Beard`):
+- **Universal Base Characters [Standard]** (`Superhero_Male_FullBody`, `Superhero_Female_FullBody`, `Hair_Long`, `Hair_SimpleParted`, `Hair_Beard`):
   https://quaternius.itch.io/universal-base-characters
 - **Universal Animation Library [Standard]** (`UAL1_Standard.glb`): idle, walk, jog, roll,
   spell-shoot, hit, sword attack, death.
