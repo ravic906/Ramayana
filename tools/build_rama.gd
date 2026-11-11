@@ -35,6 +35,7 @@ const GOLD_TRIM := Color(0, 1, 0)    # region_g: zari border and waistband
 const UTTARIYA := Color(0, 0, 1)     # region_b: saffron sash
 
 const MAT_DIR := "res://assets/materials/"
+const FaceRig := preload("res://tools/face_rig_builder.gd")
 
 
 func _initialize() -> void:
@@ -61,18 +62,57 @@ func _initialize() -> void:
 	# --- Body: paint outfit + toon material ---------------------------------
 	var body_mi: MeshInstance3D = skeleton.get_node("SuperHero_Male")
 	body_mi.name = "Body"
-	body_mi.mesh = _with_lods(_paint_outfit(body_mi.mesh as ArrayMesh, skeleton), load(MAT_DIR + "rama_body.tres"))
+	var body_mat: Material = load(MAT_DIR + "rama_body.tres")
+	var painted := _paint_outfit(body_mi.mesh as ArrayMesh, skeleton).surface_get_arrays(0)
+	# --- Face rig (see tools/face_rig_builder.gd) ---------------------------------
+	var head_binds := []
+	var skin := body_mi.skin
+	var head_bone := skeleton.find_bone("Head")
+	for b in skin.get_bind_count():
+		if skin.get_bind_bone(b) == head_bone or String(skin.get_bind_name(b)) == "Head":
+			head_binds.append(b)
+	var parts: Array = FaceRig.split_head(painted, head_binds)
+	var body_only := ArrayMesh.new()
+	body_only.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, parts[0])
+	body_mi.mesh = _with_lods(body_only, body_mat)
+	var head := MeshInstance3D.new()
+	head.name = "Head"
+	head.mesh = FaceRig.head_mesh(parts[1], body_mat)
+	head.skin = skin
+	skeleton.add_child(head)
+	head.skeleton = NodePath("..")
 
 	var eyes: MeshInstance3D = skeleton.get_node("Eyes")
-	eyes.mesh.surface_set_material(0, load(MAT_DIR + "rama_eyes.tres"))
+	var eye_arrays := (eyes.mesh as ArrayMesh).surface_get_arrays(0)
+	skeleton.remove_child(eyes)
+	eyes.free()
 	var brows: MeshInstance3D = skeleton.get_node("Eyebrows")
-	brows.mesh.surface_set_material(0, load(MAT_DIR + "rama_hair.tres"))  # double-sided dark
+	brows.mesh = FaceRig.brow_mesh((brows.mesh as ArrayMesh).surface_get_arrays(0), load(MAT_DIR + "rama_hair.tres"))
 
-	# --- Hair on the head bone ------------------------------------------------
+	# --- Head attachment: eyes, lids, mouth, hair ---------------------------------
 	var head_att := BoneAttachment3D.new()
 	head_att.name = "HeadAttachment"
 	head_att.bone_name = "Head"
 	skeleton.add_child(head_att)
+	var head_rest_inv := skeleton.get_bone_global_rest(head_bone).affine_inverse()
+	for pair in FaceRig.split_eyes(eye_arrays, load(MAT_DIR + "rama_eyes.tres")):
+		var c: Vector3 = pair[0]
+		var pivot := Node3D.new()
+		pivot.name = "EyeL" if c.x > 0.0 else "EyeR"   # the character's own left is +X
+		pivot.transform = head_rest_inv * Transform3D(Basis(), c)
+		head_att.add_child(pivot)
+		var ball := MeshInstance3D.new()
+		ball.name = "Ball"
+		ball.mesh = pair[1]
+		pivot.add_child(ball)
+		var lid := MeshInstance3D.new()
+		lid.name = "UpperLid"
+		lid.mesh = FaceRig.lid_mesh(body_mat)
+		lid.rotation.x = deg_to_rad(FaceRig.LID_OPEN_DEG)
+		pivot.add_child(lid)
+	var mouth := FaceRig.mouth_interior()
+	mouth.transform = head_rest_inv * Transform3D(Basis().scaled(mouth.scale), Vector3(0.0, 1.614, 0.0745))
+	head_att.add_child(mouth)
 	var hair_mi: MeshInstance3D = hair_src.find_children("*", "MeshInstance3D", true, false)[0]
 	var hair := MeshInstance3D.new()
 	hair.name = "Hair"

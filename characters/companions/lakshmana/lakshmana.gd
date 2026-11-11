@@ -59,6 +59,8 @@ func _ready() -> void:
 		add_child(health)
 	health.died.connect(_on_downed)
 	health.damaged.connect(func(_a: float, _s: Node) -> void: model.play_hit())
+	if model.face_rig:
+		model.face_rig.speaker = "Lakshmana"
 	_apply_style()
 	Settings.style_changed.connect(func(_s: int) -> void: _apply_style())
 
@@ -260,4 +262,4 @@ func _apply_style() -> void:
 	mat.set_shader_parameter(&"region_r", GARMENT)
 	mat.set_shader_parameter(&"region_g", TRIM)
 	mat.set_shader_parameter(&"region_b", SASH)
-	(model.skeleton.get_node("Body") as MeshInstance3D).material_override = mat
+	FaceController.set_skin(model.skeleton, mat)

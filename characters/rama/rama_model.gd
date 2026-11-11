@@ -50,6 +50,9 @@ var _string_bottom: MeshInstance3D
 var _nocked_arrow: Node3D
 var _nock_point := Vector3.ZERO
 var _astra_fx: Node3D
+## Name this face answers to when the Voice autoload speaks (Lakshmana sets his own).
+@export var speaker_name := "Rama"
+var face_rig: FaceController
 
 
 func _ready() -> void:
@@ -60,6 +63,7 @@ func _ready() -> void:
 	pose.name = "ArcheryPose"
 	pose.influence = 0.0
 	skeleton.add_child(pose)
+	face_rig = FaceController.attach(self, skeleton, speaker_name, &"calm")
 
 
 func _process(delta: float) -> void:
@@ -71,6 +75,8 @@ func _process(delta: float) -> void:
 		pose.influence = w
 		_update_pose_targets()
 	_update_bow(real_delta)
+	if face_rig:
+		face_rig.effort = draw * w
 
 
 # --- Archery API --------------------------------------------------------------
@@ -160,6 +166,8 @@ func play_roll(duration: float) -> void:
 
 func play_hit() -> void:
 	_fire(&"hit")
+	if face_rig:
+		face_rig.wince()
 
 
 func play_death() -> void:

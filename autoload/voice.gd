@@ -9,7 +9,12 @@ signal line_finished
 const DIR := "res://assets/audio/voice/"
 
 var speaking := false
+## Who is speaking now (the "Speaker" part of the line), for lip sync.
+var current_speaker := ""
 var _player: AudioStreamPlayer
+var _lipsync := {}
+var _envelope := ""
+const LIPSYNC_FPS := 30.0
 
 
 func _ready() -> void:
@@ -21,6 +26,9 @@ func _ready() -> void:
 	_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_player)
 	_player.finished.connect(_on_finished)
+	var data = JSON.parse_string(FileAccess.get_file_as_string(DIR + "lipsync.json"))
+	if data is Dictionary:
+		_lipsync = data
 
 
 static func key(speaker: String, text: String) -> String:
@@ -50,6 +58,8 @@ func say(speaker: String, text: String, interrupt := true) -> float:
 	_player.stream = stream
 	_player.play()
 	speaking = true
+	current_speaker = speaker
+	_envelope = _lipsync.get(key(speaker, text), "")
 	Music.voice_duck(true)
 	return stream.get_length()
 
@@ -60,7 +70,20 @@ func stop() -> void:
 		_on_finished()
 
 
+## How open the speaker's mouth should be right now (0..1), from the line's
+## precomputed loudness envelope (tools/gen_voices.py writes lipsync.json).
+func mouth_level() -> float:
+	if not speaking or _envelope.is_empty():
+		return 0.0
+	var i := int(_player.get_playback_position() * LIPSYNC_FPS)
+	if i < 0 or i >= _envelope.length():
+		return 0.0
+	return ("0x" + _envelope[i]).hex_to_int() / 15.0
+
+
 func _on_finished() -> void:
 	speaking = false
+	current_speaker = ""
+	_envelope = ""
 	Music.voice_duck(false)
 	line_finished.emit()

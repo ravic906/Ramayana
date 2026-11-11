@@ -211,14 +211,48 @@ def load_growl():
         return resample(g, w.getframerate() / SR) if w.getframerate() != SR else g
 
 
+LIPSYNC_FPS = 30
+
+
+def mouth_envelope(path: Path) -> str:
+    """How open the mouth is through a voice line: 30 values a second, each one
+    hex digit (0 closed .. f wide), from the speech-band loudness."""
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-ac", "1", "-ar", str(SR),
+                          "-af", "highpass=f=180,lowpass=f=3500", "-f", "f32le", "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, np.float32)
+    hop = SR // LIPSYNC_FPS
+    n = max(1, len(x) // hop)
+    rms = np.array([np.sqrt(np.mean(x[i * hop:(i + 1) * hop] ** 2) + 1e-12) for i in range(n)])
+    db = 20 * np.log10(rms)
+    peak = np.percentile(db, 95)
+    level = np.clip((db - (peak - 22.0)) / 22.0, 0.0, 1.0) ** 2.0   # 22 dB range; tails and reverb stay shut
+    # Lips cannot snap: smooth a little, closing faster than opening is unnatural.
+    out, prev = [], 0.0
+    for v in level:
+        prev = prev + (v - prev) * (0.75 if v > prev else 0.5)
+        out.append("0123456789abcdef"[int(round(prev * 15))])
+    return "".join(out)
+
+
+def write_lipsync():
+    data = {f.stem: mouth_envelope(f) for f in sorted(OUT.glob("*.ogg"))}
+    (OUT / "lipsync.json").write_text(json.dumps(data, indent=0) + "\n")
+    print(f"lip sync for {len(data)} lines")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", required=True, help="folder holding en_GB-vctk-medium.onnx(.json)")
+    ap.add_argument("--model", default="", help="folder holding en_GB-vctk-medium.onnx(.json)")
     ap.add_argument("--force", action="store_true", help="re-voice lines that already have audio")
     ap.add_argument("--only-containing", default="",
                     help="with --force: re-voice only lines containing one of these comma-separated words")
     ap.add_argument("--preview", help="also write a listening reel (gate scene + Tataka intro) to this .mp3")
+    ap.add_argument("--lipsync-only", action="store_true", help="only rebuild lipsync.json from the existing audio")
     args = ap.parse_args()
+    if args.lipsync_only:
+        write_lipsync()
+        return
     from piper import PiperVoice, SynthesisConfig  # noqa: imported here so --help works without piper
 
     model = Path(args.model) / "en_GB-vctk-medium.onnx"
@@ -271,6 +305,7 @@ def main():
                 imp.unlink()
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + "\n")
     print(f"{len(manifest)} lines")
+    write_lipsync()
     if args.preview:
         gap = np.zeros(int(0.6 * SR))
         reel = np.concatenate([seg for stem in ("sage_at_gate", "tataka_intro", "forest")

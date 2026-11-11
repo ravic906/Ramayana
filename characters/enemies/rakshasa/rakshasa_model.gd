@@ -28,7 +28,7 @@ var _current := &""
 func _ready() -> void:
 	_apply_style()
 	Settings.style_changed.connect(func(_s: int) -> void: _apply_style())
-	(skeleton.get_node("Eyes") as MeshInstance3D).material_override = load(MAT + "rakshasa_eyes.tres")
+	FaceController.set_eyes(skeleton, load(MAT + "rakshasa_eyes.tres"))
 	var hair_mat: Material = load(hair_material)
 	(skeleton.get_node("Eyebrows") as MeshInstance3D).material_override = hair_mat
 	var hair := skeleton.find_child("Hair", true, false) as MeshInstance3D
@@ -42,7 +42,7 @@ func _ready() -> void:
 func _apply_style() -> void:
 	var path := body_material_realistic if Settings.is_realistic() else body_material
 	_body_mat = (load(path) as ShaderMaterial).duplicate()
-	(skeleton.get_node("Body") as MeshInstance3D).material_override = _body_mat
+	FaceController.set_skin(skeleton, _body_mat)
 
 
 func _process(delta: float) -> void:

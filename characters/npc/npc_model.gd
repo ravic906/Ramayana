@@ -14,12 +14,16 @@ extends Node3D
 @export var topknot := false
 @export var staff := false
 @export var model_scale := 1.0
+## Voice speaker name for lip sync; defaults to the node's name.
+@export var speaker := ""
+@export var default_emotion: StringName = &"calm"
 
 @onready var body: Node3D = $Body
 @onready var skeleton: Skeleton3D = $Body/Armature/Skeleton3D
 @onready var anim: AnimationPlayer = $Body/AnimationPlayer
 
 var _staff: Node3D
+var face_rig: FaceController
 
 
 func _ready() -> void:
@@ -39,6 +43,7 @@ func _ready() -> void:
 	if beard_mi:
 		beard_mi.visible = beard
 	_build_props()
+	face_rig = FaceController.attach(self, skeleton, speaker if speaker != "" else String(name), default_emotion)
 	anim.play(&"idle")
 	anim.seek(randf() * 2.0)
 
@@ -49,6 +54,8 @@ signal hurt(npc: NpcModel)
 ## Bystanders (the sages at the yagna) flinch when struck but are never killed.
 func on_attacked(_damage: float, _source: Node) -> bool:
 	hurt.emit(self)
+	if face_rig:
+		face_rig.wince()
 	anim.play(&"hit", 0.1)
 	anim.queue(&"idle")
 	return true
@@ -93,7 +100,7 @@ func _apply_style() -> void:
 	mat.set_shader_parameter(&"region_r", garment)
 	mat.set_shader_parameter(&"region_g", trim)
 	mat.set_shader_parameter(&"region_b", sash)
-	(skeleton.get_node("Body") as MeshInstance3D).material_override = mat
+	FaceController.set_skin(skeleton, mat)
 
 
 func _build_props() -> void:
