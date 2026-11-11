@@ -101,3 +101,18 @@ func test_cutscene_frames_registered_speakers_and_directs_faces() -> void:
 	c.skip()
 	await get_tree().process_frame
 	assert_eq(sage.face_rig.look_target, null, "faces are released after the scene")
+
+
+func test_close_up_avoids_an_actor_in_the_way() -> void:
+	var ab: Array = await _stage()
+	var sp: Array = ShotFramer.face_of(ab[0])
+	# A third actor standing right where the plain close-up camera would be.
+	var plain := ShotFramer.frame(ShotFramer.Kind.CLOSE, ab[0], ab[1])
+	var blocker := _actor("res://characters/npc/vasishtha.tscn", Vector3.ZERO, Vector3.ZERO)
+	var between: Vector3 = ((plain["position"] as Vector3) + (sp[0] as Vector3)) * 0.5
+	blocker.global_position = Vector3(between.x, 0, between.z) - (ShotFramer.face_of(blocker)[0] as Vector3 - blocker.global_position) * Vector3(1, 0, 1)
+	await get_tree().process_frame
+	assert_true(ShotFramer._blocked(plain["position"], sp[0], [blocker], ab[0]), "the plain view is blocked")
+	var shot := ShotFramer.frame(ShotFramer.Kind.CLOSE, ab[0], ab[1], 1.0, [ab[0], ab[1], blocker])
+	if not shot.is_empty():
+		assert_false(ShotFramer._blocked(shot["position"], sp[0], [blocker], ab[0]), "the chosen view is clear")

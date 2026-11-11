@@ -51,7 +51,7 @@ static func face_rig_of(actor: Node) -> FaceController:
 ## Returns {position, look, fov, focus} for a shot of `speaker`, optionally
 ## favouring `listener` (Node or null). `side` (+1/-1) picks which side of the
 ## line of action the camera sits on, so cuts never cross it.
-static func frame(kind: Kind, speaker: Node, listener: Node = null, side := 1.0) -> Dictionary:
+static func frame(kind: Kind, speaker: Node, listener: Node = null, side := 1.0, blockers: Array = []) -> Dictionary:
 	var s := face_of(speaker)
 	if s.is_empty():
 		return {}
@@ -61,7 +61,7 @@ static func frame(kind: Kind, speaker: Node, listener: Node = null, side := 1.0)
 	match kind:
 		Kind.OTS:
 			if l.is_empty():
-				return frame(Kind.CLOSE, speaker, null, side)
+				return frame(Kind.CLOSE, speaker, null, side, blockers)
 			var leye: Vector3 = l[0]
 			var to := (eye - leye)
 			to.y = 0.0
@@ -73,7 +73,7 @@ static func frame(kind: Kind, speaker: Node, listener: Node = null, side := 1.0)
 				"focus": pos.distance_to(eye)}
 		Kind.TWO:
 			if l.is_empty():
-				return frame(Kind.CLOSE, speaker, null, side)
+				return frame(Kind.CLOSE, speaker, null, side, blockers)
 			var leye2: Vector3 = l[0]
 			var mid := (eye + leye2) * 0.5
 			var across := (eye - leye2)
@@ -96,6 +96,28 @@ static func frame(kind: Kind, speaker: Node, listener: Node = null, side := 1.0)
 			off = fwd.cross(Vector3.UP).normalized()
 			if off.dot(tl) < 0.0:
 				off = -off
-	var dir3 := (fwd + off * 0.42).normalized()
-	var cpos := eye + dir3 * CLOSE_DISTANCE - Vector3.UP * 0.02
-	return {"position": cpos, "look": eye - Vector3.UP * 0.065, "fov": CLOSE_FOV, "focus": CLOSE_DISTANCE}
+	# Try toward the listener first, then the other side, then straight on and
+	# tighter: the first view no other actor's head or body blocks.
+	for attempt in [[off, CLOSE_DISTANCE], [-off, CLOSE_DISTANCE], [Vector3.ZERO, CLOSE_DISTANCE], [off, 0.62], [-off, 0.62]]:
+		var dir3: Vector3 = (fwd + (attempt[0] as Vector3) * 0.42).normalized()
+		var cpos: Vector3 = eye + dir3 * float(attempt[1]) - Vector3.UP * 0.02
+		if not _blocked(cpos, eye, blockers, speaker):
+			return {"position": cpos, "look": eye - Vector3.UP * 0.065, "fov": CLOSE_FOV, "focus": attempt[1]}
+	return {}
+
+
+## Whether another actor stands between the camera and the speaker's eyes
+## (their head or chest within ~0.4 m of the sight line).
+static func _blocked(cam: Vector3, eye: Vector3, blockers: Array, speaker: Node) -> bool:
+	for b in blockers:
+		if b == speaker or not is_instance_valid(b):
+			continue
+		var f := face_of(b)
+		if f.is_empty():
+			continue
+		for p: Vector3 in [f[0], (f[0] as Vector3) - Vector3.UP * 0.45]:
+			var seg := eye - cam
+			var t := clampf((p - cam).dot(seg) / seg.length_squared(), 0.0, 1.0)
+			if t > 0.02 and t < 0.98 and p.distance_to(cam + seg * t) < 0.4:
+				return true
+	return false

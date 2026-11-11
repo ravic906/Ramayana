@@ -339,7 +339,7 @@ func camp_scene() -> void:
 	set_objective("")
 	_float_lamps()
 	_seat(rama, m("RamaSeat"), &"sit")
-	_seat(lakshmana, m("LakshmanaSeat"), &"kneel")
+	_seat(lakshmana, m("LakshmanaSeat"), &"sit")
 	_light_override = true
 	_tween_light(-4.0, 0.55, Color(1.0, 0.55, 0.32), 3.0)
 	if Settings.quality != Settings.Quality.BATTERY:

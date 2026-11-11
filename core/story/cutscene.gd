@@ -236,7 +236,9 @@ func _frame_speaker(speaker: String, wanted: StringName) -> void:
 			elif listener and _auto_count % 3 == 2:
 				kind = ShotFramer.Kind.OTS
 	_auto_count += 1
-	var shot := ShotFramer.frame(kind, actors[speaker], listener)
+	var shot := ShotFramer.frame(kind, actors[speaker], listener, 1.0, actors.values())
+	if shot.is_empty() and kind == ShotFramer.Kind.CLOSE and listener:
+		shot = ShotFramer.frame(ShotFramer.Kind.TWO, actors[speaker], listener)  # no clear close-up: show both
 	if shot.is_empty():
 		return
 	if _push:

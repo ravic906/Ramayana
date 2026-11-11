@@ -492,7 +492,7 @@ func _camp() -> void:
 	for spec in [[Vector3(-2.6, 0, 1.4), 0.5], [Vector3(-2.4, 0, -1.6), -0.4]]:
 		put(MeshKit.box(Vector3(0.9, 0.08, 2.0)), Transform3D(Basis(Vector3.UP, spec[1]), c + spec[0] + Vector3.UP * 0.04), "straw")
 	# Seat stones (river boulders) for the sage and Rama, set back from the fire.
-	for spec in [[Vector3(2.45, 0, 0.2), "SageSeat"], [Vector3(-2.35, 0, 1.45), "RamaSeat"]]:
+	for spec in [[Vector3(2.45, 0, 0.2), "SageSeat"], [Vector3(-2.35, 0, 1.45), "RamaSeat"], [Vector3(-2.25, 0, -1.7), "LakshmanaSeat"]]:
 		var p: Vector3 = c + spec[0]
 		var away: Vector3 = (p - c).normalized()
 		var stone := p + away * 0.12
