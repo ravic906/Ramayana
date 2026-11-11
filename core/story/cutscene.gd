@@ -30,6 +30,9 @@ const CHARS_PER_SECOND := 45.0
 var dialogue: DialogueResource
 ## shot id -> [camera position, look-at point]
 var shots := {}
+## Speaker name -> actor node (see ShotFramer): framed and animated automatically.
+var actors := {}
+const AUTO_SHOTS := [&"", &"auto", &"close", &"ots", &"two"]
 var index := -1
 
 var _cam: Camera3D
@@ -45,15 +48,20 @@ var _narration: ColorRect
 var _narration_text: Label
 var _bars: Array[ColorRect] = []
 var _line_token := 0
+var _key_light: OmniLight3D
+var _push: Tween
+var _auto_count := 0
+var _last_speaker := ""
 ## Seconds to wait after a spoken line before moving on by itself.
 const AUTO_ADVANCE_PAUSE := 0.6
 
 
 ## Starts a cutscene under `host` (usually the level root).
-static func play(host: Node, d: DialogueResource, shot_map: Dictionary = {}) -> Cutscene:
+static func play(host: Node, d: DialogueResource, shot_map: Dictionary = {}, actor_map: Dictionary = {}) -> Cutscene:
 	var c := Cutscene.new()
 	c.dialogue = d
 	c.shots = shot_map
+	c.actors = actor_map
 	host.add_child(c)
 	return c
 
@@ -62,7 +70,7 @@ func _ready() -> void:
 	layer = 30
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
-	if not shots.is_empty():
+	if not shots.is_empty() or not actors.is_empty():
 		_prev_cam = get_viewport().get_camera_3d()
 		_cam = Camera3D.new()
 		_cam.fov = 50.0
@@ -106,6 +114,9 @@ func advance() -> void:
 	var line := dialogue.get_line(index)
 	if line["shot"] != &"" and shots.has(line["shot"]):
 		_move_camera(shots[line["shot"]], index > 0)
+	elif line["shot"] in AUTO_SHOTS and line["text"] != "" and actors.has(line["speaker"]):
+		_frame_speaker(line["speaker"], line["shot"])
+	_direct_faces(line)
 	var act: StringName = line["action"]
 	if act != &"":
 		if String(act).begins_with("wait:"):
@@ -168,6 +179,9 @@ func _show_line(speaker: String, text: String) -> void:
 func _move_camera(shot: Array, smooth: bool) -> void:
 	if _cam == null:
 		return
+	_set_lens(50.0, -1.0)
+	if _key_light:
+		_key_light.visible = false
 	var pos: Vector3 = shot[0]
 	var look: Vector3 = shot[1]
 	if not smooth:
@@ -183,6 +197,111 @@ func _move_camera(shot: Array, smooth: bool) -> void:
 			_cam.look_at(v), _look, look, 1.2)
 
 
+## The listener for `speaker`: whoever spoke last, else the nearest other actor.
+func _listener_for(speaker: String) -> Node:
+	if _last_speaker != "" and _last_speaker != speaker and actors.has(_last_speaker) and is_instance_valid(actors[_last_speaker]):
+		return actors[_last_speaker]
+	var me := ShotFramer.face_of(actors[speaker])
+	var best: Node = null
+	var best_d := INF
+	for n in actors:
+		if n == speaker or not is_instance_valid(actors[n]):
+			continue
+		var f := ShotFramer.face_of(actors[n])
+		if f.is_empty() or me.is_empty():
+			continue
+		var d: float = (f[0] as Vector3).distance_to(me[0])
+		if d < best_d and d < 8.0:
+			best_d = d
+			best = actors[n]
+	return best
+
+
+## Close-ups and over-the-shoulder shots, cut on the line, with a slow push-in.
+func _frame_speaker(speaker: String, wanted: StringName) -> void:
+	if _cam == null:
+		return
+	var listener := _listener_for(speaker)
+	var kind := ShotFramer.Kind.CLOSE
+	match wanted:
+		&"ots": kind = ShotFramer.Kind.OTS
+		&"two": kind = ShotFramer.Kind.TWO
+		&"close": kind = ShotFramer.Kind.CLOSE
+		_:
+			# Open on the two of them, then shot / reverse shot.
+			if _auto_count == 0 and listener:
+				kind = ShotFramer.Kind.TWO
+			elif listener and _auto_count % 3 == 2:
+				kind = ShotFramer.Kind.OTS
+	_auto_count += 1
+	var shot := ShotFramer.frame(kind, actors[speaker], listener)
+	if shot.is_empty():
+		return
+	if _push:
+		_push.kill()
+	_cam.global_position = shot["position"]
+	_look = shot["look"]
+	_cam.look_at(_look)
+	_set_lens(shot["fov"], shot["focus"] if kind != ShotFramer.Kind.TWO else -1.0)
+	# A slow push-in while the line plays.
+	var toward: Vector3 = (_look - _cam.global_position) * 0.05
+	_push = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_push.tween_property(_cam, "global_position", _cam.global_position + toward, 6.0)
+	_place_key_light(kind != ShotFramer.Kind.TWO)
+
+
+func _set_lens(fov: float, focus: float) -> void:
+	_cam.fov = fov
+	if focus <= 0.0 or Settings.quality == Settings.Quality.BATTERY:
+		_cam.attributes = null
+		return
+	var a := CameraAttributesPractical.new()
+	a.dof_blur_far_enabled = true
+	a.dof_blur_far_distance = focus + 0.7
+	a.dof_blur_far_transition = 3.0
+	a.dof_blur_amount = 0.07
+	_cam.attributes = a
+
+
+## A soft, warm key light from beside the camera so faces read even at night.
+func _place_key_light(on: bool) -> void:
+	if _key_light == null:
+		_key_light = OmniLight3D.new()
+		_key_light.name = "CutsceneKeyLight"
+		_key_light.light_color = Color(1.0, 0.9, 0.78)
+		_key_light.light_energy = 0.55
+		_key_light.omni_range = 2.6
+		_key_light.shadow_enabled = false
+		_key_light.light_specular = 0.3
+		_cam.get_parent().add_child(_key_light)
+	_key_light.visible = on
+	if on:
+		var right := _cam.global_transform.basis.x
+		_key_light.global_position = _cam.global_position + right * 0.6 + Vector3.UP * 0.45
+
+
+## Speaker looks at the listener and wears the line's emotion; the others look at the speaker.
+func _direct_faces(line: Dictionary) -> void:
+	var speaker: String = line["speaker"]
+	if line["text"] == "" or not actors.has(speaker) or not is_instance_valid(actors[speaker]):
+		return
+	var me := ShotFramer.face_of(actors[speaker])
+	var listener := _listener_for(speaker)
+	var lf := ShotFramer.face_of(listener) if listener else []
+	var rig := ShotFramer.face_rig_of(actors[speaker])
+	if rig:
+		if line["emotion"] != &"":
+			rig.set_emotion(line["emotion"])
+		rig.look_target = lf[0] if not lf.is_empty() else null
+	if not me.is_empty():
+		for n in actors:
+			if n != speaker and is_instance_valid(actors[n]):
+				var other := ShotFramer.face_rig_of(actors[n])
+				if other:
+					other.look_target = me[0]
+	_last_speaker = speaker
+
+
 func _finish() -> void:
 	if _done:
 		return
@@ -191,6 +310,13 @@ func _finish() -> void:
 	Voice.stop()
 	if _typing:
 		_typing.kill()
+	for a in actors.values():
+		var f := ShotFramer.face_rig_of(a)
+		if f:
+			f.look_target = null
+			f.set_emotion(f.default_emotion)
+	if _key_light:
+		_key_light.queue_free()
 	if _cam:
 		if is_instance_valid(_prev_cam):
 			_prev_cam.current = true

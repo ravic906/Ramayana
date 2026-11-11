@@ -81,6 +81,16 @@ def unescape(s: str) -> str:
     return re.sub(r'\\(.)', lambda m: {"n": "\n", "t": "\t"}.get(m.group(1), m.group(1)), s)
 
 
+## Delivery per dialogue emotion: (length scale, pitch in semitones). Small
+## nudges only; the actors' own reading comes later.
+EMOTION_DELIVERY = {
+    "grief": (1.13, -0.4), "concern": (1.06, 0.0), "calm": (1.04, 0.0), "reverence": (1.1, -0.3),
+    "resolve": (1.0, -0.2), "anger": (0.95, 0.2), "fury": (0.92, 0.4), "joy": (0.96, 0.5),
+    "smile": (0.99, 0.3), "wonder": (1.05, 0.3), "pain": (1.05, 0.0),
+}
+EMOTION_OF = {}
+
+
 def collect_lines():
     lines = []
     for tres in sorted((ROOT / "data" / "dialogue").rglob("*.tres")):
@@ -88,8 +98,10 @@ def collect_lines():
         if not m:
             continue
         for row in unescape(m.group(1)).split("\n"):
-            parts = (row.strip().split("|", 3) + ["", "", "", ""])[:4]
+            parts = (row.strip().split("|", 4) + ["", "", "", "", ""])[:5]   # Speaker|shot|action|text|emotion
             speaker, text = parts[0].strip(), parts[3].strip().replace("\\n", "\n")
+            if parts[4].strip():
+                EMOTION_OF[(speaker, text)] = parts[4].strip()
             if speaker and text:
                 lines.append((speaker, text, tres.stem))
     for gd in sorted(list((ROOT / "kandas").rglob("*.gd")) + list((ROOT / "characters").rglob("*.gd"))):
@@ -277,8 +289,9 @@ def main():
             # Piper's synthesis is not deterministic: keep existing takes stable.
             manifest[k] = old_manifest[k]
             continue
-        r = 2 ** (cast["pitch"] / 12)
-        cfg = SynthesisConfig(speaker_id=ids[cast["spk"]], length_scale=cast["speed"] * r,
+        e_speed, e_pitch = EMOTION_DELIVERY.get(EMOTION_OF.get((speaker, text), ""), (1.0, 0.0))
+        r = 2 ** ((cast["pitch"] + e_pitch) / 12)
+        cfg = SynthesisConfig(speaker_id=ids[cast["spk"]], length_scale=cast["speed"] * e_speed * r,
                               noise_scale=0.6, noise_w_scale=0.75)
         pcm = b"".join(c.audio_int16_bytes for c in voice.synthesize(tts_text(text), syn_config=cfg))
         x = trim(np.frombuffer(pcm, np.int16) / 32768.0)

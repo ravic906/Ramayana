@@ -4,11 +4,23 @@
 
 [resource]
 script = ExtResource("1_d")
-text = "Narration|||Then came a sage to the palace gate, and with him the first step of a long road.
-Vishvamitra|gate||King of Ayodhya. Rakshasas defile my sacrifice in the forest. I ask for Rama.
-Dasharatha|king||He is not yet sixteen. Take my army, take me. Not my son.
-Vishvamitra|sage||A king who promises and then bargains has forgotten whose son he is.
-Vasishtha|vasishtha||Let him go, my king. With this sage, no harm can reach him.
-Rama|rama||Father, I will return. Bless the bow, not only the boy.
-Lakshmana|brothers||Where my brother walks, I walk.
-Dasharatha|king||Go then, both of you. And come back to me."
+text = "Narration|gate||Then came a sage to the palace gate, and with him the first step of a long road.
+Dasharatha|||Vishvamitra! Rain has come to a dry field. Ask, great one. Whatever you ask is already given.|joy
+Vishvamitra|||You have said it, King, and a king's word is a vow. Hear what I ask before you say it again.|calm
+Vishvamitra|||Two rakshasas, Maricha and Subahu, rain blood upon my sacrifice. My vow forbids me to curse them.|resolve
+Vishvamitra|||Give me Rama, your eldest, for ten nights. He alone can end this.|resolve
+Dasharatha|||Rama?|concern
+Dasharatha|||He is not yet sixteen. He has never seen a battle. Take my army. Take me. Not my son.|grief
+Dasharatha|||I waited half my life for him. Do not ask me to give him to the night.|grief
+Vishvamitra|||A king who promises and then bargains has forgotten whose son he is.|anger
+Vishvamitra|||So be it. I will go as I came. Live happily among your kinsmen, King of the Raghus.|anger
+Narration|gate||The earth trembled at the sage's anger, and even the gods grew still.
+Vasishtha|||My king. You were born in the line of Ikshvaku. Truth is your inheritance. Do not cast it away.|concern
+Vasishtha|||This sage is master of every astra known to gods or men. Rama is safer at his side than behind any wall of ours.|calm
+Vasishtha|||He does not ask for Rama because he needs a guard. He asks because he means to give him something.|calm
+Dasharatha|||Rama. Lakshmana. Come to me.|grief
+Rama|||Father, I will return. Bless the bow, not only the boy.|resolve
+Lakshmana|||Where my brother walks, I walk.|resolve
+Dasharatha|||Go then, both of you. And come back to me.|grief
+Vishvamitra|||Come, princes. The Sarayu is waiting, and so is what I have to teach you.|calm
+Narration|gate||So the two princes walked out of Ayodhya behind the sage, bows on their shoulders, toward a forest no one entered."

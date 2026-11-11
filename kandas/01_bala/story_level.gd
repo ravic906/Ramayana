@@ -10,6 +10,9 @@ const LAKSHMANA := preload("res://characters/companions/lakshmana/lakshmana.tscn
 
 ## Camera shots for cutscenes: id -> [position, look_at].
 var shots := {}
+## Speaker name -> actor (Rama, Lakshmana, spawned NPCs): cutscenes frame and
+## animate their faces automatically (see Cutscene, ShotFramer).
+var actors := {}
 ## What happens during the current mission (stars, summary).
 var stats: MissionStats
 ## The current story objective (shown on the HUD, in the Log, on the compass).
@@ -90,7 +93,8 @@ func cutscene(path: String) -> void:
 	_cinematic = true
 	Settings.set_fps_context("cinematic")
 	Music.duck(true)
-	var c := Cutscene.play(self, dialogue, shots)
+	_register_party()
+	var c := Cutscene.play(self, dialogue, shots, actors)
 	c.action.connect(_on_story_action)
 	if not c.is_done():
 		await c.finished
@@ -125,6 +129,14 @@ func _process(delta: float) -> void:
 		_end_cinematic()
 
 
+func _register_party() -> void:
+	if is_instance_valid(rama) and not actors.has("Rama"):
+		actors["Rama"] = rama.model
+	for c in get_tree().get_nodes_in_group(&"companions"):
+		if c.name == "Lakshmana" and is_instance_valid(c) and "model" in c:
+			actors["Lakshmana"] = c.model
+
+
 func _on_story_action(_name: StringName) -> void:
 	pass
 
@@ -132,7 +144,9 @@ func _on_story_action(_name: StringName) -> void:
 func spawn_npc(scene: String, pos: Vector3, look_at_point: Vector3) -> Node3D:
 	var npc := (load(scene) as PackedScene).instantiate() as Node3D
 	npc.position = pos
+	var speaker_name := String(npc.name)
 	add_child(npc)
+	actors[speaker_name] = npc
 	if npc.has_method("face"):
 		npc.face(look_at_point)
 	return npc

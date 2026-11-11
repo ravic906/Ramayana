@@ -75,18 +75,33 @@ func _on_trials_complete() -> void:
 func _play_sage_at_gate() -> void:
 	if not is_inside_tree():
 		return
-	rama.global_position = Vector3(0, 0, -30)
-	rama.visual.rotation.y = 0.0
-	var king := spawn_npc("res://characters/npc/dasharatha.tscn", Vector3(-5.0, 0, -37.0), Vector3(0, 0, -34))
+	# Staged close, as a court would gather: the king and his guru on one side,
+	# the princes on the other, the sage arriving between them.
+	var sage_mark := Vector3(0.0, 0, -38.6)
+	rama.global_position = Vector3(1.4, 0, -35.6)
+	_face_rama(sage_mark)
+	for c in get_tree().get_nodes_in_group(&"companions"):
+		if c is Node3D:
+			(c as Node3D).global_position = Vector3(2.5, 0, -35.2)
+	var king := spawn_npc("res://characters/npc/dasharatha.tscn", Vector3(-1.8, 0, -36.6), sage_mark)
 	if _vasishtha:
-		_vasishtha.global_position = Vector3(-7.0, 0, -35.0)
-		_vasishtha.face(Vector3(0, 0, -36))
+		_vasishtha.global_position = Vector3(-3.4, 0, -35.0)
+		_vasishtha.face(sage_mark)
+		actors["Vasishtha"] = _vasishtha
 	var sage := spawn_npc("res://characters/npc/vishvamitra.tscn", Vector3(0, 0, -47.0), Vector3(0, 0, -30))
-	sage.walk_to(Vector3(0, 0, -39.0), 3.5)
-	king.face(Vector3(0, 0, -39.0))
+	sage.walk_to(sage_mark, 3.5)
+	get_tree().create_timer(3.6).timeout.connect(func() -> void:
+		if is_instance_valid(sage):
+			sage.face(king.global_position.lerp(rama.global_position, 0.4)))
+	king.face(sage_mark)
 	await cutscene(D + "sage_at_gate.tres")
 	if is_inside_tree():
 		go_to_mission(3)
+
+
+func _face_rama(point: Vector3) -> void:
+	var d := point - rama.global_position
+	rama.visual.rotation.y = atan2(-d.x, -d.z)
 
 
 ## In the final trial Vasishtha grants a glimpse of the Agneyastra.

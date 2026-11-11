@@ -191,17 +191,47 @@
   "source": "sage_at_gate",
   "seconds": 5.12
  },
- "d905ab50e7f9e0bc7ad5ae835d90e93c": {
-  "speaker": "Vishvamitra",
-  "text": "King of Ayodhya. Rakshasas defile my sacrifice in the forest. I ask for Rama.",
-  "source": "sage_at_gate",
-  "seconds": 6.63
- },
- "54bcf3df07d5c4d699fad729452392e0": {
+ "30c81cd68e4805318047e853f4561b4e": {
   "speaker": "Dasharatha",
-  "text": "He is not yet sixteen. Take my army, take me. Not my son.",
+  "text": "Vishvamitra! Rain has come to a dry field. Ask, great one. Whatever you ask is already given.",
   "source": "sage_at_gate",
-  "seconds": 5.19
+  "seconds": 6.92
+ },
+ "7a71c0834d19235bc4ccb1344719dc93": {
+  "speaker": "Vishvamitra",
+  "text": "You have said it, King, and a king's word is a vow. Hear what I ask before you say it again.",
+  "source": "sage_at_gate",
+  "seconds": 6.3
+ },
+ "879e686f3d745bba7797c1079fbba1b2": {
+  "speaker": "Vishvamitra",
+  "text": "Two rakshasas, Maricha and Subahu, rain blood upon my sacrifice. My vow forbids me to curse them.",
+  "source": "sage_at_gate",
+  "seconds": 8.0
+ },
+ "013b9d6d5124c858ceefda9459e79fd8": {
+  "speaker": "Vishvamitra",
+  "text": "Give me Rama, your eldest, for ten nights. He alone can end this.",
+  "source": "sage_at_gate",
+  "seconds": 5.51
+ },
+ "fe82b80c9e83961ae76bf8a475fa2e1c": {
+  "speaker": "Dasharatha",
+  "text": "Rama?",
+  "source": "sage_at_gate",
+  "seconds": 1.63
+ },
+ "8d87a376e2a5d7df4acd76635890db49": {
+  "speaker": "Dasharatha",
+  "text": "He is not yet sixteen. He has never seen a battle. Take my army. Take me. Not my son.",
+  "source": "sage_at_gate",
+  "seconds": 7.61
+ },
+ "5272f2e5e5f98c0e478e65ce8e6291e6": {
+  "speaker": "Dasharatha",
+  "text": "I waited half my life for him. Do not ask me to give him to the night.",
+  "source": "sage_at_gate",
+  "seconds": 5.39
  },
  "036addc5b8c67cd596022e442cd20751": {
   "speaker": "Vishvamitra",
@@ -209,11 +239,41 @@
   "source": "sage_at_gate",
   "seconds": 4.86
  },
- "d95180820e4d04d863ca2b688b44be0d": {
-  "speaker": "Vasishtha",
-  "text": "Let him go, my king. With this sage, no harm can reach him.",
+ "27b0db5ead48de06d6860527b7596b3f": {
+  "speaker": "Vishvamitra",
+  "text": "So be it. I will go as I came. Live happily among your kinsmen, King of the Raghus.",
   "source": "sage_at_gate",
-  "seconds": 5.7
+  "seconds": 6.01
+ },
+ "6cf5dfbfa08f8dea195a0607d5b0addb": {
+  "speaker": "Narration",
+  "text": "The earth trembled at the sage's anger, and even the gods grew still.",
+  "source": "sage_at_gate",
+  "seconds": 4.73
+ },
+ "bab707020169edbd4e2ea3740ab14b60": {
+  "speaker": "Vasishtha",
+  "text": "My king. You were born in the line of Ikshvaku. Truth is your inheritance. Do not cast it away.",
+  "source": "sage_at_gate",
+  "seconds": 8.54
+ },
+ "1f7204d6e9a16d1fb2082e133a33dd17": {
+  "speaker": "Vasishtha",
+  "text": "This sage is master of every astra known to gods or men. Rama is safer at his side than behind any wall of ours.",
+  "source": "sage_at_gate",
+  "seconds": 8.44
+ },
+ "e156a7321be42572070240bcb6ff98e8": {
+  "speaker": "Vasishtha",
+  "text": "He does not ask for Rama because he needs a guard. He asks because he means to give him something.",
+  "source": "sage_at_gate",
+  "seconds": 5.86
+ },
+ "7873b517ccdb6eec12f1a2f99461dc8b": {
+  "speaker": "Dasharatha",
+  "text": "Rama. Lakshmana. Come to me.",
+  "source": "sage_at_gate",
+  "seconds": 3.39
  },
  "1d06dc37c37913085e1d1994da65eb9f": {
   "speaker": "Rama",
@@ -232,6 +292,18 @@
   "text": "Go then, both of you. And come back to me.",
   "source": "sage_at_gate",
   "seconds": 3.64
+ },
+ "39ed86fff7c1b75209b5d73a629e800d": {
+  "speaker": "Vishvamitra",
+  "text": "Come, princes. The Sarayu is waiting, and so is what I have to teach you.",
+  "source": "sage_at_gate",
+  "seconds": 5.3
+ },
+ "929736149c8812a8149a83500da4a270": {
+  "speaker": "Narration",
+  "text": "So the two princes walked out of Ayodhya behind the sage, bows on their shoulders, toward a forest no one entered.",
+  "source": "sage_at_gate",
+  "seconds": 6.3
  },
  "c7475caa263c4fb930f7b001e5274e79": {
   "speaker": "Lakshmana",
