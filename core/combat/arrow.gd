@@ -125,6 +125,8 @@ func _update_trail(grow: float) -> void:
 
 
 func _on_hit(other: Object, at: Vector3) -> void:
+	# Animals are never struck (arrows pass them by); one landing close startles them.
+	get_tree().call_group(&"animals", &"on_arrow_near", at, shooter)
 	var killed := false
 	var health: Health = null
 	if other is Node:

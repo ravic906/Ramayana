@@ -24,6 +24,8 @@ const SPEAKER_COLORS := {
 	"Chandu": Color(1.0, 0.85, 0.4),
 	"Gardener": Color(0.6, 0.85, 0.5),
 	"Maricha": Color(0.75, 0.55, 1.0),
+	"Widow": Color(0.9, 0.88, 0.82),
+	"Boatman": Color(0.75, 0.6, 0.45),
 }
 const CHARS_PER_SECOND := 45.0
 

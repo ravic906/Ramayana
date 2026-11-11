@@ -76,6 +76,20 @@
   "license_url": "http://creativecommons.org/licenses/by/4.0/",
   "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Black%20Vortex.mp3"
  },
+ "sarayu": {
+  "title": "The Parting",
+  "author": "Kevin MacLeod (incompetech.com)",
+  "license": "Creative Commons: By Attribution 4.0 License",
+  "license_url": "http://creativecommons.org/licenses/by/4.0/",
+  "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Parting.mp3"
+ },
+ "sarayu_dusk": {
+  "title": "River Flute",
+  "author": "Kevin MacLeod (incompetech.com)",
+  "license": "Creative Commons: By Attribution 4.0 License",
+  "license_url": "http://creativecommons.org/licenses/by/4.0/",
+  "url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/River%20Flute.mp3"
+ },
  "sting_reveal": {
   "title": "Discovery Hit",
   "author": "Kevin MacLeod (incompetech.com)",

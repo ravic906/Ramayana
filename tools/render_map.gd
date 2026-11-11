@@ -7,6 +7,7 @@ extends SceneTree
 const MAPS := [
 	["ayodhya", "Ayodhya, the palace grounds", "res://kandas/01_bala/env/ayodhya_grounds.scn", "res://kandas/01_bala/ayodhya_hub.tscn", Rect2(-48, -62, 96, 92)],
 	["forest", "The Silent Forest", "res://kandas/01_bala/env/tataka_forest.scn", "res://kandas/01_bala/forest.tscn", Rect2(-40, -150, 80, 166)],
+	["sarayu", "The Road along the Sarayu", "res://kandas/01_bala/env/sarayu_road.scn", "res://kandas/01_bala/sarayu_road.tscn", Rect2(-46, -346, 124, 360), 4.0],
 	["siddhashrama", "Siddhashrama", "res://kandas/01_bala/env/siddhashrama.scn", "res://kandas/01_bala/siddhashrama.tscn", Rect2(-50, -50, 100, 72)],
 ]
 const PX_PER_M := 10.0
@@ -18,12 +19,12 @@ func _initialize() -> void:
 
 func _run() -> void:
 	for spec in MAPS:
-		await _render(spec[0], spec[1], spec[2], spec[3], spec[4])
+		await _render(spec[0], spec[1], spec[2], spec[3], spec[4], spec[5] if spec.size() > 5 else PX_PER_M)
 	quit()
 
 
-func _render(id: String, title: String, env_path: String, level: String, rect: Rect2) -> void:
-	var size := Vector2i(int(rect.size.x * PX_PER_M), int(rect.size.y * PX_PER_M))
+func _render(id: String, title: String, env_path: String, level: String, rect: Rect2, px_per_m: float = PX_PER_M) -> void:
+	var size := Vector2i(int(rect.size.x * px_per_m), int(rect.size.y * px_per_m))
 	var vp := SubViewport.new()
 	vp.size = size
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS

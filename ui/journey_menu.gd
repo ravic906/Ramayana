@@ -73,7 +73,7 @@ func play(part: PartResource) -> void:
 	if mission:
 		GameState.current_mission = mission.number
 	SaveSystem.save_game()
-	get_tree().change_scene_to_file(mission.scene_path if mission else part.scene_path)
+	get_tree().change_scene_to_file(PartFlow.scene_for(part))
 
 
 func _on_card_action(part: PartResource, state: int) -> void:

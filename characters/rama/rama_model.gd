@@ -170,6 +170,24 @@ func play_hit() -> void:
 		face_rig.wince()
 
 
+## Cutscene staging: holds a story clip (sit, kneel, talk...) instead of the
+## gameplay animation tree. clear_pose() hands back to the tree.
+func play_pose(clip: StringName, blend := 0.3) -> void:
+	if not anim_player.has_animation(clip):
+		return
+	anim_tree.active = false
+	anim_player.play(clip, blend)
+
+
+func clear_pose() -> void:
+	anim_player.stop()
+	anim_tree.active = true
+
+
+func is_posing() -> bool:
+	return not anim_tree.active
+
+
 func play_death() -> void:
 	if anim_tree:
 		anim_tree.active = false

@@ -215,6 +215,13 @@ func _follow(delta: float) -> void:
 	var goal := target.global_position + target.visual.global_basis * follow_offset
 	if command == Command.GUARD and guard_point != null and is_instance_valid(guard_point):
 		goal = guard_point.global_position + (target.global_position - guard_point.global_position).normalized() * 2.5
+		# Step between the guarded one and anything charging at them.
+		for a in get_tree().get_nodes_in_group(&"charging_animals"):
+			var to_a: Vector3 = (a as Node3D).global_position - guard_point.global_position
+			to_a.y = 0.0
+			if to_a.length() < 16.0:
+				goal = guard_point.global_position + to_a.normalized() * 1.6
+				break
 	var to := goal - global_position
 	to.y = 0.0
 	var dist := to.length()

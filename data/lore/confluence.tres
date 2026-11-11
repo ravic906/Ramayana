@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"confluence"
+title = "Where the Sarayu Meets the Ganga"
+text = "Walking east, the princes came to where the Sarayu flows into the holy Ganga. Valmiki tells that they heard the roar of the waters meeting, and Vishvamitra explained that the Sarayu flows from Manasa, a lake made by Brahma's mind on Mount Kailasa."

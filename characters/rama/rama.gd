@@ -221,7 +221,17 @@ func can_dodge() -> bool:
 
 
 func start_dodge_cooldown() -> void:
-	_dodge_timer = dodge_cooldown
+	_dodge_timer = dodge_cooldown * (BALA_DODGE if has_bala_atibala() else 1.0)
+
+
+## Bala and Atibala (taught on the Sarayu, mission 2): no weariness. The dodge
+## recovers faster and the bow holds steady longer before the aim trembles.
+const BALA_DODGE := 0.65
+const BALA_STEADY := 1.5
+
+
+func has_bala_atibala() -> bool:
+	return bool(GameState.get_flag("bala_atibala", false))
 
 
 # --- Archery --------------------------------------------------------------
@@ -301,7 +311,8 @@ func update_draw(real_delta: float) -> void:
 		Haptics.pulse(16, 0.15 + 0.55 * draw_amount)
 		_haptic_timer = 0.09
 	# Fatigue: holding too long makes the aim tremble.
-	var fatigue := clampf((full_draw_time - fatigue_time) / 1.5, 0.0, 1.0) if holding else 0.0
+	var steady := fatigue_time * (BALA_STEADY if has_bala_atibala() else 1.0)
+	var fatigue := clampf((full_draw_time - steady) / 1.5, 0.0, 1.0) if holding else 0.0
 	if fatigue > 0.0 and cam:
 		var t := hold_time
 		cam.rotate_by(Vector2(cos(t * 2.3) * 2.3, -sin(t * 1.9) * 1.9) * fatigue * real_delta * 60.0)

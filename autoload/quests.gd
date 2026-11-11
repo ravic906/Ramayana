@@ -8,10 +8,13 @@ signal completed(quest: QuestResource)
 const QUEST_PATHS := [
 	"res://data/quests/leaves_of_old.tres", "res://data/quests/archers_challenge.tres",
 	"res://data/quests/lost_child.tres", "res://data/quests/lotus_for_guru.tres",
+	"res://data/quests/river_lamps.tres", "res://data/quests/boatmans_oar.tres",
 ]
 const LORE_PATHS := [
 	"res://data/lore/ikshvaku.tres", "res://data/lore/sarayu.tres", "res://data/lore/vasishtha.tres",
 	"res://data/lore/kodanda.tres", "res://data/lore/ayodhya.tres",
+	"res://data/lore/kaushika.tres", "res://data/lore/bala_atibala.tres", "res://data/lore/confluence.tres",
+	"res://data/lore/kama_ashrama.tres",
 ]
 
 var all: Array[QuestResource] = []

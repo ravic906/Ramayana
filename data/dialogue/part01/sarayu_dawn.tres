@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|dawn_wide|dawn|
+Vishvamitra|close||Kausalya's son, Rama. The dawn has come. Rise, tiger among men: the gods' rites are waiting.|smile
+Rama|close||We are awake, Guru-dev.|calm
+|water|morning_rites|
+Narration|dawn_wide||They bathed, offered water to the rising sun, and walked on, to where the Sarayu runs into the Ganga, past the hermitage where Kama once burned.
+Lakshmana|close||Which way now, Guru-dev?|wonder
+Vishvamitra|close||South, across the river, into lands where no bird sings. Keep the mantras close, princes.|concern"

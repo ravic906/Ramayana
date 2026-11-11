@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MapResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/nav/map_resource.gd" id="1_ifdft"]
+
+[resource]
+script = ExtResource("1_ifdft")
+title = "The Road along the Sarayu"
+level_scene = "res://kandas/01_bala/sarayu_road.tscn"
+other_scenes = PackedStringArray()
+image_path = "res://assets/maps/sarayu.png"
+world_rect = Rect2(-46, -346, 124, 360)

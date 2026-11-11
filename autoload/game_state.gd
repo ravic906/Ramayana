@@ -215,6 +215,9 @@ func from_dict(data: Dictionary) -> void:
 		current_part = int(data.get("current_part", 1))
 		for c in data.get("completed_parts", []):
 			completed_parts.append(StringName(c))
+	# Saves from before the Sarayu road: anyone past mission 2 has walked it.
+	if current_part == 1 and current_mission >= 3 and not flags.has("bala_atibala"):
+		flags["bala_atibala"] = true
 
 
 func _store_owns_full_game() -> bool:

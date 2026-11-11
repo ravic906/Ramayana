@@ -39,8 +39,18 @@ static func current(part: PartResource) -> MissionResource:
 	return m
 
 
+## Mid-mission places to resume (GameState.checkpoint) that live in another
+## scene than the mission's own: checkpoint -> [mission number, scene].
+const CHECKPOINT_SCENES := {
+	"sarayu": [2, "res://kandas/01_bala/sarayu_road.tscn"],
+}
+
+
 static func scene_for(part: PartResource) -> String:
 	var m := current(part)
+	var cp: Array = CHECKPOINT_SCENES.get(GameState.checkpoint, [])
+	if m and not cp.is_empty() and m.number == cp[0]:
+		return cp[1]
 	return m.scene_path if m else part.scene_path
 
 

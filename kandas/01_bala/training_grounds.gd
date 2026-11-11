@@ -4,6 +4,7 @@ extends StoryLevel
 ## Vishvamitra arrives at the gate and asks for Rama.
 
 const D := "res://data/dialogue/part01/"
+const SARAYU := "res://kandas/01_bala/sarayu_road.tscn"
 
 @onready var spawner: WaveSpawner = $WaveSpawner
 @onready var sun: DirectionalLight3D = $Sun
@@ -96,7 +97,7 @@ func _play_sage_at_gate() -> void:
 	king.face(sage_mark)
 	await cutscene(D + "sage_at_gate.tres")
 	if is_inside_tree():
-		go_to_mission(3)
+		go_to_scene(SARAYU)  # mission 2 goes on: the road along the Sarayu
 
 
 func _face_rama(point: Vector3) -> void:

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LoreResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/lore_resource.gd" id="1_l"]
+
+[resource]
+script = ExtResource("1_l")
+id = &"bala_atibala"
+title = "Bala and Atibala"
+text = "On the bank of the Sarayu, Vishvamitra taught Rama the two vidyas Bala and Atibala, said to be born of Brahma. Whoever holds them knows no hunger, no thirst and no weariness, and has no equal in the three worlds while they remain in mind. Rama received them after sipping the river's water, as one prepares for any sacred teaching."

@@ -247,6 +247,17 @@ func _refresh_lookups(delta: float) -> void:
 	_update_side_tracker()
 
 
+## Draws the eye to the Command button (Lakshmana's Guard tutorial).
+func highlight_command(seconds: float = 6.0) -> void:
+	_update_command()
+	if _command_button == null:
+		return
+	_command_button.pivot_offset = _command_button.size * 0.5
+	var t := create_tween().set_loops(int(seconds / 0.8))
+	t.tween_property(_command_button, "scale", Vector2.ONE * 1.18, 0.4).set_trans(Tween.TRANS_SINE)
+	t.tween_property(_command_button, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_SINE)
+
+
 func _update_command() -> void:
 	var l := _companion if is_instance_valid(_companion) else null
 	var show := l != null and l.command != Lakshmana.Command.FOLLOW and _player is Rama \

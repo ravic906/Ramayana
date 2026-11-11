@@ -24,8 +24,17 @@ const CLIPS := {
 	"Hit_Chest": "hit",
 	"Sword_Attack": "strike",
 	"Death01": "death",
+	# Story staging (cutscenes): sitting at the camp, kneeling at the water, talking.
+	"Sitting_Enter": "sit_down",
+	"Sitting_Idle_Loop": "sit",
+	"Sitting_Talking_Loop": "sit_talk",
+	"Sitting_Exit": "stand_up",
+	"Fixing_Kneeling": "kneel",
+	"Idle_Talking_Loop": "talk",
+	"Walk_Formal_Loop": "walk_formal",
+	"Interact": "interact",
 }
-const LOOPING := ["idle", "walk", "run"]
+const LOOPING := ["idle", "walk", "run", "sit", "sit_talk", "kneel", "talk", "walk_formal"]
 
 ## Outfit regions, painted as pure 0/1 channel masks. The actual colours live
 ## in assets/materials/rama_body.tres (region_* uniforms):

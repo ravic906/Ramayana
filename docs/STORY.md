@@ -67,7 +67,7 @@ This keeps the prototype's content, teaches astras early, and stays faithful.
 | # | Mission | Setting | Gameplay focus | Unlocks | Boss |
 |---|---|---|---|---|---|
 | 1 | Golden Hour (prologue) | Ayodhya royal training grounds | Movement, snap shot, draw-hold-release, perfect release, dodge; Agneyastra glimpse | Draw-hold-release, perfect dodge | Maya trial waves |
-| 2 | The Sage at the Gate | Dasharatha's court → Sarayu riverbank | Story; light traversal; first palm leaves | Bala & Atibala (stamina), Lakshmana Guard command | — |
+| 2 | The Sage at the Gate | Dasharatha's court → the road along the Sarayu → a dusk camp | Story; walk-and-talk; stampede (Guard tutorial, no kills); side quests (the widow's lamps, the boatman's oar); palm leaves | Bala & Atibala (dodge recovery, steady bow), Lakshmana Guard command | — |
 | 3 | The Silent Forest | Malada and Karusha (Tataka's forest) | Exploration, first *real* rakshasas, sparing the fleeing | Dharma meter | — |
 | 4 | Tataka | Ruined grove | Dodge-timing boss | Agneyastra, Varunastra, Vayavyastra (astra ceremony) | **Tataka** |
 | 5 | Six Nights at Siddhashrama | Vishvamitra's hermitage | Astra tutorials, wave defence of the yagna | Astra slots 2–3 | **Maricha & Subahu** |
@@ -96,6 +96,13 @@ counsels the king to trust the sage. Rama and Lakshmana leave with Vishvamitra. 
 the Sarayu he teaches them Bala and Atibala. They pass the ashram of Kama and cross the Ganga.
 *Gameplay:* Short court cutscene, then a walking traversal with palm-leaf pickups and a
 Lakshmana Guard-command tutorial against forest animals scared by distant rakshasas (no kills).
+*As built:* the road along the Sarayu (`kandas/01_bala/sarayu_road.tscn`). The sage talks as
+they walk (his past as King Kaushika; the river born of Brahma's mind-lake). A herd stampedes:
+Lakshmana on Guard and arrows landed close turn the bulls from the sage. At a sandbank camp at
+dusk Rama sips the river's water and receives Bala and Atibala; at dawn the sage wakes him with
+"Kausalya's son, Rama, the dawn has come". Side quests: a ferryman's widow asks for five lamps
+set afloat; a boatman at the ghat has lost his oar (left unnamed, so he is never confused with Guha, the
+Nishada king of Ayodhya Kanda).
 *Lines:*
 - Dasharatha: "He is not yet sixteen. Take my army, take me — not my son."
 - Vishvamitra: "A king who promises and then bargains has forgotten whose son he is."

@@ -120,6 +120,33 @@ tests/           Headless test runner + unit tests
     ends (a tap stops it and advances);
   - `HUD.show_subtitle` speaks call-outs without interrupting a line already playing.
 
+### Mission 2b: the road along the Sarayu
+- **Level:** `kandas/01_bala/sarayu_road.{tscn,gd}`; the environment `env/sarayu_road.scn` is
+  built by `tools/build_sarayu.gd`:
+  - a chunked height grid (river bed and sloping banks; trimesh collision on the walkable side;
+    a wall at the shallows);
+  - the river ribbon with `river.gdshader` (procedural flowing ripples along UV.y, lit glints,
+    foam from vertex alpha);
+  - `riverbank.gdshader` blends meadow into sand by vertex colour (textured PBR in the
+    realistic look, two-tone noise in the stylised look);
+  - the ghat and shrine, moored boats, Ayodhya's walls behind, crop fields, groves, reeds, the
+    dusk camp with seat stones, and named markers that the level script reads.
+- **Flow:** the gate cutscene calls `go_to_scene(SARAYU)`, and the road sets
+  `GameState.checkpoint = "sarayu"`, which `PartFlow.scene_for()` honours on resume
+  (`CHECKPOINT_SCENES`, mission 2 only). The camp ends with `complete_mission(2)`, then
+  `go_to_mission(3)`.
+- **The walk:** the sage leads to talk points, waits, and speaks when Rama catches up
+  (`say_lines`); the light drifts from late afternoon to sunset with Rama's progress.
+- **Stampede:** `Animal` (`characters/animals/animal.gd`: GRAZE / RUN / FLEE / CHARGE) runs
+  along a route; bulls charge the sage. A companion on GUARD within 2.6 m turns a bull
+  (Lakshmana steps between the sage and anything charging), and an arrow landing within 4.5 m
+  makes an animal flee. Animals have no Health. +5 Dharma and `fact:sage_unharmed` if the
+  sage is never struck.
+- **Blessing:** the `bala_atibala` flag: dodge cooldown ×0.65 and bow tremble onset ×1.5
+  (`Rama.has_bala_atibala()`). Saves already past mission 2 get it on load.
+- **Story poses:** `RamaModel.play_pose()/clear_pose()` bypass the gameplay AnimationTree. New
+  clips: `sit_down`, `sit`, `sit_talk`, `stand_up`, `kneel`, `talk`, `walk_formal`, `interact`.
+
 ### Faces and close-up dialogue
 - **The rig (build time, `tools/face_rig_builder.gd`, run by `tools/build_rama.gd`).** The
   Quaternius base has no facial rig, so the build makes one:
@@ -221,6 +248,7 @@ draw, and rendering outlines only on LOD0.
 | 3 | enemies |
 | 4 | projectiles |
 | 5 | companions |
+| 6 | animals (arrows don't collide; a landing arrow startles them via the `animals` group) |
 
 ### Companion AI (Phase 1)
 Use a behaviour tree (LimboAI addon) with Follow, Engage and Command (Guard / Attack) branches,

@@ -185,6 +185,22 @@ func go_to_mission(mission_number: int) -> void:
 	get_tree().change_scene_to_file(m.scene_path)
 
 
+## Fades out and loads another scene of the same mission (e.g. the Sarayu road
+## after the gate).
+func go_to_scene(path: String) -> void:
+	var fade := ColorRect.new()
+	fade.color = Color(0, 0, 0, 0)
+	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var layer := CanvasLayer.new()
+	layer.layer = 40
+	layer.add_child(fade)
+	add_child(layer)
+	var t := create_tween()
+	t.tween_property(fade, "color:a", 1.0, 0.8)
+	await t.finished
+	get_tree().change_scene_to_file(path)
+
+
 var end_card: CanvasLayer
 
 

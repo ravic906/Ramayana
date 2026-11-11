@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/story/dialogue_resource.gd" id="1_d"]
+
+[resource]
+script = ExtResource("1_d")
+text = "|city||
+Narration|city||Behind them, the walls of Ayodhya. Ahead, a river road that no prince of the Raghus had walked alone.
+Lakshmana|close||The city looks small from here, brother.|concern
+Rama|close||It will look smaller still, before we see it again. Come. The sage does not wait.|resolve
+Vishvamitra|close||Walk beside the river, princes. It knows the way better than any road.|calm"

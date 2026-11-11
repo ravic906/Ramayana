@@ -11,3 +11,4 @@ narration = "Then came a sage to the palace gate, and with him the first step of
 scene_path = "res://kandas/01_bala/ayodhya_hub.tscn"
 checkpoint = &"sage"
 available = true
+star_goals = PackedStringArray("finish|Reach the camp on the Sarayu", "fact:sage_unharmed|Keep the sage safe in the stampede", "fact:leaves_sarayu|Find the three palm leaves on the road")

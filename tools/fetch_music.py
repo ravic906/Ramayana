@@ -41,6 +41,8 @@ LOOPS = {
     "ashram": ("Night Vigil", 30.0, (60, 95)),
     "ashram_combat": ("The Descent", 75.0, (55, 85)),
     "sky_bosses": ("Black Vortex", 40.0, (55, 85)),
+    "sarayu": ("The Parting", 8.0, (70, 110)),
+    "sarayu_dusk": ("River Flute", 90.0, (90, 130)),
 }
 ## stinger -> (track title, start s, length s): one-shots, faded out.
 STINGERS = {
@@ -59,6 +61,7 @@ AUDITION = {
     "trials_combat": ("Trials and ambush fights", "action", ["Strength of the Titans", "Noble Race", "Rynos Theme", "Clash Defiant"]),
     "forest": ("The Silent Forest", "calm", ["Oppressive Gloom", "Lost Frontier", "Intrepid", "Past the Edge"]),
     "boss": ("Boss battles", "action", ["Final Battle of the Dark Wizards", "Black Vortex", "Corruption", "Unlight"]),
+    "sarayu": ("The road along the Sarayu", "calm", ["The Parting", "On the Shore", "Healing", "River Flute"]),
     "blessing": ("Bloom, dawn and blessings", "calm", ["Tempting Secrets", "Peaceful Desolation", "On the Shore", "Heart of Nowhere"]),
 }
 TARGET_DB = -21.0     # loudness above ~200 Hz (what a phone speaker plays)

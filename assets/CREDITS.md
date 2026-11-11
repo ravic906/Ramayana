@@ -29,6 +29,12 @@ Both packs are released under **CC0 1.0** (public domain) by Quaternius
    godot --headless -s res://tools/build_rama.gd -- "<…>/Universal Base Characters[Standard]" "<…>/Unreal-Godot/UAL1_Standard.glb"
    ```
 
+## Animals: Quaternius Ultimate Animated Animals (CC0)
+- https://quaternius.com/packs/ultimateanimatedanimals.html (CC0 1.0, by Quaternius)
+- Used: `Deer`, `Stag`, `Bull` (glTF). `tools/build_animals.gd` scales them to life size, welds
+  and smooth-shades the low-poly meshes, mutes the colours a little, adds LODs and keeps the
+  clips the game uses (`characters/animals/model/`).
+
 ## Environment: Quaternius Stylized Nature MegaKit [Standard] (CC0)
 - https://quaternius.itch.io/stylized-nature-megakit (CC0 1.0, by Quaternius)
 - Used: `CommonTree_3`, `CommonTree_5`, `TwistedTree_1/3`, `DeadTree_1/3`, `Fern_1`,
@@ -51,6 +57,7 @@ Textures and sky from https://polyhaven.com (CC0 1.0), downscaled and packed for
 - `forest_leaves_02` (Rob Tuytel) and `dirt_floor` (eye-candy.xyz): the forest floor and path
 - `thatch_roof_angled` (Poly Haven): the hermitage roofs
 - `qwantani_moonrise_puresky` HDRI (Poly Haven): the night sky at Siddhashrama
+- `sparse_grass` and `coast_sand_01` (Poly Haven): the Sarayu's meadows and sandy banks
 
 ## Music: Kevin MacLeod (CC BY 4.0)
 Cut into seamless loops by `tools/fetch_music.py`. The in-game Credits screen lists each track

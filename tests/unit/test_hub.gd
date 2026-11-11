@@ -30,7 +30,7 @@ func test_the_hub_has_people_and_things_to_find() -> void:
 	await _frames(3)
 	for k in ["scribe", "sumantra", "grandfather", "gardener", "vasishtha", "child"]:
 		assert_true(level.npcs.has(k), k)
-	assert_eq(Quests.all.size(), 4)
+	assert_eq(Quests.all.size(), 6)
 	var leaves := 0
 	for n in get_tree().get_nodes_in_group(&"interactables"):
 		if String(n.name).begins_with("Leaf_"):
@@ -87,7 +87,8 @@ func test_archers_challenge_win_and_lose() -> void:
 	for i in 3:
 		level.dummies[i].health.take_damage(999.0)
 	level.challenge_left = 0.01
-	await _frames(3)
+	for i in 3:
+		await get_tree().process_frame  # the sand runs in _process
 	assert_false(Quests.is_done(&"archers_challenge"), "the sand ran out")
 	assert_eq(level.challenge_left, -1.0)
 	level.start_challenge()

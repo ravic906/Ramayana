@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"boatmans_oar"
+title = "The Boatman's Oar"
+giver = "The Boatman at the Ghat"
+summary = "The current took the boatman's oar in the night. He saw it come to rest on a sandbank upstream, beyond the reeds."
+objective = "Find the oar on the sandbank"
+goal_count = 1
+reward_punya = 40
+reward_dharma = 2
+return_text = "Bring the oar back to the boatman at the ghat"

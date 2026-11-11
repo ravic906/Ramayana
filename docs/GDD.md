@@ -122,6 +122,9 @@ short "vision" sequences framed by Rama's perspective, then returns to Rama.
 - **Playable now:**
   - missions 1–4: trials, the sage at the gate, the Silent Forest with the Dharma moment,
     the Tataka boss and the astra ceremony;
+  - mission 2 continues on the road along the Sarayu: the sage's walk-and-talk, the
+    stampede (Lakshmana's Guard tutorial, no animal harmed), two side quests, three palm
+    leaves, and Bala and Atibala at the dusk camp, then the dawn;
   - mission 5: the Siddhashrama yagna defence, Maricha and Subahu, and the Manavastra.
   - Mission 6 shows a "coming soon" card.
 - **Prologue:** Guru Vasishtha's maya trials in the Ayodhya training grounds. The

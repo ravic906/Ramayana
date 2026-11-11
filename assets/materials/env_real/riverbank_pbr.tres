@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" load_steps=8 format=3]
+
+[ext_resource type="Shader" path="res://assets/shaders/riverbank.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://assets/env/real/meadow_albedo.jpg" id="2"]
+[ext_resource type="Texture2D" path="res://assets/env/real/meadow_normal.jpg" id="3"]
+[ext_resource type="Texture2D" path="res://assets/env/real/meadow_arm.jpg" id="4"]
+[ext_resource type="Texture2D" path="res://assets/env/real/sand_albedo.jpg" id="5"]
+[ext_resource type="Texture2D" path="res://assets/env/real/sand_normal.jpg" id="6"]
+[ext_resource type="Texture2D" path="res://assets/env/real/sand_arm.jpg" id="7"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/use_textures = true
+shader_parameter/meadow_albedo = ExtResource("2")
+shader_parameter/meadow_normal = ExtResource("3")
+shader_parameter/meadow_arm = ExtResource("4")
+shader_parameter/sand_albedo = ExtResource("5")
+shader_parameter/sand_normal = ExtResource("6")
+shader_parameter/sand_arm = ExtResource("7")
+shader_parameter/tile_metres = 4.0
+shader_parameter/meadow_tint = Color(0.62, 0.84, 0.44, 1)
+shader_parameter/sand_tint = Color(1, 0.95, 0.88, 1)

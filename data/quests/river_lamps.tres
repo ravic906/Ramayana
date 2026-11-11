@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/quests/quest_resource.gd" id="1_q"]
+
+[resource]
+script = ExtResource("1_q")
+id = &"river_lamps"
+title = "Lamps for the River"
+giver = "A Ferryman's Widow"
+summary = "Her husband's boat was overturned by rakshasas on the river. She asks the princes to set five lamps afloat for him and for all the river has taken."
+objective = "Gather the five clay lamps left along the road"
+goal_count = 5
+reward_punya = 60
+reward_dharma = 8
+return_text = "Set the lamps afloat on the Sarayu at the camp"

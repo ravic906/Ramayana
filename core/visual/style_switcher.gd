@@ -33,6 +33,8 @@ const MAP := {
 	"res://assets/materials/env/forest_floor.tres": "res://assets/materials/env_real/forest_floor_pbr.tres",
 	"res://assets/materials/env/forest_path.tres": "res://assets/materials/env_real/forest_path_pbr.tres",
 	"res://assets/materials/env/thatch.tres": "res://assets/materials/env_real/thatch_pbr.tres",
+	"res://assets/materials/env/riverbank.tres": "res://assets/materials/env_real/riverbank_pbr.tres",
+	"res://assets/materials/env/river.tres": "res://assets/materials/env_real/river_pbr.tres",
 }
 @export_file("*.tres") var realistic_environment := "res://assets/env/real/realistic_environment.tres"
 

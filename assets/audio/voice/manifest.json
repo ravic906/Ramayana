@@ -35,6 +35,78 @@
   "source": "ashram_arrival",
   "seconds": 2.6
  },
+ "9553aa0b10f0fce4199f1f6d6a9e8310": {
+  "speaker": "Narration",
+  "text": "They walked until the sun lay low over the Sarayu, and there, on the southern bank, the sage stopped.",
+  "source": "bala_atibala",
+  "seconds": 5.81
+ },
+ "2c41f1d68e038dc111729cab5537f431": {
+  "speaker": "Vishvamitra",
+  "text": "Rama. Go down to the water. Sip it, and wash your hands and face. What I give now must be received clean.",
+  "source": "bala_atibala",
+  "seconds": 7.98
+ },
+ "e3360e4e9e656f79cc57ecdae2749906": {
+  "speaker": "Rama",
+  "text": "It is done, Guru-dev.",
+  "source": "bala_atibala",
+  "seconds": 2.08
+ },
+ "a54ddd4cc147509a386885bc8e1d083d": {
+  "speaker": "Vishvamitra",
+  "text": "These are Bala and Atibala, born of Brahma himself. Hold them in mind, and you will know no hunger, no thirst, no weariness.",
+  "source": "bala_atibala",
+  "seconds": 9.34
+ },
+ "288ce55b2a3a95ef479971fbfcc964ad": {
+  "speaker": "Vishvamitra",
+  "text": "While you keep them, no one in the three worlds will be your equal, not in strength, not in wisdom, not in answer.",
+  "source": "bala_atibala",
+  "seconds": 7.47
+ },
+ "063f8bd543ab930951c2fa5f5fcfcbe3": {
+  "speaker": "Rama",
+  "text": "I receive them as I would receive water in the desert, Guru-dev. With thanks, and with care.",
+  "source": "bala_atibala",
+  "seconds": 5.79
+ },
+ "113786538dd643ba92a5f72268a6d092": {
+  "speaker": "Lakshmana",
+  "text": "Brother, it is strange. We walked from noon, and I am not tired at all.",
+  "source": "bala_atibala",
+  "seconds": 4.18
+ },
+ "bb1e7726fc1fb6a8de5c18602d724aff": {
+  "speaker": "Vishvamitra",
+  "text": "That is the first of their gifts. Not the last.",
+  "source": "bala_atibala",
+  "seconds": 4.04
+ },
+ "c4c0b793c81a7cec4d0fa307ff1b6b89": {
+  "speaker": "Rama",
+  "text": "Guru-dev, why do you give this to us, here, on a riverbank?",
+  "source": "bala_atibala",
+  "seconds": 3.53
+ },
+ "f1d8b7ffb210446ddd0df4f9380714b4": {
+  "speaker": "Vishvamitra",
+  "text": "Because a teaching should be given where it will be needed. The forest ahead has no rivers that sing.",
+  "source": "bala_atibala",
+  "seconds": 6.14
+ },
+ "6ad99eb3a030d915677961783c58ee5b": {
+  "speaker": "Vishvamitra",
+  "text": "Sleep now. The grass is soft, and the night will keep watch with me.",
+  "source": "bala_atibala",
+  "seconds": 4.91
+ },
+ "7316504f5cbf5e7ca6db810fb364b386": {
+  "speaker": "Narration",
+  "text": "The princes slept on beds of grass beside the river, and the sage sat awake under the stars.",
+  "source": "bala_atibala",
+  "seconds": 6.0
+ },
  "dd7aef7f403dfce52cae0865ce6780ce": {
   "speaker": "Narration",
   "text": "And at dawn on the seventh day, the yagna was complete.",
@@ -251,6 +323,30 @@
   "source": "night_5",
   "seconds": 3.07
  },
+ "2ad44de552320ae719405e30e5222938": {
+  "speaker": "Narration",
+  "text": "Behind them, the walls of Ayodhya. Ahead, a river road that no prince of the Raghus had walked alone.",
+  "source": "road_departure",
+  "seconds": 5.81
+ },
+ "7c2a4e187140285892ec5f849aace910": {
+  "speaker": "Lakshmana",
+  "text": "The city looks small from here, brother.",
+  "source": "road_departure",
+  "seconds": 2.64
+ },
+ "fbb74423052c6dcf54f2ec005f0783cc": {
+  "speaker": "Rama",
+  "text": "It will look smaller still, before we see it again. Come. The sage does not wait.",
+  "source": "road_departure",
+  "seconds": 5.31
+ },
+ "1d5ed06aac4de6b894cbe084b20a3576": {
+  "speaker": "Vishvamitra",
+  "text": "Walk beside the river, princes. It knows the way better than any road.",
+  "source": "road_departure",
+  "seconds": 5.19
+ },
  "d728966b1fc98f810076ba29fc9396f0": {
   "speaker": "Narration",
   "text": "Then came a sage to the palace gate, and with him the first step of a long road.",
@@ -370,6 +466,36 @@
   "text": "So the two princes walked out of Ayodhya behind the sage, bows on their shoulders, toward a forest no one entered.",
   "source": "sage_at_gate",
   "seconds": 6.3
+ },
+ "576612221ddce6bed37a6656a477a242": {
+  "speaker": "Vishvamitra",
+  "text": "Kausalya's son, Rama. The dawn has come. Rise, tiger among men: the gods' rites are waiting.",
+  "source": "sarayu_dawn",
+  "seconds": 6.23
+ },
+ "55a0eba637ef8957e43e642595ce8f74": {
+  "speaker": "Rama",
+  "text": "We are awake, Guru-dev.",
+  "source": "sarayu_dawn",
+  "seconds": 2.13
+ },
+ "224c727d1a0b40a222c12f0afbc3723f": {
+  "speaker": "Narration",
+  "text": "They bathed, offered water to the rising sun, and walked on, to where the Sarayu runs into the Ganga, past the hermitage where Kama once burned.",
+  "source": "sarayu_dawn",
+  "seconds": 8.48
+ },
+ "faae97823965f7fe8561aca497c234bd": {
+  "speaker": "Lakshmana",
+  "text": "Which way now, Guru-dev?",
+  "source": "sarayu_dawn",
+  "seconds": 1.93
+ },
+ "195b4f35acbd906ae8331a57a794339c": {
+  "speaker": "Vishvamitra",
+  "text": "South, across the river, into lands where no bird sings. Keep the mantras close, princes.",
+  "source": "sarayu_dawn",
+  "seconds": 6.89
  },
  "c7475caa263c4fb930f7b001e5274e79": {
   "speaker": "Lakshmana",
@@ -700,6 +826,174 @@
   "text": "He had already turned to flee...",
   "source": "forest",
   "seconds": 1.87
+ },
+ "3a40f2a0fb6e2ad4c4bb9078b8d0c8e5": {
+  "speaker": "Lakshmana",
+  "text": "Not past me!",
+  "source": "sarayu_road",
+  "seconds": 1.39
+ },
+ "02e966a235a6af4987727a47e795617c": {
+  "speaker": "Lakshmana",
+  "text": "Guru-dev!",
+  "source": "sarayu_road",
+  "seconds": 1.13
+ },
+ "e3ce8c742a91c38a2b045f817890d2ed": {
+  "speaker": "Vishvamitra",
+  "text": "Your father's grief will pass, Rama. A word kept outlives every sorrow.",
+  "source": "sarayu_road",
+  "seconds": 5.31
+ },
+ "70fb4f94c60eb0718ec710e35ebf65f9": {
+  "speaker": "Rama",
+  "text": "I know, Guru-dev. I only hope he does not watch the road too long.",
+  "source": "sarayu_road",
+  "seconds": 4.3
+ },
+ "d3a2275d7f6dd9018cd717abb0a3f58f": {
+  "speaker": "Lakshmana",
+  "text": "Guru-dev, they say you were a king once.",
+  "source": "sarayu_road",
+  "seconds": 2.72
+ },
+ "47293c39395601f90725ecfbb97c2f33": {
+  "speaker": "Vishvamitra",
+  "text": "Kaushika, of the line of Kusha. I had armies, and I lost a contest to a man who had only his tapas.",
+  "source": "sarayu_road",
+  "seconds": 6.98
+ },
+ "fe5beb63b8122649659b24cfe247b3df": {
+  "speaker": "Vishvamitra",
+  "text": "So I set down the crown and became what you see. It took me longer than you have been alive.",
+  "source": "sarayu_road",
+  "seconds": 5.96
+ },
+ "3c09b05504f14e08f7c6ed7b7f5d026b": {
+  "speaker": "Vishvamitra",
+  "text": "The Sarayu is born of a lake Brahma made with his mind, high on Kailasa. That is why its water runs clear, even here.",
+  "source": "sarayu_road",
+  "seconds": 7.84
+ },
+ "83bf335c8ba6c6d4247c57741d8519a5": {
+  "speaker": "Lakshmana",
+  "text": "Then it has walked further than we have.",
+  "source": "sarayu_road",
+  "seconds": 2.55
+ },
+ "1d0be2b78ef96e68488709b9d5c7f752": {
+  "speaker": "Rama",
+  "text": "Guru-dev, the birds have gone quiet.",
+  "source": "sarayu_road",
+  "seconds": 2.79
+ },
+ "85d06bc958470abb024fb9e6e128ccd5": {
+  "speaker": "Vishvamitra",
+  "text": "Something stirs in the south. Stay close to me.",
+  "source": "sarayu_road",
+  "seconds": 4.07
+ },
+ "bd2462bc9a68502f3b24d9d8e7ce7d84": {
+  "speaker": "Vishvamitra",
+  "text": "The rakshasas drive even the deer from their grazing. You will see why, soon enough.",
+  "source": "sarayu_road",
+  "seconds": 6.03
+ },
+ "57450560e12f47a73ce098ee059ce4ea": {
+  "speaker": "Lakshmana",
+  "text": "The sun is low, brother. Will we sleep under the sky tonight?",
+  "source": "sarayu_road",
+  "seconds": 3.53
+ },
+ "fab7c663f22c2ef957080fcbac12386a": {
+  "speaker": "Rama",
+  "text": "Under the sky, beside a river, with a guru keeping watch. Kings sleep worse.",
+  "source": "sarayu_road",
+  "seconds": 5.15
+ },
+ "32aea88b64785d10c81449cb14c00fd2": {
+  "speaker": "Lakshmana",
+  "text": "Horns, far to the south. The herd is panicking!",
+  "source": "sarayu_road",
+  "seconds": 3.87
+ },
+ "41bbce058a2aad57ffb6b084543981a0": {
+  "speaker": "Vishvamitra",
+  "text": "You turned them without spilling a drop of blood. That is the beginning of a protector.",
+  "source": "sarayu_road",
+  "seconds": 5.57
+ },
+ "6c6e4118584485c02e09789eb06882c6": {
+  "speaker": "Vishvamitra",
+  "text": "I am unhurt, princes. A bruise is a small teacher. Come.",
+  "source": "sarayu_road",
+  "seconds": 5.12
+ },
+ "a9be523d06ec78ab8324fe4c446c6caf": {
+  "speaker": "Widow",
+  "text": "May the river carry your kindness as far as it carries the lamps, my prince.",
+  "source": "sarayu_road",
+  "seconds": 5.18
+ },
+ "96292739a13fe35f560c6548c8d0513d": {
+  "speaker": "Widow",
+  "text": "The lamps were left along the road by those who could not bear to light them. Take them to the water where you rest.",
+  "source": "sarayu_road",
+  "seconds": 6.6
+ },
+ "f73060556aa2fa7715afb2d99447b755": {
+  "speaker": "Widow",
+  "text": "My prince. My husband ferried this river for thirty years. The rakshasas overturned his boat at night.",
+  "source": "sarayu_road",
+  "seconds": 7.51
+ },
+ "33225e97f01c9a27d44209cd9943959d": {
+  "speaker": "Widow",
+  "text": "There are lamps along the road, five of them. Set them on the water for him, and for all the river has taken.",
+  "source": "sarayu_road",
+  "seconds": 7.51
+ },
+ "f479b57fb6d197a35ee8faff11cfbb37": {
+  "speaker": "Rama",
+  "text": "We will set them afloat tonight, mother. He will not be forgotten.",
+  "source": "sarayu_road",
+  "seconds": 3.55
+ },
+ "52e51c3d440df930df6601de79326197": {
+  "speaker": "Boatman",
+  "text": "My oar is home and my boat is whole. Call on me, my prince, whenever a river stands in your way.",
+  "source": "sarayu_road",
+  "seconds": 5.78
+ },
+ "b2f4c0d43d20e203ebceb65122cef59a": {
+  "speaker": "Boatman",
+  "text": "My oar! The current took it as if it wanted it. Thank you, Prince Rama.",
+  "source": "sarayu_road",
+  "seconds": 4.87
+ },
+ "abc0b6a7f6e60c2ab5c672a3c0e5e799": {
+  "speaker": "Boatman",
+  "text": "On the sandbank upstream, past the reeds. Mind the soft sand.",
+  "source": "sarayu_road",
+  "seconds": 4.07
+ },
+ "fabe9e770d5433e88ab3343027f7ceb5": {
+  "speaker": "Boatman",
+  "text": "Forgive me, my princes, no crossing today. The current stole my oar in the night.",
+  "source": "sarayu_road",
+  "seconds": 5.03
+ },
+ "010bd1c1c3f8df6297526c5bc409fb9e": {
+  "speaker": "Boatman",
+  "text": "I saw it come to rest on a sandbank upstream, past the reeds. My knees will not carry me there.",
+  "source": "sarayu_road",
+  "seconds": 5.74
+ },
+ "d0c597550fb5f69771058cef43d65db3": {
+  "speaker": "Lakshmana",
+  "text": "Ours will. Wait here, boatman.",
+  "source": "sarayu_road",
+  "seconds": 2.13
  },
  "09a2fac3279e80452e362e32dde2dee7": {
   "speaker": "Vishvamitra",

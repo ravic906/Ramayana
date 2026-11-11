@@ -17,6 +17,8 @@ Status:
 | 5 | **Cultural consultant** | A sacred text: the script and the portrayal need an expert's review before release | **Waiting** | 2026-11-11 |
 | 6 | **Store accounts** | Must be in your name: Google Play developer account ($25 one-time) now; Apple ($99/yr) later | **Waiting** (needed before release and in-app purchases) | 2026-11-11 |
 | 7 | **Approve faces, close-ups and Rama's look** | Taste and reverence: how Rama and the sages look and act in close-up | **Review**. Sent: the expression sheet, Rama's portraits (new kireeta, luminous skin) and a video of *The Sage at the Gate*. Also in the APK (Mission 2 opening) | 2026-11-11 |
+| 9 | **Music for the Sarayu road** | Taste | **Review**. Claude picked *The Parting* (the walk) and *River Flute* (the dusk camp); other options in the audition list: *On the Shore*, *Healing* | 2026-11-11 |
+| 10 | **Review the Sarayu road's words** | New scenes: the departure, Bala and Atibala, the dawn verse, the widow and the boatman (`data/dialogue/part01/`, `kandas/01_bala/sarayu_road.gd`) | **Review** (and for the cultural consultant) | 2026-11-11 |
 | 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review
@@ -34,6 +36,8 @@ Status:
 | Maricha and Subahu | Black Vortex | Brass, aggressive |
 | Bloom and dawn | **Peaceful Desolation** (new) | Calm, sombre, uplifting brass and strings |
 | Stingers | Discovery Hit, Our Story Begins | |
+| The road along the Sarayu | **The Parting** (new) | Leaving home: calm, sombre, uplifting strings and winds |
+| The dusk camp (Bala and Atibala) | **River Flute** (new) | Calm, meditative flute with the sound of the river |
 
 ### Pronunciation (how the voice is told to say it; subtitles unchanged)
 | Name | Now said as | Was |

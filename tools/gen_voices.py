@@ -48,6 +48,8 @@ CAST = {
     "Chandu": {"spk": "p273", "speed": 0.95, "pitch": 6.0, "reverb": (0.5, 0.05)},
     "Gardener": {"spk": "p347", "speed": 1.12, "pitch": -0.5, "reverb": (0.6, 0.06)},
     "Maricha": {"spk": "p345", "speed": 1.1, "pitch": -3.5, "reverb": (1.8, 0.24)},
+    "Widow": {"spk": "p248", "speed": 1.15, "pitch": -1.0, "reverb": (0.7, 0.07)},
+    "Boatman": {"spk": "p360", "speed": 1.05, "pitch": -1.5, "reverb": (0.7, 0.07)},
 }
 
 ## Sanskrit names, spelled the way the English voice should say them

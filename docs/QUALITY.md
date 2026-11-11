@@ -41,5 +41,7 @@ owner before it ships.
 | Faces | No facial expressions; dialogue lacks close-ups | Face rig with blend shapes, blinking lids and turning eyes; lip sync; emotions per line; automatic close-ups, over-the-shoulder and two-shots with depth of field and a key light. Interim until a character artist's heads (owner, item 4) |
 | Rama | Bucket-shaped crown; plain skin | A tall tapered kireeta with a lotus crest; a subtle luminous skin (Rama only) |
 | Dialogue | Scenes are brief | *Sage at the Gate* told in full after Valmiki (20 lines); the trials, forest, Tataka, Siddhashrama and dawn scenes deepened, each line with an emotion |
+| Animals | The pack is low-poly and flat-shaded (toy-like beside the cast) | Welded and smooth-shaded, life-sized, colours muted; never harmed (arrows pass them; near arrows startle) |
+| Boatman's name | "Guha" would clash with the Nishada king of Ayodhya Kanda | Left unnamed |
 | Mouth | Interior poked through the chin in the idle pose | Interior made smaller and set deeper; checked in a close-up render |
 | Score | Licensed placeholders | A commissioned score (Indian classical + orchestra + choir) is the goal for launch |
