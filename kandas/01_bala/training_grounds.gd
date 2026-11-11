@@ -50,8 +50,93 @@ func _start_story() -> void:
 		return
 	spawner.hold()  # the first wave waits for the intro
 	await cutscene(D + "m1_intro.tres")
+	if is_inside_tree() and not GameState.get_flag("range_done", false):
+		await range_chapter()
 	if is_inside_tree():
+		set_objective("Vasishtha's maya trials: defeat the illusions")
 		spawner.start()
+
+
+# --- The Range (mission 1, before the maya trials) -------------------------------------
+
+const DUMMY := preload("res://characters/enemies/target_dummy.tscn")
+var range_step := 0
+var _range_count := 0
+
+
+## Three drills at Vasishtha's range: moving targets, perfect releases, a long
+## shot. Taught in one line each; skipped on later plays (flag "range_done").
+func range_chapter() -> void:
+	hud.show_banner("The Range", Color(1.0, 0.88, 0.6), 2.5)
+	# 1. Moving targets.
+	range_step = 1
+	_range_count = 0
+	await say_lines([["Vasishtha", "A target that waits for you is a courtesy. These will not wait."]])
+	var movers: Array[Node3D] = []
+	for i in 3:
+		var d := DUMMY.instantiate() as TargetDummy
+		d.punya_reward = 5
+		d.respawn_delay = 999.0
+		add_child(d)
+		d.global_position = Vector3(-5.0 + i * 5.0, 0, -22.0 - i * 3.0)
+		var t := d.create_tween().set_loops()
+		var sway := 3.5 + i
+		t.tween_property(d, "global_position:x", d.global_position.x + sway, 1.6 + i * 0.4).set_trans(Tween.TRANS_SINE)
+		t.tween_property(d, "global_position:x", d.global_position.x - sway, 1.6 + i * 0.4).set_trans(Tween.TRANS_SINE)
+		d.health.died.connect(func() -> void: _range_hit(3))
+		movers.append(d)
+	_range_objective("Strike the three moving targets", 3)
+	while is_inside_tree() and _range_count < 3:
+		await get_tree().process_frame
+	for d in movers:
+		if is_instance_valid(d):
+			d.queue_free()
+	if not is_inside_tree():
+		return
+	# 2. Perfect releases.
+	range_step = 2
+	_range_count = 0
+	await say_lines([["Vasishtha", "Now let the arrow go at the moment the string sings. Three times."]])
+	var on_release := func(_a: Arrow, _p: float, perfect: bool) -> void:
+		if perfect:
+			_range_hit(3)
+	rama.released.connect(on_release)
+	_range_objective("Three perfect releases (let go when the ring turns gold)", 3)
+	while is_inside_tree() and _range_count < 3:
+		await get_tree().process_frame
+	if rama.released.is_connected(on_release):
+		rama.released.disconnect(on_release)
+	if not is_inside_tree():
+		return
+	# 3. The long shot.
+	range_step = 3
+	_range_count = 0
+	await say_lines([["Vasishtha", "The last mark stands far. Hold your breath, not your doubt."]])
+	var far := DUMMY.instantiate() as TargetDummy
+	far.punya_reward = 15
+	far.respawn_delay = 999.0
+	add_child(far)
+	far.global_position = Vector3(2.0, 0, -36.0)
+	far.health.died.connect(func() -> void: _range_hit(1))
+	_range_objective("The long shot: strike the far target", 1)
+	while is_inside_tree() and _range_count < 1:
+		await get_tree().process_frame
+	if is_instance_valid(far):
+		far.queue_free()
+	if not is_inside_tree():
+		return
+	range_step = 4
+	GameState.set_flag("range_done", true)
+	await say_lines([["Vasishtha", "Good. The hand is ready. Now let us see the heart."]])
+
+
+func _range_hit(goal: int) -> void:
+	_range_count += 1
+	hud.show_banner("%d / %d" % [mini(_range_count, goal), goal], Color(1.0, 0.9, 0.6), 0.8)
+
+
+func _range_objective(text: String, _goal: int) -> void:
+	set_objective("Vasishtha's range: " + text)
 
 
 ## Vasishtha's final trial ends mission 1.
