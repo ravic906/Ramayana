@@ -10,6 +10,8 @@ extends Node3D
 @export var sash := Color(0.95, 0.85, 0.65)
 @export var hair_color := Color(0.1, 0.07, 0.05)
 @export var beard := false
+## Long loose hair (sages, the king); princes and townsfolk wear the gathered style.
+@export var long_hair := false
 @export var crown := false
 @export var topknot := false
 @export var staff := false
@@ -34,7 +36,12 @@ func _ready() -> void:
 	hair_mat.albedo_color = hair_color
 	hair_mat.roughness = 0.8
 	hair_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	for n in ["Hair", "Beard"]:
+	var gathered := skeleton.find_child("Hair", true, false) as Node3D
+	var long := skeleton.find_child("HairLong", true, false) as Node3D
+	if gathered and long:
+		gathered.visible = not long_hair
+		long.visible = long_hair
+	for n in ["Hair", "HairLong", "Beard"]:
 		var mi := skeleton.find_child(n, true, false) as MeshInstance3D
 		if mi:
 			mi.material_override = hair_mat

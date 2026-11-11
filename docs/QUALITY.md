@@ -39,6 +39,7 @@ owner before it ships.
 | Layout | Subtitles overlapped Dodge on 4:3 | Narrowed |
 | Voices | Pronunciation unverified | Reel sent to the owner; awaiting corrections |
 | Faces | No facial expressions; dialogue lacks close-ups | Face rig with blend shapes, blinking lids and turning eyes; lip sync; emotions per line; automatic close-ups, over-the-shoulder and two-shots with depth of field and a key light. Interim until a character artist's heads (owner, item 4) |
+| Hair | Stock long loose cut fell over the princes' faces | Gathered into the crown after temple iconography: face and ears open, dark locks behind to the shoulders; sages, the king and rakshasas keep the long hair |
 | Rama | Bucket-shaped crown; plain skin | A tall tapered kireeta with a lotus crest; a subtle luminous skin (Rama only) |
 | Dialogue | Scenes are brief | *Sage at the Gate* told in full after Valmiki (20 lines); the trials, forest, Tataka, Siddhashrama and dawn scenes deepened, each line with an emotion |
 | Animals | The pack is low-poly and flat-shaded (toy-like beside the cast) | Welded and smooth-shaded, life-sized, colours muted; never harmed (arrows pass them; near arrows startle) |

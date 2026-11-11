@@ -45,6 +45,7 @@ const UTTARIYA := Color(0, 0, 1)     # region_b: saffron sash
 
 const MAT_DIR := "res://assets/materials/"
 const FaceRig := preload("res://tools/face_rig_builder.gd")
+const HairBuilder := preload("res://tools/hair_builder.gd")
 
 
 func _initialize() -> void:
@@ -125,10 +126,20 @@ func _initialize() -> void:
 	var hair_mi: MeshInstance3D = hair_src.find_children("*", "MeshInstance3D", true, false)[0]
 	var hair := MeshInstance3D.new()
 	hair.name = "Hair"
-	hair.mesh = _with_lods(hair_mi.mesh as ArrayMesh, load(MAT_DIR + "rama_hair.tres"))
+	# Hair gathered into the crown, face open, curled locks (tools/hair_builder.gd).
+	var cap_src := _load_gltf(ubc.path_join("Hairstyles/Origin at 0/glTF (Godot)/Hair_SimpleParted.gltf"))
+	var cap_mi: MeshInstance3D = cap_src.find_children("*", "MeshInstance3D", true, false)[0]
+	hair.mesh = _with_lods(HairBuilder.build(hair_mi.mesh as ArrayMesh, cap_mi.mesh as ArrayMesh, null), load(MAT_DIR + "rama_hair.tres"))
 	# The hair is modelled in place (origin at 0), so undo the head's rest transform.
 	hair.transform = skeleton.get_bone_global_rest(skeleton.find_bone("Head")).affine_inverse()
 	head_att.add_child(hair)
+	# The pack's long loose hair, kept for the sages and the king (NpcModel.long_hair).
+	var hair_long := MeshInstance3D.new()
+	hair_long.name = "HairLong"
+	hair_long.mesh = _with_lods(hair_mi.mesh as ArrayMesh, load(MAT_DIR + "rama_hair.tres"))
+	hair_long.transform = hair.transform
+	hair_long.visible = false
+	head_att.add_child(hair_long)
 	# Beard (hidden; sages and kings in cutscenes show it via NpcModel).
 	var beard_src := _load_gltf(ubc.path_join("Hairstyles/Origin at 0/glTF (Godot)/Hair_Beard.gltf"))
 	if beard_src:

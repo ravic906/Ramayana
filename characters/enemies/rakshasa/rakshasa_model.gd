@@ -31,7 +31,14 @@ func _ready() -> void:
 	FaceController.set_eyes(skeleton, load(MAT + "rakshasa_eyes.tres"))
 	var hair_mat: Material = load(hair_material)
 	(skeleton.get_node("Eyebrows") as MeshInstance3D).material_override = hair_mat
-	var hair := skeleton.find_child("Hair", true, false) as MeshInstance3D
+	# Rakshasas keep the wild long hair.
+	var gathered := skeleton.find_child("Hair", true, false) as MeshInstance3D
+	var hair := skeleton.find_child("HairLong", true, false) as MeshInstance3D
+	if hair and gathered:
+		gathered.visible = false
+		hair.visible = true
+	elif gathered:
+		hair = gathered
 	if hair:
 		hair.material_override = hair_mat
 	_build_props()
