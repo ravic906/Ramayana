@@ -31,6 +31,9 @@ const SAVE_VERSION := 3
 ## Runtime only (not saved): true when a Part was launched from the Journey
 ## menu, so levels play their story (narration, cutscenes, mission hand-off).
 var story_session := false
+## The trial being played (Trials: "gauntlet", "tataka", "sky"), "" in the story.
+## Not saved: a trial is always started from the Trials list.
+var trial := ""
 
 var current_part := 1
 var completed_parts: Array[StringName] = []
@@ -54,6 +57,7 @@ var lore: Array[StringName] = []
 
 
 func reset() -> void:
+	trial = ""
 	current_part = 1
 	completed_parts.clear()
 	current_kanda = 0

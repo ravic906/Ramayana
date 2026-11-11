@@ -34,6 +34,13 @@ func _ready() -> void:
 	var title := PartCard._label("Part %d: Missions" % part_number, 46, Color(1, 0.85, 0.5), false)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title)
+	var trials := Button.new()
+	trials.name = "TrialsButton"
+	trials.text = "Trials"
+	trials.custom_minimum_size = Vector2(200, 72)
+	trials.add_theme_font_size_override(&"font_size", 28)
+	trials.pressed.connect(func() -> void: TrialsScreen.open(get_parent()))
+	top.add_child(trials)
 	var close := Button.new()
 	close.text = "Close"
 	close.custom_minimum_size = Vector2(200, 72)

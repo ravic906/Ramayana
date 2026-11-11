@@ -109,7 +109,14 @@ func _seat_sages() -> void:
 var _vishvamitra: Node3D
 
 
+var _trial_t0 := 0
+
+
 func _begin() -> void:
+	if GameState.trial == "sky":
+		_trial_t0 = Time.get_ticks_msec()
+		start_night(6)
+		return
 	var resume := _checkpoint_night()
 	if resume > 1:
 		start_night(resume)
@@ -136,8 +143,9 @@ func start_defence() -> void:
 func start_night(n: int) -> void:
 	night = n
 	_night_sage_hits = sage_hits
-	GameState.checkpoint = "night_%d" % n
-	SaveSystem.save_game()
+	if GameState.trial == "":
+		GameState.checkpoint = "night_%d" % n
+		SaveSystem.save_game()
 	fire.rekindle()
 	if n >= 6:
 		start_sky_battle()
@@ -320,6 +328,13 @@ func _on_maricha_banished(_b: SkyRakshasa) -> void:
 
 
 func _check_victory() -> void:
+	if subahu_down and maricha_gone and not yagna_complete and GameState.trial == "sky":
+		yagna_complete = true
+		hud.clear_boss_bars()
+		await get_tree().create_timer(2.0).timeout
+		if is_inside_tree():
+			TrialResult.open(self, "sky", (Time.get_ticks_msec() - _trial_t0) / 1000.0)
+		return
 	if subahu_down and maricha_gone and not yagna_complete:
 		yagna_complete = true
 		GameState.checkpoint = ""

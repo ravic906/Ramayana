@@ -26,6 +26,7 @@ var scouts: WaveSpawner
 var shrine: ShrinePuzzle
 var thorns: StaticBody3D
 var chapter := 1
+var _trial_t0 := 0
 const CHAPTERS := ["The Empty Fields of Malada", "The Deep Wood", "Tataka's Grove"]
 
 
@@ -62,7 +63,14 @@ func _ready() -> void:
 	tataka.staggered.connect(func() -> void: lakshmana.say("She's down, brother! Now!", 2.0))
 	_build_chapter_one()
 	_build_shrine()
-	if GameState.current_mission >= 4:
+	if GameState.trial == "tataka":
+		chapter = 3
+		_place_at_grove_entry()
+		if thorns:
+			thorns.queue_free()
+			thorns = null
+		_start_boss.call_deferred()
+	elif GameState.current_mission >= 4:
 		chapter = 3
 		_place_at_grove_entry()
 	elif GameState.checkpoint == "forest_c2":
@@ -110,6 +118,8 @@ func _place(at: Vector3) -> void:
 
 func _process(delta: float) -> void:
 	super._process(delta)
+	if GameState.trial != "":
+		return
 	if chapter == 1 and rama.global_position.z < m("Chapter2").z:
 		_enter_chapter(2)
 	elif chapter == 2 and rama.global_position.z < $BossTrigger.global_position.z + 14.0 and not boss_started:
@@ -286,7 +296,9 @@ func _start_boss() -> void:
 			return
 	Music.play("tataka")
 	Music.stinger("sting_reveal")
-	PartFlow.advance_to(4)
+	if GameState.trial == "":
+		PartFlow.advance_to(4)
+	_trial_t0 = Time.get_ticks_msec()
 	rama.spawn_point = rama.global_position
 	var gate := env.get_node("GroveGate") as StaticBody3D
 	gate.collision_layer = 1
@@ -311,6 +323,12 @@ func _on_tataka_defeated() -> void:
 	boss_defeated = true
 	Music.stop()  # a moment of silence before the forest blooms
 	hud.show_boss("", null)
+	if GameState.trial == "tataka":
+		var seconds := (Time.get_ticks_msec() - _trial_t0) / 1000.0
+		await get_tree().create_timer(2.0).timeout
+		if is_inside_tree():
+			TrialResult.open(self, "tataka", seconds)
+		return
 	await get_tree().create_timer(2.5).timeout
 	if not is_inside_tree():
 		return

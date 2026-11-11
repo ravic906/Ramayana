@@ -809,6 +809,30 @@
   "source": "forest",
   "seconds": 2.22
  },
+ "737595e3cb981f55168c6da58d6942f9": {
+  "speaker": "Lakshmana",
+  "text": "Thorns, brother, thick as a wall. There was a shrine back there, to the west.",
+  "source": "forest",
+  "seconds": 3.69
+ },
+ "5ef0c4f4c7754e2f5c34c7f8c3d9017a": {
+  "speaker": "Lakshmana",
+  "text": "Scouts. Whoever sent them knows we are coming.",
+  "source": "forest",
+  "seconds": 2.97
+ },
+ "5a3b84ca140d43211b64ac32d78397f9": {
+  "speaker": "Lakshmana",
+  "text": "Movement in the huts, brother!",
+  "source": "forest",
+  "seconds": 1.87
+ },
+ "9c6c620a9a5b0866b4977443e841fa64": {
+  "speaker": "Lakshmana",
+  "text": "The bells fall silent. Read the carving again, brother.",
+  "source": "forest",
+  "seconds": 3.36
+ },
  "a09bc6d221e2ea9736bb30fd9e042bd9": {
   "speaker": "Lakshmana",
   "text": "Rakshasas, brother! Real ones, this time.",
@@ -826,6 +850,18 @@
   "text": "He had already turned to flee...",
   "source": "forest",
   "seconds": 1.87
+ },
+ "3360152c645d642f31ffa3919b85abec": {
+  "speaker": "Lakshmana",
+  "text": "Listen, brother. The thorns are falling back.",
+  "source": "forest",
+  "seconds": 2.66
+ },
+ "fdd796f03cc0d1ab63ca933030bfd6da": {
+  "speaker": "Rama",
+  "text": "Someone kept this shrine once. The forest still remembers them.",
+  "source": "forest",
+  "seconds": 3.92
  },
  "3a40f2a0fb6e2ad4c4bb9078b8d0c8e5": {
   "speaker": "Lakshmana",
@@ -1042,5 +1078,29 @@
   "text": "Then let him remember that he was spared.",
   "source": "siddhashrama",
   "seconds": 2.53
+ },
+ "2b70586498fcac394105b22ef043b3f4": {
+  "speaker": "Vasishtha",
+  "text": "A target that waits for you is a courtesy. These will not wait.",
+  "source": "training_grounds",
+  "seconds": 4.57
+ },
+ "ef49de3fc27e26f7e41c6b92220a9d90": {
+  "speaker": "Vasishtha",
+  "text": "Now let the arrow go at the moment the string sings. Three times.",
+  "source": "training_grounds",
+  "seconds": 5.46
+ },
+ "0a7a7040db09ad90f027acf627ecdc4a": {
+  "speaker": "Vasishtha",
+  "text": "The last mark stands far. Hold your breath, not your doubt.",
+  "source": "training_grounds",
+  "seconds": 4.29
+ },
+ "16438abfad39f76e89fb1ade5d9d1a55": {
+  "speaker": "Vasishtha",
+  "text": "Good. The hand is ready. Now let us see the heart.",
+  "source": "training_grounds",
+  "seconds": 4.94
  }
 }

@@ -33,7 +33,9 @@ func _ready() -> void:
 		&"king": [Vector3(-2.5, 1.8, -33.0), Vector3(-5.0, 1.7, -37.0)],
 		&"sage": [Vector3(1.5, 1.8, -34.0), Vector3(0.0, 1.7, -39.0)],
 	}
-	if story_enabled():
+	if GameState.trial == "gauntlet":
+		_start_gauntlet.call_deferred()
+	elif story_enabled():
 		_start_story.call_deferred()
 
 
@@ -137,6 +139,58 @@ func _range_hit(goal: int) -> void:
 
 func _range_objective(text: String, _goal: int) -> void:
 	set_objective("Vasishtha's range: " + text)
+
+
+# --- The Gauntlet (Trials) ----------------------------------------------------------------
+
+const GAUNTLET_WAVES := 30
+var gauntlet_score := 0
+var gauntlet_over := false
+
+
+## Endless-feeling waves of maya rakshasas at night; the score is foes felled
+## plus a bonus per wave. One life.
+func _start_gauntlet() -> void:
+	spawner.all_cleared.disconnect(_on_trials_complete)
+	sun.light_energy *= 0.35
+	sun.light_color = Color(0.62, 0.68, 1.0)
+	var waves: Array[PackedStringArray] = []
+	for n in range(1, GAUNTLET_WAVES + 1):
+		var pool := ["grunt"]
+		for spec in [["archer", 2], ["raider", 3], ["shield", 4], ["mayavi", 5], ["brute", 6]]:
+			if n >= spec[1]:
+				pool.append(spec[0])
+		var w := PackedStringArray()
+		for k in mini(3 + n, 12):
+			w.append(pool[(k * 7 + n * 3) % pool.size()])
+		waves.append(w)
+	spawner.waves = waves
+	spawner.break_time = 2.5
+	spawner.enemy_spawned.connect(func(r: Rakshasa) -> void:
+		r.died.connect(func(_r: Rakshasa) -> void:
+			gauntlet_score += 1
+			hud._tracker_override = true
+			hud.set_tracker("Score  %d" % gauntlet_score)))
+	spawner.wave_cleared.connect(func(i: int) -> void:
+		gauntlet_score += 3
+		hud.show_banner("Wave %d cleared  +3" % (i + 1), Color(1.0, 0.85, 0.5), 1.5))
+	spawner.all_cleared.connect(func() -> void: _end_gauntlet())
+	rama.rama_died.connect(func() -> void: _end_gauntlet())
+	set_objective("The Gauntlet: stand as long as you can")
+	hud.show_banner("The Gauntlet", Color(1.0, 0.85, 0.5), 2.0)
+	Music.play("ayodhya")
+	Music.set_intensity(1.0)
+	spawner.start()
+
+
+func _end_gauntlet() -> void:
+	if gauntlet_over:
+		return
+	gauntlet_over = true
+	spawner.hold()
+	await get_tree().create_timer(1.5).timeout
+	if is_inside_tree():
+		TrialResult.open(self, "gauntlet", gauntlet_score)
 
 
 ## Vasishtha's final trial ends mission 1.

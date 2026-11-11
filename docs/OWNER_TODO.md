@@ -19,6 +19,8 @@ Status:
 | 7 | **Approve faces, close-ups and Rama's look** | Taste and reverence: how Rama and the sages look and act in close-up | **Review**. Sent: the expression sheet, Rama's portraits (new kireeta, luminous skin) and a video of *The Sage at the Gate*. Also in the APK (Mission 2 opening) | 2026-11-11 |
 | 9 | **Music for the Sarayu road** | Taste | **Review**. Claude picked *The Parting* (the walk) and *River Flute* (the dusk camp); other options in the audition list: *On the Shore*, *Healing* | 2026-11-11 |
 | 10 | **Review the Sarayu road's words** | New scenes: the departure, Bala and Atibala, the dawn verse, the widow and the boatman (`data/dialogue/part01/`, `kandas/01_bala/sarayu_road.gd`) | **Review** (and for the cultural consultant) | 2026-11-11 |
+| 11 | **Review M3's new words** | Vasishtha's range lines, the forest's new lines (the scouts, the thorns, the shrine) and the shrine's lore leaf (an invented shrine, labelled as such) | **Review** | 2026-11-11 |
+| 12 | **Hair** | Rama's hair is now gathered into the crown, face open (portraits sent) | **Review** | 2026-11-11 |
 | 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review

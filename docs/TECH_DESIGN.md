@@ -147,6 +147,30 @@ tests/           Headless test runner + unit tests
 - **Story poses:** `RamaModel.play_pose()/clear_pose()` bypass the gameplay AnimationTree. New
   clips: `sit_down`, `sit`, `sit_talk`, `stand_up`, `kneel`, `talk`, `walk_formal`, `interact`.
 
+### Mission 1's range, the forest chapters and the Trials
+- **The Range** (`training_grounds.gd: range_chapter()`): three drills (moving `TargetDummy`s
+  on looping tweens, three perfect releases via `Rama.released`, a far target at 36 m), each
+  introduced by one Vasishtha line; flag `range_done` skips it afterwards.
+- **The Silent Forest** (`build_forest.gd` extends the path south to z +190; `forest.gd`):
+  - chapter I is open farmland with a ruined village (`_village()`) and three scouts (a
+    `WaveSpawner` built in code, triggered at the village);
+  - chapter II starts at the `Chapter2` marker, saves `checkpoint = "forest_c2"` and puts a
+    thorn wall (`StaticBody3D`) on the path at `Thorns`;
+  - `ShrinePuzzle` (`kandas/01_bala/shrine_puzzle.gd`): three bells are `StaticBody3D`s with
+    a never-emptying `Health`, so an arrow hit is a ring. The order is `ORDER` (moon, earth,
+    sun, from the carving); a wrong bell resets. Solving it lights the shrine, gives
+    +30 Punya, sets `fact:shrine` and `flag shrine_rung`, and dissolves the thorns.
+    `tools/gen_bells.py` synthesises the bells.
+  - chapter III is the grove (unchanged).
+- **Trials** (`core/progress/trials.gd`, `ui/trials_screen.gd`, `ui/trial_result.gd`):
+  - `GameState.trial` (not saved) makes a level run its trial variant;
+  - the Gauntlet is 30 escalating waves in the training grounds at night (score = foes + 3 per
+    wave; one life);
+  - the rematches (Tataka in the grove; night 6 at Siddhashrama) are timed and never advance
+    the story or its checkpoints;
+  - medal thresholds are in `Trials.LIST`; Punya for each new medal tier; the best result is
+    kept in `flags`.
+
 ### Difficulty
 - `Settings.difficulty`: STORY / WARRIOR / MAHARATHI (`story_mode` remains a property for
   older code; configs with only `story_mode` migrate).

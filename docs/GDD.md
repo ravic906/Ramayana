@@ -125,7 +125,14 @@ short "vision" sequences framed by Rama's perspective, then returns to Rama.
   - mission 2 continues on the road along the Sarayu: the sage's walk-and-talk, the
     stampede (Lakshmana's Guard tutorial, no animal harmed), two side quests, three palm
     leaves, and Bala and Atibala at the dusk camp, then the dawn;
+  - mission 1 opens with Vasishtha's range (moving targets, perfect releases, a long shot);
+  - mission 3 is the Silent Forest in three chapters: the empty fields of Malada and a ruined
+    village; the deep wood with the forest shrine's bells (a puzzle solved with arrows), the
+    ambushes and a Mayavi; Tataka's grove;
   - mission 5: the Siddhashrama yagna defence, Maricha and Subahu, and the Manavastra.
+  - **Trials** (from the Missions screen): the Gauntlet (endless waves, score) and rematches
+    with Tataka and with Maricha & Subahu (timed); bronze, silver and gold medals with Punya.
+  - **Difficulty:** Story, Warrior, and Maharathi (hard, unlocked after Tataka).
   - Mission 6 shows a "coming soon" card.
 - **Prologue:** Guru Vasishtha's maya trials in the Ayodhya training grounds. The
   final trial grants a temporary *glimpse* of the Agneyastra.

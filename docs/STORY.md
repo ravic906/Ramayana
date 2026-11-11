@@ -118,6 +118,12 @@ not smoke). The **Dharma meter** is introduced: a wounded rakshasa that flees ca
 - Vishvamitra: "No bird sings here. Listen to what silence costs a land."
 - Rama (sparing a fleeing foe): "Go. Do not return."
 
+*As built (M3):* three chapters. I: the empty fields of Malada, a ruined village, rakshasa
+scouts. II: the deep wood, where a forest shrine of Karusha's people has three bells; rung in
+the order on its carved stone ("The moon sets, the earth turns, the sun rises"), the thorns
+that choke the path fall back. (The shrine is this game's invention, noted as such in its
+lore leaf.) Then the two ambushes and the Dharma moment. III: Tataka's grove.
+
 **4. Boss: Tataka.**
 *Beat:* Rama hesitates to strike a woman. Vishvamitra answers that protecting the innocent is the
 duty that matters here, citing earlier guardians of dharma who had to act the same way. Rama
