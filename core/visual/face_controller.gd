@@ -61,6 +61,7 @@ var _gaze := Vector2.ZERO
 var _wince := 0.0
 var _talk_phase := 0.0
 var _ready_rig := false
+var _voice: Node  # the Voice autoload, looked up at run time (this script also loads in tools)
 
 
 ## Finds the rig parts under `skeleton`. Returns false if this body has no face rig.
@@ -80,6 +81,7 @@ func setup(skeleton: Skeleton3D) -> bool:
 			_balls.append(pivot.get_node("Ball"))
 			_lids.append(pivot.get_node("UpperLid"))
 	emotion = default_emotion
+	_voice = skeleton.get_node_or_null("/root/Voice")
 	_next_blink = randf_range(1.0, 4.0)
 	_ready_rig = true
 	return true
@@ -103,16 +105,17 @@ func weight(shape: String) -> float:
 
 
 func is_talking() -> bool:
-	return speaker != "" and Voice.speaking and Voice.current_speaker == speaker
+	return speaker != "" and _voice != null and _voice.speaking and _voice.current_speaker == speaker
 
 
 func _process(delta: float) -> void:
 	if not _ready_rig or not is_instance_valid(_head):
 		return
 	var cam := get_viewport().get_camera_3d()
-	if cam and cam.global_position.distance_squared_to(_head.global_position + Vector3.UP * 1.6) > ACTIVE_DISTANCE * ACTIVE_DISTANCE \
-			and not is_talking():
-		return
+	if cam and not is_talking():
+		var to := _head.global_position + Vector3.UP * 1.6 - cam.global_position
+		if to.length_squared() > ACTIVE_DISTANCE * ACTIVE_DISTANCE or to.dot(-cam.global_transform.basis.z) < 0.0:
+			return  # too far to read, or behind the camera
 	_wince = move_toward(_wince, 0.0, delta * 2.5)
 	_update_blink(delta)
 	_update_gaze(delta)
@@ -178,7 +181,7 @@ func _update_shapes(delta: float) -> void:
 			if k != "lid":
 				target[k] = maxf(target.get(k, 0.0), EMOTIONS[&"pain"][k] * _wince)
 	if is_talking():
-		var level := Voice.mouth_level()
+		var level: float = _voice.mouth_level()
 		_talk_phase += delta * 7.0
 		# Speech overrides the mouth: open with the voice, shapes vary by syllable.
 		target["lips_press"] = 0.0
@@ -190,7 +193,10 @@ func _update_shapes(delta: float) -> void:
 	for k in HEAD_SHAPES + BROW_SHAPES:
 		var cur: float = _weights.get(k, 0.0)
 		var goal: float = target.get(k, 0.0)
-		cur = lerpf(cur, goal, fast if k == "jaw_open" else rate)
+		var nxt := lerpf(cur, goal, fast if k == "jaw_open" else rate)
+		if absf(nxt - cur) < 0.0005 and absf(goal - nxt) < 0.0005:
+			continue  # settled: no work for the renderer either
+		cur = nxt
 		_weights[k] = cur
 		if _head_idx.get(k, -1) >= 0:
 			_head.set_blend_shape_value(_head_idx[k], cur)

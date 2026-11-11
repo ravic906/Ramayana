@@ -4,6 +4,9 @@
 
 [resource]
 script = ExtResource("1_d")
-text = "Rama|rama||It burned without touching me, Guru-ji. Is that what power is?
-Vasishtha|vasishtha||That is what restraint is. Remember the feeling.
-Herald|gate||My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line."
+text = "Rama|close||It burned without touching me, Guru-dev. Is that what power is?|wonder
+Vasishtha|close||That is what restraint is. Remember the feeling.|calm
+Vasishtha|close||Another teacher will place that fire in your hands. When he does, it will weigh more than it did today.|concern
+Herald|gate||My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line.
+Lakshmana|close||Vishvamitra? The king who became a sage?|wonder
+Vasishtha|close||Go to your father. Whatever the sage asks, remember that a promise made in Ayodhya is kept.|resolve"

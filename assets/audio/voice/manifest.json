@@ -5,6 +5,12 @@
   "source": "ashram_arrival",
   "seconds": 5.9
  },
+ "c28592167396a344060cb9893e49f2d8": {
+  "speaker": "Vishvamitra",
+  "text": "This is Siddhashrama. Vishnu himself once sat here in tapas, as Vamana. Sages have kept fire here ever since.",
+  "source": "ashram_arrival",
+  "seconds": 8.15
+ },
  "4b85ecc1d55bb8ebeaf2e5eb55055af1": {
   "speaker": "Vishvamitra",
   "text": "Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.",
@@ -41,6 +47,12 @@
   "source": "dawn",
   "seconds": 5.65
  },
+ "766f59929b8cd00d89b8dbb87c32c9b7": {
+  "speaker": "Rama",
+  "text": "The sages kept six nights of silence, Guru-dev. We only kept watch.",
+  "source": "dawn",
+  "seconds": 4.69
+ },
  "047d95f43f3ef7d066afc0775a45e5e1": {
   "speaker": "Vishvamitra",
   "text": "Now come with me. In Mithila, King Janaka keeps a bow that no man has ever strung.",
@@ -59,6 +71,12 @@
   "source": "forest_intro",
   "seconds": 4.66
  },
+ "62ede25362a07c05048c0d7b397855ff": {
+  "speaker": "Lakshmana",
+  "text": "Guru-dev, these fields were farmed once. Who would leave land like this?",
+  "source": "forest_intro",
+  "seconds": 4.17
+ },
  "f5433bdd0b4e62ed538275a1cd33346c": {
   "speaker": "Vishvamitra",
   "text": "No bird sings here. Listen to what silence costs a land.",
@@ -70,6 +88,18 @@
   "text": "Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.",
   "source": "forest_intro",
   "seconds": 8.54
+ },
+ "5b21351fd27d4c78433a974332be7ac4": {
+  "speaker": "Vishvamitra",
+  "text": "These were rich countries once. She has unmade them, village by village.",
+  "source": "forest_intro",
+  "seconds": 5.48
+ },
+ "c62f2fe8058ed6ec9847cd5cad898ab0": {
+  "speaker": "Rama",
+  "text": "Then we will not walk through quietly.",
+  "source": "forest_intro",
+  "seconds": 2.28
  },
  "07f44fcf5971e5d66321a1fbbccd3e3c": {
   "speaker": "Lakshmana",
@@ -113,17 +143,53 @@
   "source": "m1_intro",
   "seconds": 5.39
  },
+ "c90596979fd0b798bc7aadf429aafdd6": {
+  "speaker": "Vasishtha",
+  "text": "Again, Rama. Not faster. Truer.",
+  "source": "m1_intro",
+  "seconds": 3.75
+ },
+ "aa61994d6dc45ce7083732db698e29ce": {
+  "speaker": "Rama",
+  "text": "The bow pulls when I breathe, Guru-dev.",
+  "source": "m1_intro",
+  "seconds": 2.95
+ },
+ "279ae071ed969650819c61f167ef6b98": {
+  "speaker": "Vasishtha",
+  "text": "Then do not fight your breath. Let the arrow leave between one breath and the next.",
+  "source": "m1_intro",
+  "seconds": 5.04
+ },
  "33ceb37b4abb6ffd2221a0a1b6af8c96": {
   "speaker": "Vasishtha",
   "text": "An arrow obeys the hand. The hand must obey something higher.",
   "source": "m1_intro",
   "seconds": 4.32
  },
+ "4b9b5919d356fcfda81e71a3fc490eda": {
+  "speaker": "Rama",
+  "text": "The heart, Guru-dev?",
+  "source": "m1_intro",
+  "seconds": 1.96
+ },
+ "726c497cf8a7db8e9dd9ba6a7f0a0337": {
+  "speaker": "Vasishtha",
+  "text": "Dharma. The heart can be mistaken.",
+  "source": "m1_intro",
+  "seconds": 3.13
+ },
  "ab014a2842264d319b522351da5a46eb": {
   "speaker": "Lakshmana",
   "text": "Brother, leave one for me. Just one.",
   "source": "m1_intro",
   "seconds": 2.28
+ },
+ "61a6fffdee6d3b9f42bcebb720cbd99a": {
+  "speaker": "Rama",
+  "text": "Watch my left, then, and I will leave you the last.",
+  "source": "m1_intro",
+  "seconds": 3.41
  },
  "e217177bafa233251f0f9fb1417de09e": {
   "speaker": "Vasishtha",
@@ -317,6 +383,18 @@
   "source": "tataka_bloom",
   "seconds": 7.48
  },
+ "fbe7d63594619b820ce697e377135d5b": {
+  "speaker": "Rama",
+  "text": "It does not feel like a victory, Guru-dev.",
+  "source": "tataka_bloom",
+  "seconds": 3.48
+ },
+ "0e029bebda38e97b4d691527b2984f93": {
+  "speaker": "Vishvamitra",
+  "text": "That weight is why the astras will obey you. They are never given to those who feel nothing.",
+  "source": "tataka_bloom",
+  "seconds": 5.6
+ },
  "ae28355b138a837c021194caf16a869b": {
   "speaker": "The Astras",
   "text": "Command us, and we will come.",
@@ -359,17 +437,23 @@
   "source": "tataka_intro",
   "seconds": 6.5
  },
+ "092e616539c92d3a53c1799e09b1a0c5": {
+  "speaker": "Vishvamitra",
+  "text": "Kings before you have stopped those who destroy the innocent, whoever they were. That is not cruelty, Rama. It is care for the many.",
+  "source": "tataka_intro",
+  "seconds": 8.12
+ },
  "364c4d3de314570121cee028d708169a": {
   "speaker": "Rama",
   "text": "Then I will try to turn her back first. If she will not turn, I will not look away.",
   "source": "tataka_intro",
   "seconds": 4.65
  },
- "c4af81c55fd5dc513e8d179f89d455e1": {
+ "8226ba0f22df0503d8dae10afafa0986": {
   "speaker": "Rama",
-  "text": "It burned without touching me, Guru-ji. Is that what power is?",
+  "text": "It burned without touching me, Guru-dev. Is that what power is?",
   "source": "trials_complete",
-  "seconds": 4.12
+  "seconds": 4.32
  },
  "62edc5d65d9db342d806d903264bbf55": {
   "speaker": "Vasishtha",
@@ -377,11 +461,29 @@
   "source": "trials_complete",
   "seconds": 3.75
  },
+ "ffdafa1436857fa49698557280e0d216": {
+  "speaker": "Vasishtha",
+  "text": "Another teacher will place that fire in your hands. When he does, it will weigh more than it did today.",
+  "source": "trials_complete",
+  "seconds": 6.96
+ },
  "5e5fe17d54c19dd7b48621e7f47dcffd": {
   "speaker": "Herald",
   "text": "My princes! A sage stands at the palace gate: Vishvamitra of Kaushika's line.",
   "source": "trials_complete",
   "seconds": 5.95
+ },
+ "8bf23ef9355cd0c01f1f34c5826694d4": {
+  "speaker": "Lakshmana",
+  "text": "Vishvamitra? The king who became a sage?",
+  "source": "trials_complete",
+  "seconds": 3.02
+ },
+ "e9e45e94eab187dcd115ebab944e71b8": {
+  "speaker": "Vasishtha",
+  "text": "Go to your father. Whatever the sage asks, remember that a promise made in Ayodhya is kept.",
+  "source": "trials_complete",
+  "seconds": 5.97
  },
  "166e0f308c86e2bed7ef9c61ae36b708": {
   "speaker": "Lakshmana",

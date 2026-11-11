@@ -5,6 +5,9 @@
 [resource]
 script = ExtResource("1_d")
 text = "Narration|||They walked into lands where no bird sang: the lands of Malada and Karusha.
-Vishvamitra|sage||No bird sings here. Listen to what silence costs a land.
-Vishvamitra|sage||Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.
-Lakshmana|brothers||Stay close, brother. The trees themselves are watching."
+Lakshmana|close||Guru-dev, these fields were farmed once. Who would leave land like this?|concern
+Vishvamitra|sage||No bird sings here. Listen to what silence costs a land.|grief
+Vishvamitra|sage||Tataka rules this forest. Once a yakshini of great strength, she became a terror after a sage's curse. Her son Maricha follows her.|concern
+Vishvamitra|close||These were rich countries once. She has unmade them, village by village.|grief
+Rama|close||Then we will not walk through quietly.|resolve
+Lakshmana|brothers||Stay close, brother. The trees themselves are watching.|concern"

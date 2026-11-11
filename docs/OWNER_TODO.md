@@ -16,7 +16,8 @@ Status:
 | 4 | **Budget for talent** | Paid work: voice actors (or a paid AI voice service), a composer (Indian classical + orchestra + choir), a 3D character artist (Rama and the main cast, real faces) | **Waiting**. Placeholders are in place until then | 2026-11-11 |
 | 5 | **Cultural consultant** | A sacred text: the script and the portrayal need an expert's review before release | **Waiting** | 2026-11-11 |
 | 6 | **Store accounts** | Must be in your name: Google Play developer account ($25 one-time) now; Apple ($99/yr) later | **Waiting** (needed before release and in-app purchases) | 2026-11-11 |
-| 7 | **Approve faces and close-ups** | The expression sheet, Rama's portraits and the dialogue video | Coming with the next build | 2026-11-11 |
+| 7 | **Approve faces, close-ups and Rama's look** | Taste and reverence: how Rama and the sages look and act in close-up | **Review**. Sent: the expression sheet, Rama's portraits (new kireeta, luminous skin) and a video of *The Sage at the Gate*. Also in the APK (Mission 2 opening) | 2026-11-11 |
+| 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review
 

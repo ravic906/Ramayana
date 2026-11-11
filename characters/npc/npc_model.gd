@@ -100,6 +100,7 @@ func _apply_style() -> void:
 	mat.set_shader_parameter(&"region_r", garment)
 	mat.set_shader_parameter(&"region_g", trim)
 	mat.set_shader_parameter(&"region_b", sash)
+	mat.set_shader_parameter(&"inner_glow", 0.0)  # only Rama is radiant
 	FaceController.set_skin(skeleton, mat)
 
 

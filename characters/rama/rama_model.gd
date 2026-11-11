@@ -309,17 +309,25 @@ func _build_ornaments() -> void:
 	var ruby: Material = load(MAT + "ruby.tres")
 	var pearl: Material = load(MAT + "pearl.tres")
 
-	# Kireeta (crown) on the head.
+	# Kireeta: a tall, tiered crown tapering to a finial, a lotus crest over the
+	# brow with a ruby at its heart (after temple iconography of Rama).
 	var cz := -0.01
-	_add("Head", _cyl(0.118, 0.118, 0.07, 20), gold, _at(0, 1.745, cz))
-	_add("Head", _cyl(0.07, 0.115, 0.13, 16), gold, _at(0, 1.845, cz))
-	_add("Head", _torus(0.106, 0.124, 20), gold_plain, _at(0, 1.785, cz))
-	_add("Head", _torus(0.082, 0.098, 18), gold_plain, _at(0, 1.86, cz))
-	_add("Head", _sphere(0.05), gold, _at(0, 1.925, cz))
-	_add("Head", _cyl(0.0, 0.018, 0.06, 8), gold, _at(0, 1.98, cz))
-	_add("Head", _sphere(0.024), ruby, _at(0, 1.75, cz + 0.118))
+	_add("Head", _cyl(0.116, 0.118, 0.045, 24), gold, _at(0, 1.757, cz))
+	_add("Head", _torus(0.112, 0.124, 24), gold_plain, _at(0, 1.736, cz))
+	_add("Head", _torus(0.108, 0.12, 24), gold_plain, _at(0, 1.779, cz))
+	# One smooth taper with jewelled rings, not stacked drums.
+	_add("Head", _cyl(0.046, 0.104, 0.18, 24), gold, _at(0, 1.87, cz))
+	for r in [[0.096, 1.81], [0.08, 1.86], [0.064, 1.91]]:
+		_add("Head", _torus(r[0] - 0.005, r[0] + 0.005, 20), gold_plain, _at(0, r[1], cz))
+	_add("Head", _sphere(0.032), gold, _at(0, 1.972, cz))
+	_add("Head", _cyl(0.0, 0.019, 0.075, 10), gold, _at(0, 2.03, cz))
+	_add("Head", _sphere(0.01), ruby, _at(0, 2.07, cz))
+	# Lotus crest: leaf-shaped petals standing on the band over the forehead.
+	_add("Head", _sphere(0.04), gold, Transform3D(Basis().scaled(Vector3(0.6, 1.3, 0.14)), Vector3(0, 1.808, cz + 0.112)))
+	_add("Head", _sphere(0.014), ruby, _at(0, 1.79, cz + 0.12))
 	for side in [-1.0, 1.0]:
-		_add("Head", _sphere(0.012), ruby, _at(0.06 * side, 1.75, cz + 0.1))
+		_add("Head", _sphere(0.03), gold, Transform3D(Basis(Vector3.UP, 0.5 * side).scaled(Vector3(0.6, 1.2, 0.14)), Vector3(0.05 * side, 1.795, cz + 0.104)))
+		_add("Head", _sphere(0.008), ruby, _at(0.05 * side, 1.785, cz + 0.11))
 		# Makara-kundala earrings.
 		_add("Head", _torus(0.012, 0.024, 12), gold,
 			Transform3D(Basis(Vector3.FORWARD, PI / 2), Vector3(0.088 * side, 1.6, -0.01)))

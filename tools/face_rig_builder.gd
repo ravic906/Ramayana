@@ -285,6 +285,6 @@ static func mouth_interior() -> MeshInstance3D:
 	mat.albedo_color = Color(0.11, 0.035, 0.035)
 	mat.roughness = 1.0
 	mi.material_override = mat
-	mi.scale = Vector3(0.021, 0.016, 0.012)
+	mi.scale = Vector3(0.018, 0.010, 0.010)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return mi

@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_d")
 text = "Narration|||Vishvamitra led the princes to Siddhashrama, where the sages would keep a sacred fire for six nights.
-Vishvamitra|altar||Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.
-Vishvamitra|altar||Maricha and Subahu will come, as they always come, with rakshasas behind them. Guard the fire, princes of Raghu.
-Lakshmana|brothers||Let them come, Guru-dev. We will be waiting.
-Rama|rama||No one will put out this fire while I stand."
+Vishvamitra|close||This is Siddhashrama. Vishnu himself once sat here in tapas, as Vamana. Sages have kept fire here ever since.|reverence
+Vishvamitra|altar||Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.|calm
+Vishvamitra|altar||Maricha and Subahu will come, as they always come, with rakshasas behind them. Guard the fire, princes of Raghu.|resolve
+Lakshmana|close||Let them come, Guru-dev. We will be waiting.|resolve
+Rama|close||No one will put out this fire while I stand.|resolve"

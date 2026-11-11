@@ -6,6 +6,7 @@
 script = ExtResource("1_d")
 text = "|dawn_wide|dawn|
 Narration|||And at dawn on the seventh day, the yagna was complete.
-Vishvamitra|altar||The fire is whole. You kept your word, Rama, and you kept your mercy.
-Vishvamitra|altar||Now come with me. In Mithila, King Janaka keeps a bow that no man has ever strung.
-Lakshmana|brothers||A bow no one can string? Brother, I think we should see it."
+Vishvamitra|close||The fire is whole. You kept your word, Rama, and you kept your mercy.|smile
+Rama|close||The sages kept six nights of silence, Guru-dev. We only kept watch.|reverence
+Vishvamitra|close||Now come with me. In Mithila, King Janaka keeps a bow that no man has ever strung.|calm
+Lakshmana|close||A bow no one can string? Brother, I think we should see it.|smile"

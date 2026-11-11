@@ -13,6 +13,8 @@ owner before it ships.
   - Every cue is chosen by the owner from an audition reel.
 - **Voices:** every Sanskrit name is checked in a pronunciation reel and fixed in
   `gen_voices.py`'s `PRONOUNCE`.
+- **Faces:** every close-up is checked in a render before it ships; expressions stay
+  restrained (no cartoon extremes on Rama or the sages).
 - **Rama** is calm, dignified, never the source of humour; divine figures are never trivialised
   (`docs/STORY.md`).
 - **Typography:**
@@ -36,6 +38,8 @@ owner before it ships.
 | Navigation | No mission log, objectives, map or compass | Log (Story / Side quests / Palm leaves), objectives per level, compass, beacon, parchment map |
 | Layout | Subtitles overlapped Dodge on 4:3 | Narrowed |
 | Voices | Pronunciation unverified | Reel sent to the owner; awaiting corrections |
-| Faces | No facial expressions; dialogue lacks close-ups | **Next:** expression-capable face rig, close-up cutscene framing, Rama's look refined |
-| Dialogue | Scenes are brief | **Next:** richer, longer scenes with staging (owner request) |
+| Faces | No facial expressions; dialogue lacks close-ups | Face rig with blend shapes, blinking lids and turning eyes; lip sync; emotions per line; automatic close-ups, over-the-shoulder and two-shots with depth of field and a key light. Interim until a character artist's heads (owner, item 4) |
+| Rama | Bucket-shaped crown; plain skin | A tall tapered kireeta with a lotus crest; a subtle luminous skin (Rama only) |
+| Dialogue | Scenes are brief | *Sage at the Gate* told in full after Valmiki (20 lines); the trials, forest, Tataka, Siddhashrama and dawn scenes deepened, each line with an emotion |
+| Mouth | Interior poked through the chin in the idle pose | Interior made smaller and set deeper; checked in a close-up render |
 | Score | Licensed placeholders | A commissioned score (Indian classical + orchestra + choir) is the goal for launch |

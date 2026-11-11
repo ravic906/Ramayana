@@ -111,7 +111,7 @@ func _initialize() -> void:
 		lid.rotation.x = deg_to_rad(FaceRig.LID_OPEN_DEG)
 		pivot.add_child(lid)
 	var mouth := FaceRig.mouth_interior()
-	mouth.transform = head_rest_inv * Transform3D(Basis().scaled(mouth.scale), Vector3(0.0, 1.614, 0.0745))
+	mouth.transform = head_rest_inv * Transform3D(Basis().scaled(mouth.scale), Vector3(0.0, 1.618, 0.068))
 	head_att.add_child(mouth)
 	var hair_mi: MeshInstance3D = hair_src.find_children("*", "MeshInstance3D", true, false)[0]
 	var hair := MeshInstance3D.new()

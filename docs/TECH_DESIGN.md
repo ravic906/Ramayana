@@ -120,6 +120,45 @@ tests/           Headless test runner + unit tests
     ends (a tap stops it and advances);
   - `HUD.show_subtitle` speaks call-outs without interrupting a line already playing.
 
+### Faces and close-up dialogue
+- **The rig (build time, `tools/face_rig_builder.gd`, run by `tools/build_rama.gd`).** The
+  Quaternius base has no facial rig, so the build makes one:
+  - `Head`: the head split out of the skinned body by head-bone weight. Blend shapes live only on
+    this small mesh, which keeps skinning cheap on phones.
+  - Blend shapes (normalized, absolute targets) on `Head`: `jaw_open`, `mouth_smile`,
+    `mouth_frown`, `mouth_wide`, `mouth_round`, `lips_press`, `cheek_raise`; on `Eyebrows`:
+    `brow_raise`, `brow_furrow`, `brow_sad`. Each is a smooth-falloff displacement around
+    landmarks measured on the rest pose; the jaw rotates the lower lip and chin about a pivot.
+  - `HeadAttachment/EyeL|EyeR`: pivots at the eye centres (rest frame: +Z out of the face) holding
+    `Ball` (turns to look) and `UpperLid` (a skin shell rotated from -58° open to 0° closed).
+  - `HeadAttachment/MouthInterior`: a dark hollow behind the lips.
+  - **For a commissioned head:** provide these shape names (they map to ARKit's
+    `jawOpen`, `mouthSmile_L/R`, `mouthFrown_L/R`, `mouthStretch_L/R`, `mouthPucker`,
+    `mouthPress_L/R`, `cheekSquint_L/R`, `browInnerUp`, `browDown_L/R`, and `eyeBlink_L/R`
+    for lids) and the eye pivots, and the runtime works unchanged.
+  - Materials: `FaceController.set_skin()` / `set_eyes()` set the body, head and lids together.
+- **`FaceController`** (`core/visual/`), on `RamaModel` and `NpcModel` as `face_rig`:
+  - blinks every 2.5–6 s (15% doubles), saccades, gaze toward `look_target`, lids follow a
+    downward gaze;
+  - restrained emotion presets (`EMOTIONS`); Rama defaults to *calm*;
+  - effort at the bow (`draw`), a wince when struck;
+  - lip sync: `tools/gen_voices.py` writes `assets/audio/voice/lipsync.json` (30 values a second
+    per line, from speech-band loudness); `Voice.mouth_level()` reads it at the playback position;
+    the speaking character's jaw and mouth follow it;
+  - idle beyond 14 m from the camera unless speaking, so crowds cost nothing.
+- **Cutscene framing (`ShotFramer`, `Cutscene`).** Lines are
+  `Speaker|shot|action|text|emotion`. Levels register actors (`StoryLevel.actors`: Rama,
+  Lakshmana, every `spawn_npc`). When the shot is empty, `auto`, `close`, `ots` or `two` and the
+  speaker is an actor:
+  - a two-shot opens the scene, then close-ups (eyes on the upper third, 26° lens) and
+    over-the-shoulder shots, cut on the line with a slow push-in;
+  - depth of field on the subject (off on Battery saver) and a soft warm key light;
+  - the speaker takes the line's emotion and looks at the listener; everyone else looks at the
+    speaker; all are released when the scene ends.
+  - Level shot ids still win where a line names one (wide establishing shots).
+- **Voices by emotion:** `gen_voices.py` nudges speed and pitch per line emotion
+  (`EMOTION_DELIVERY`).
+
 ### Enemies and astras
 - **`Rakshasa`** (`characters/enemies/rakshasa/`) is a CharacterBody3D driven by the shared
   StateMachine (Idle, Chase, Telegraph, Recover, Stagger, Dead).
