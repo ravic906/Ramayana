@@ -42,6 +42,35 @@ def args():
     return a or list(CAST.keys()), Path(out)
 
 
+def _delete_helpers(body) -> None:
+    """MakeHuman's base mesh carries helper geometry (skirt, tights, hair and
+    joint helpers) that Blender only hides with a mask modifier; it must not
+    reach the game. Keeps the vertices of the "body" group."""
+    import bmesh
+    group = body.vertex_groups.get("body")
+    if group is None:
+        print("WARNING: no 'body' vertex group; helpers kept")
+        return
+    gi = group.index
+    keep = set()
+    for v in body.data.vertices:
+        for g in v.groups:
+            if g.group == gi and g.weight > 0.0:
+                keep.add(v.index)
+                break
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    bm.verts.ensure_lookup_table()
+    doomed = [v for v in bm.verts if v.index not in keep]
+    bmesh.ops.delete(bm, geom=doomed, context="VERTS")
+    bm.to_mesh(body.data)
+    bm.free()
+    for m in list(body.modifiers):
+        if m.type == "MASK":
+            body.modifiers.remove(m)
+    print("removed %d helper vertices" % len(doomed))
+
+
 def build(name: str, spec: dict, out: Path) -> None:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     info = HumanService._create_default_human_info_dict()
@@ -68,6 +97,7 @@ def build(name: str, spec: dict, out: Path) -> None:
     # Bake the body shape (macro and face targets) into the mesh: only the
     # face units stay as shape keys.
     TargetService.bake_targets(body)
+    _delete_helpers(body)
     if FaceService.is_faceunits01_installed(True):
         FaceService.load_targets(body, load_microsoft_visemes=False, load_arkit_faceunits=True)
         FaceService.interpolate_targets(body)
