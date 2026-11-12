@@ -52,7 +52,13 @@ var _nock_point := Vector3.ZERO
 var _astra_fx: Node3D
 ## Name this face answers to when the Voice autoload speaks (Lakshmana sets his own).
 @export var speaker_name := "Rama"
+## The realistic body used when the Realistic look is on (characters/people).
+@export_file("*.scn") var realistic_body := ""
 var face_rig: FaceController
+
+
+func _enter_tree() -> void:
+	RealisticBody.apply(self, realistic_body)
 
 
 func _ready() -> void:
@@ -368,7 +374,8 @@ func _build_ornaments() -> void:
 	# Kamarbandh (waistband) and the pleated front of the dhoti.
 	_add("pelvis", _torus(0.15, 0.172, 24), gold,
 		Transform3D(Basis().scaled(Vector3(1.04, 1.0, 0.8)), Vector3(0, 1.0, -0.025)))
-	_add("pelvis", _pleats(), load(MAT + "pitambara.tres"), _at(0, 0.985, 0.108), true)
+	if not RealisticBody.is_realistic(skeleton):  # the realistic dhoti has its own pleats
+		_add("pelvis", _pleats(), load(MAT + "pitambara.tres"), _at(0, 0.985, 0.108), true)
 
 	# Quiver on the back, its top over the right shoulder.
 	var q_axis := Vector3(-0.42, 1.0, 0.0).normalized()
@@ -506,7 +513,7 @@ func _attach_node(bone: String, node: Node3D, rest_xf: Transform3D) -> void:
 		att.bone_name = bone
 		skeleton.add_child(att)
 		_attachments[bone] = att
-	node.transform = skeleton.get_bone_global_rest(skeleton.find_bone(bone)).affine_inverse() * rest_xf
+	node.transform = skeleton.get_bone_global_rest(skeleton.find_bone(bone)).affine_inverse() * RealisticBody.adjust(skeleton, bone, rest_xf)
 	_attachments[bone].add_child(node)
 
 

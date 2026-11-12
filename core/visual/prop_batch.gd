@@ -19,7 +19,7 @@ func add(bone: String, mesh: Mesh, material: Material, rest_xf: Transform3D, cas
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		_groups[key] = {"bone": bone, "material": material, "st": st, "shadow": casts_shadow}
-	var local := skeleton.get_bone_global_rest(skeleton.find_bone(bone)).affine_inverse() * rest_xf
+	var local := skeleton.get_bone_global_rest(skeleton.find_bone(bone)).affine_inverse() * RealisticBody.adjust(skeleton, bone, rest_xf)
 	for s in mesh.get_surface_count():
 		(_groups[key]["st"] as SurfaceTool).append_from(mesh, s, local)
 

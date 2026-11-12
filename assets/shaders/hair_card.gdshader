@@ -16,8 +16,11 @@ void fragment() {
 	float lum = dot(t.rgb, vec3(0.299, 0.587, 0.114));
 	float d = clamp(lum / 0.35, 0.3, 1.6);
 	ALBEDO = hair_color.rgb * mix(1.0, d, detail);
-	ALPHA = t.a;
-	ALPHA_SCISSOR_THRESHOLD = alpha_cut;
+	// Opaque path with a cut-out (writing ALPHA would send hair down the
+	// transparent path, which the Mobile renderer lights wrongly here).
+	if (t.a < alpha_cut) {
+		discard;
+	}
 	ROUGHNESS = 0.55;
 	SPECULAR = sheen;
 }

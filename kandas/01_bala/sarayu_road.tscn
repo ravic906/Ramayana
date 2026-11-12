@@ -36,7 +36,7 @@ script = ExtResource("1_level")
 environment = SubResource("Env")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=45518648]
-transform = Transform3D(-0.4161468, -0.37077552, 0.83026934, 0, 0.91308886, 0.40776044, -0.90929735, 0.16968822, -0.37997904, 0, 20, 0)
+transform = Transform3D(-0.4161468, -0.37077552, 0.8302693, 0, 0.9130888, 0.4077604, -0.90929735, 0.16968822, -0.379979, 0, 20, 0)
 light_color = Color(1, 0.86, 0.66, 1)
 light_energy = 1.2
 shadow_enabled = true

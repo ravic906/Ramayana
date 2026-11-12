@@ -48,12 +48,24 @@ func _go() -> void:
 		return
 	# Everything not baked into the lightmap stays out of the bake (dynamic
 	# geometry inside it darkens the probes it is later lit by).
+	# Only the level's environment is baked: characters, props and spawned
+	# things must never take a lightmap slot (a body swapped in later would
+	# be painted with the old one's).
+	var env := scene.get_node_or_null("Environment")
 	var excluded := []
+	var modes := {}
 	for gi: GeometryInstance3D in scene.find_children("*", "GeometryInstance3D", true, false):
-		if gi.gi_mode == GeometryInstance3D.GI_MODE_DYNAMIC:
+		var in_env := env != null and env.is_ancestor_of(gi)
+		if gi.gi_mode == GeometryInstance3D.GI_MODE_DYNAMIC or not in_env:
 			excluded.append(gi)
+			modes[gi] = gi.gi_mode
 			gi.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 	printerr("BAKER: ", excluded.size(), " dynamic objects kept out of the bake")
+	# Light probes for everything that moves (characters, foliage batches):
+	# a grid over the level's static geometry at body heights. Godot's own
+	# probe placement produced none here, so they are placed explicitly.
+	var probes := _place_probes(scene, lm)
+	printerr("BAKER: ", probes.size(), " light probes placed")
 	var old := lm.light_data
 	lm.light_data = null
 	var t0 := Time.get_ticks_msec()
@@ -78,8 +90,11 @@ func _go() -> void:
 		lm.set("baked_data", lm.light_data.resource_path)
 		lm.light_data = null
 	_restore(restore)
+	for pr: Node in probes:
+		pr.get_parent().remove_child(pr)
+		pr.free()
 	for gi: GeometryInstance3D in excluded:
-		gi.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+		gi.gi_mode = modes[gi]
 	EditorInterface.save_scene()
 	await get_tree().create_timer(1.0).timeout
 	get_tree().quit(0 if ok else 1)
@@ -123,3 +138,44 @@ func _restore(r: Dictionary) -> void:
 		sun.light_color = r["sun"][3]
 	for pair: Array in r.get("materials", []):
 		(pair[0] as GeometryInstance3D).material_override = pair[1]
+
+
+func _place_probes(scene: Node, lm: LightmapGI) -> Array:
+	var box := AABB()
+	var first := true
+	for mi: MeshInstance3D in scene.find_children("*", "MeshInstance3D", true, false):
+		if mi.gi_mode != GeometryInstance3D.GI_MODE_STATIC or mi.mesh == null:
+			continue
+		var b := mi.global_transform * mi.get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	var out := []
+	if first:
+		return out
+	var spacing := 4.0
+	var min_x := maxf(box.position.x, -70.0)
+	var max_x := minf(box.end.x, 70.0)
+	var min_z := maxf(box.position.z, -200.0)
+	var max_z := minf(box.end.z, 200.0)
+	var nx := int((max_x - min_x) / spacing) + 1
+	var nz := int((max_z - min_z) / spacing) + 1
+	if nx * nz > 1500:
+		spacing *= sqrt(float(nx * nz) / 1500.0)
+		nx = int((max_x - min_x) / spacing) + 1
+		nz = int((max_z - min_z) / spacing) + 1
+	var space := (scene as Node3D).get_world_3d().direct_space_state
+	for ix in nx:
+		for iz in nz:
+			var x := min_x + ix * spacing
+			var z := min_z + iz * spacing
+			# stand on the ground where there is one
+			var ground := 0.0
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(Vector3(x, 60, z), Vector3(x, -20, z)))
+			if hit:
+				ground = (hit["position"] as Vector3).y
+			for h in [0.5, 1.6, 3.0]:
+				var p := LightmapProbe.new()
+				lm.get_parent().add_child(p)
+				p.global_position = Vector3(x, ground + h, z)
+				out.append(p)
+	return out

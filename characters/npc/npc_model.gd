@@ -21,6 +21,8 @@ extends Node3D
 ## Voice speaker name for lip sync; defaults to the node's name.
 @export var speaker := ""
 @export var default_emotion: StringName = &"calm"
+## The realistic body used when the Realistic look is on (characters/people).
+@export_file("*.scn") var realistic_body := ""
 
 @onready var body: Node3D = $Body
 @onready var skeleton: Skeleton3D = $Body/Armature/Skeleton3D
@@ -30,8 +32,18 @@ var _staff: Node3D
 var face_rig: FaceController
 
 
+func _enter_tree() -> void:
+	RealisticBody.apply(self, realistic_body)
+
+
 func _ready() -> void:
 	body.scale = Vector3.ONE * model_scale
+	if RealisticBody.is_realistic(skeleton):
+		_build_props()
+		face_rig = FaceController.attach(self, skeleton, speaker if speaker != "" else String(name), default_emotion)
+		anim.play(&"idle")
+		anim.seek(randf() * 2.0)
+		return
 	_apply_style()
 	Settings.style_changed.connect(func(_s: int) -> void: _apply_style())
 	var hair_mat := StandardMaterial3D.new()
@@ -117,10 +129,12 @@ func _build_props() -> void:
 	var batch := PropBatch.new(skeleton)
 	var gold: Material = load("res://assets/materials/gold.tres")
 	if crown:
-		batch.add("Head", MeshKit.cyl(0.105, 0.115, 0.09, 16), gold, Transform3D(Basis(), Vector3(0, 1.75, -0.01)))
-		batch.add("Head", MeshKit.cyl(0.05, 0.1, 0.12, 12), gold, Transform3D(Basis(), Vector3(0, 1.85, -0.01)))
-		batch.add("Head", MeshKit.sphere(0.035), gold, Transform3D(Basis(), Vector3(0, 1.93, -0.01)))
-	if topknot:
+		# On the realistic faces the band sits on the forehead, above the brows.
+		var lift := 0.045 if RealisticBody.is_realistic(skeleton) else 0.0
+		batch.add("Head", MeshKit.cyl(0.105, 0.115, 0.09, 16), gold, Transform3D(Basis(), Vector3(0, 1.75 + lift, -0.01)))
+		batch.add("Head", MeshKit.cyl(0.05, 0.1, 0.12, 12), gold, Transform3D(Basis(), Vector3(0, 1.85 + lift, -0.01)))
+		batch.add("Head", MeshKit.sphere(0.035), gold, Transform3D(Basis(), Vector3(0, 1.93 + lift, -0.01)))
+	if topknot and not RealisticBody.is_realistic(skeleton):
 		var hair := StandardMaterial3D.new()
 		hair.albedo_color = hair_color
 		batch.add("Head", MeshKit.sphere(0.085, 10), hair, Transform3D(Basis().scaled(Vector3(1, 1.2, 1)), Vector3(0, 1.84, -0.03)))

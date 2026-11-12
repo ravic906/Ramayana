@@ -85,9 +85,10 @@ var _unit_values := {}
 
 ## Finds the rig parts under `skeleton`. Returns false if this body has no face rig.
 func setup(skeleton: Skeleton3D) -> bool:
-	var body := skeleton.get_node_or_null("Body") as MeshInstance3D
-	if body and body.mesh and body.find_blend_shape_by_name(&"jawOpen") >= 0:
-		return _setup_units(skeleton, body)
+	for n in ["Face", "Body"]:
+		var face := skeleton.get_node_or_null(n) as MeshInstance3D
+		if face and face.mesh and face.find_blend_shape_by_name(&"jawOpen") >= 0:
+			return _setup_units(skeleton, face)
 	_head = skeleton.get_node_or_null("Head") as MeshInstance3D
 	_brows = skeleton.get_node_or_null("Eyebrows") as MeshInstance3D
 	if _head == null or _head.mesh == null:
@@ -294,6 +295,8 @@ func _update_shapes(delta: float) -> void:
 
 ## Puts `mat` on every skin surface of the rig (body, head, eyelids).
 static func set_skin(skeleton: Skeleton3D, mat: Material) -> void:
+	if RealisticBody.is_realistic(skeleton):
+		return  # realistic people carry their own skin, cloth and hair
 	for n in ["Body", "Head", "Garment", "HeadAttachment/EyeL/UpperLid", "HeadAttachment/EyeR/UpperLid"]:
 		var mi := skeleton.get_node_or_null(n) as MeshInstance3D
 		if mi:

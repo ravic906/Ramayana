@@ -36,11 +36,16 @@ const CHAIN := {
 ## Per person: complexion, inner glow (Rama's luminous skin), eye colour.
 ## Rama: dusky blue-dark, "shyama", the colour of rain clouds.
 const PEOPLE := {
-	"rama": {"complexion": Color(0.25, 0.22, 0.27), "glow": 0.06, "eyes": "brown", "hair": Color(0.03, 0.025, 0.025)},
-	"lakshmana": {"complexion": Color(0.44, 0.31, 0.23), "glow": 0.0, "eyes": "brown", "hair": Color(0.035, 0.026, 0.02)},
-	"vishvamitra": {"complexion": Color(0.42, 0.29, 0.21), "glow": 0.0, "eyes": "brown", "hair": Color(0.72, 0.7, 0.66), "beard": 0.13},
-	"vasishtha": {"complexion": Color(0.47, 0.33, 0.24), "glow": 0.0, "eyes": "brownlight", "hair": Color(0.86, 0.85, 0.82), "beard": 0.2},
-	"dasharatha": {"complexion": Color(0.48, 0.34, 0.25), "glow": 0.0, "eyes": "brown", "hair": Color(0.55, 0.53, 0.5), "beard": 0.05},
+	"rama": {"complexion": Color(0.25, 0.22, 0.27), "glow": 0.06, "eyes": "brown", "hair": Color(0.03, 0.025, 0.025),
+		"dhoti": Color(0.93, 0.7, 0.16), "upper": Color(0.85, 0.35, 0.1), "face_clear": true},
+	"lakshmana": {"complexion": Color(0.44, 0.31, 0.23), "glow": 0.0, "eyes": "brown", "hair": Color(0.035, 0.026, 0.02),
+		"dhoti": Color(0.75, 0.2, 0.12), "upper": Color(0.93, 0.7, 0.16), "face_clear": true},
+	"vishvamitra": {"complexion": Color(0.42, 0.29, 0.21), "glow": 0.0, "eyes": "brown", "hair": Color(0.72, 0.7, 0.66), "beard": 0.13,
+		"dhoti": Color(0.85, 0.45, 0.13), "upper": Color(0.85, 0.45, 0.13), "zari": Color(0.7, 0.36, 0.1), "long_dhoti": true, "wide_cloth": true},
+	"vasishtha": {"complexion": Color(0.47, 0.33, 0.24), "glow": 0.0, "eyes": "brownlight", "hair": Color(0.86, 0.85, 0.82), "beard": 0.2,
+		"dhoti": Color(0.93, 0.9, 0.82), "upper": Color(0.93, 0.9, 0.82), "zari": Color(0.8, 0.55, 0.2), "long_dhoti": true, "wide_cloth": true},
+	"dasharatha": {"complexion": Color(0.48, 0.34, 0.25), "glow": 0.0, "eyes": "brown", "hair": Color(0.55, 0.53, 0.5), "beard": 0.05,
+		"dhoti": Color(0.92, 0.88, 0.75), "upper": Color(0.62, 0.1, 0.12), "zari": Color(0.88, 0.66, 0.22), "long_dhoti": true, "wide_cloth": true},
 }
 const SKIN_SHADER := "res://assets/shaders/skin.gdshader"
 const DETAIL_NORMAL := "res://characters/rama/model/textures/rama_skin_normal.png"
@@ -176,10 +181,66 @@ func build(glb: String, person: String) -> Error:
 		sk.add_child(beard)
 		beard.skeleton = NodePath("..")
 
+	if spec.get("face_clear", false) and sk.has_node("Hair"):
+		_clear_face(sk.get_node("Hair") as MeshInstance3D, new_global["Head"])
+	var garment := _make_garments(sk.get_node("Body") as MeshInstance3D, spec)
+	if garment:
+		sk.add_child(garment)
+		garment.skeleton = NodePath("..")
+
+
 	var att := BoneAttachment3D.new()
 	att.name = "HeadAttachment"
 	att.bone_name = "Head"
 	sk.add_child(att)
+	# Eye markers (as on the stylised head): the cutscene framer aims its
+	# close-ups at them; +Z looks out of the face.
+	var head_inv := (new_global["Head"] as Transform3D).affine_inverse()
+	var eyes := sk.get_node_or_null("Eyes") as MeshInstance3D
+	if eyes:
+		var ev: PackedVector3Array = (eyes.mesh as ArrayMesh).surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		for side in [["EyeL", 1.0], ["EyeR", -1.0]]:
+			var c := Vector3.ZERO
+			var n := 0
+			for p in ev:
+				if p.x * side[1] > 0.0:
+					c += p
+					n += 1
+			var m := Node3D.new()
+			m.name = side[0]
+			att.add_child(m)
+			m.transform = head_inv * Transform3D(Basis(), c / maxf(n, 1))
+
+	# Marks for the game: this is a realistic body, and where props authored
+	# for the stylised body belong on it (per bone: rest offset).
+	# Size: face units only where the face moves. The body's moving part
+	# becomes "Face" (with the shapes), the rest "Body" (none); the hair
+	# needs none at all.
+	_split_face(sk)
+
+	# Characters move: lit by the baked light probes, never baked themselves.
+	for mi: MeshInstance3D in sk.find_children("*", "MeshInstance3D", true, false):
+		mi.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
+	sk.set_meta(&"realistic", true)
+	var offsets := {}
+	for i in sk.get_bone_count():
+		var bname := sk.get_bone_name(i)
+		var r := sk_ref.find_bone(bname)
+		if r >= 0:
+			offsets[bname] = (new_global[bname] as Transform3D).origin - sk_ref.get_bone_global_rest(r).origin
+	# The head's props (crown, earrings) are placed by the eyes: crowns sit a
+	# set height above them on every face, earrings near their level.
+	var ref_eye := ref_scene.find_child("EyeL", true, false) as Node3D
+	var new_eye := sk.get_node_or_null("HeadAttachment/EyeL") as Node3D
+	if ref_eye and new_eye:
+		var ref_y := (ref_eye.get_parent() as Node3D).transform.origin.y  # unused when attached
+		ref_y = _rest_global(ref_eye, sk_ref).origin.y
+		var new_y := ((new_global["Head"] as Transform3D) * new_eye.transform).origin.y
+		var o: Vector3 = offsets["Head"]
+		o.y = new_y - ref_y
+		offsets["Head"] = o
+		print("  eyes: ref %.3f, new %.3f; head props move %.3f" % [ref_y, new_y, o.y])
+	sk.set_meta(&"ref_offsets", offsets)
 
 	# The animation library, with the pelvis height scaled to this body.
 	var ratio := (new_global["pelvis"] as Transform3D).origin.y / sk_ref.get_bone_global_rest(sk_ref.find_bone("pelvis")).origin.y
@@ -214,6 +275,349 @@ func build(glb: String, person: String) -> Error:
 	ref_scene.free()
 	src.free()
 	return err
+
+
+func _split_face(sk: Skeleton3D) -> void:
+	var hair := sk.get_node_or_null("Hair") as MeshInstance3D
+	if hair:
+		hair.mesh = _without_shapes(hair.mesh as ArrayMesh, PackedInt32Array())
+	var body := sk.get_node("Body") as MeshInstance3D
+	var mesh := body.mesh as ArrayMesh
+	var a := mesh.surface_get_arrays(0)
+	var verts: PackedVector3Array = a[Mesh.ARRAY_VERTEX]
+	var idx: PackedInt32Array = a[Mesh.ARRAY_INDEX]
+	var moving := PackedByteArray()
+	moving.resize(verts.size())
+	for shape in mesh.surface_get_blend_shape_arrays(0):
+		var sv: PackedVector3Array = shape[Mesh.ARRAY_VERTEX]
+		for v in verts.size():
+			if not moving[v] and sv[v].distance_squared_to(verts[v]) > 9e-8:  # 0.3 mm
+				moving[v] = 1
+	var face_tris := PackedInt32Array()
+	var body_tris := PackedInt32Array()
+	for t in range(0, idx.size(), 3):
+		var tri := PackedInt32Array([idx[t], idx[t + 1], idx[t + 2]])
+		if moving[idx[t]] or moving[idx[t + 1]] or moving[idx[t + 2]]:
+			face_tris.append_array(tri)
+		else:
+			body_tris.append_array(tri)
+	var face := MeshInstance3D.new()
+	face.name = "Face"
+	face.mesh = _subset_mesh(mesh, face_tris, true)
+	face.skin = body.skin
+	sk.add_child(face)
+	face.skeleton = NodePath("..")
+	body.mesh = _subset_mesh(mesh, body_tris, false)
+	print("  face: %d of %d triangles carry the face units" % [face_tris.size() / 3, idx.size() / 3])
+
+
+## The triangles `tris` of `src` as a compact mesh, with or without its shapes.
+func _subset_mesh(src: ArrayMesh, tris: PackedInt32Array, keep_shapes: bool) -> ArrayMesh:
+	var a := src.surface_get_arrays(0)
+	var n := (a[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+	var remap := PackedInt32Array()
+	remap.resize(n)
+	remap.fill(-1)
+	var order := PackedInt32Array()
+	for i in tris:
+		if remap[i] < 0:
+			remap[i] = order.size()
+			order.append(i)
+	var new_idx := PackedInt32Array()
+	new_idx.resize(tris.size())
+	for k in tris.size():
+		new_idx[k] = remap[tris[k]]
+	var out := _pick(a, order, n)
+	out[Mesh.ARRAY_INDEX] = new_idx
+	var m := ArrayMesh.new()
+	var shapes := []
+	if keep_shapes:
+		m.blend_shape_mode = src.blend_shape_mode
+		for i in src.get_blend_shape_count():
+			m.add_blend_shape(src.get_blend_shape_name(i))
+		for sa in src.surface_get_blend_shape_arrays(0):
+			shapes.append(_pick(sa, order, n))
+	var flags := src.surface_get_format(0) & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, out, shapes, {}, flags)
+	m.surface_set_material(0, src.surface_get_material(0))
+	return m
+
+
+func _without_shapes(src: ArrayMesh, _unused: PackedInt32Array) -> ArrayMesh:
+	var a := src.surface_get_arrays(0)
+	var m := ArrayMesh.new()
+	var flags := src.surface_get_format(0) & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+	m.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a, [], {}, flags)
+	m.surface_set_material(0, src.surface_get_material(0))
+	return m
+
+
+## Picks vertices `order` from every per-vertex array of `a` (n vertices).
+func _pick(a: Array, order: PackedInt32Array, n: int) -> Array:
+	var out := []
+	out.resize(Mesh.ARRAY_MAX)
+	for k in Mesh.ARRAY_MAX:
+		var arr = a[k]
+		if arr == null or k == Mesh.ARRAY_INDEX:
+			continue
+		var size: int = arr.size()
+		if size == 0 or size % n != 0:
+			continue
+		var per := size / n
+		var picked = arr.duplicate()
+		picked.resize(order.size() * per)
+		for j in order.size():
+			for c in per:
+				picked[j * per + c] = arr[order[j] * per + c]
+		out[k] = picked
+	return out
+
+
+## The princes wear their hair gathered under the crown, the face open: the
+## long hair's strands in front of the ears (below the crown) are removed;
+## what falls behind the ears to the shoulders stays.
+func _clear_face(hair: MeshInstance3D, head: Transform3D) -> void:
+	var src := hair.mesh as ArrayMesh
+	var out := ArrayMesh.new()
+	out.blend_shape_mode = src.blend_shape_mode
+	for i in src.get_blend_shape_count():
+		out.add_blend_shape(src.get_blend_shape_name(i))
+	var a := src.surface_get_arrays(0)
+	var v: PackedVector3Array = a[Mesh.ARRAY_VERTEX]
+	var idx: PackedInt32Array = a[Mesh.ARRAY_INDEX]
+	var crown_y := head.origin.y + 0.09
+	var ear_z := head.origin.z + 0.02
+	var keep := PackedInt32Array()
+	for t in range(0, idx.size(), 3):
+		var c := (v[idx[t]] + v[idx[t + 1]] + v[idx[t + 2]]) / 3.0
+		if c.z < ear_z or c.y > crown_y:
+			keep.append_array(PackedInt32Array([idx[t], idx[t + 1], idx[t + 2]]))
+	a[Mesh.ARRAY_INDEX] = keep
+	var shapes := src.surface_get_blend_shape_arrays(0)
+	var flags := src.surface_get_format(0) & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a, shapes, {}, flags)
+	out.surface_set_material(0, src.surface_get_material(0))
+	hair.mesh = out
+	print("  hair: face cleared, %d of %d triangles kept" % [keep.size() / 3, idx.size() / 3])
+
+
+## The garments, as cloth over the body's own surface (keeping its skinning):
+##  - the dhoti: the legs and hips from the waist to below the knee (the
+##    sages' to the ankle), loosened outward more toward the hem, with a
+##    pleated panel hanging at the front;
+##  - the uttariya: a band from the left shoulder across chest and back to
+##    the right hip.
+## Vertex colours mark the regions for cloth.gdshader: R lower garment,
+## G zari border, B upper cloth.
+const LEG_BONES := ["pelvis", "thigh_l", "thigh_r", "calf_l", "calf_r", "spine_01"]
+const TORSO_BONES := ["pelvis", "spine_01", "spine_02", "spine_03", "clavicle_l", "clavicle_r", "neck_01"]
+
+
+func _make_garments(body: MeshInstance3D, spec: Dictionary) -> MeshInstance3D:
+	var mesh := body.mesh as ArrayMesh
+	var arrays := mesh.surface_get_arrays(0)
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	var bones: PackedInt32Array = arrays[Mesh.ARRAY_BONES]
+	var weights: PackedFloat32Array = arrays[Mesh.ARRAY_WEIGHTS]
+	var index: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	var per := bones.size() / verts.size()
+	var skin := body.skin
+	var dominant := PackedStringArray()
+	dominant.resize(verts.size())
+	for v in verts.size():
+		var best := 0
+		for k in per:
+			if weights[v * per + k] > weights[v * per + best]:
+				best = k
+		dominant[v] = String(skin.get_bind_name(bones[v * per + best]))
+	var sk := body.get_parent() as Skeleton3D
+	var bone_y := func(b: String) -> float:
+		return sk.get_bone_global_rest(sk.find_bone(b)).origin.y
+	var waist: float = lerpf(bone_y.call("pelvis"), bone_y.call("spine_02"), 0.45)
+	var knee: float = bone_y.call("calf_l")
+	var ankle: float = bone_y.call("foot_l")
+	var hem: float = lerpf(ankle, knee, 0.15) if spec.get("long_dhoti", false) else lerpf(ankle, knee, 0.55)
+	var shoulder: float = bone_y.call("clavicle_l")
+
+	var out := {"v": PackedVector3Array(), "n": PackedVector3Array(), "c": PackedColorArray(),
+		"uv": PackedVector2Array(), "b": PackedInt32Array(), "w": PackedFloat32Array(), "i": PackedInt32Array()}
+	# Lower garment.
+	var take_leg := func(v: int) -> bool:
+		return verts[v].y <= waist and verts[v].y >= hem - 0.02 and dominant[v] in LEG_BONES
+	var leg_push := func(v: int) -> Vector3:
+		var t := clampf((waist - verts[v].y) / maxf(waist - hem, 0.01), 0.0, 1.0)
+		return normals[v] * (0.012 + 0.03 * t * t)
+	var leg_color := func(v: int) -> Color:
+		var near_hem := verts[v].y < hem + 0.025
+		var near_waist := verts[v].y > waist - 0.02
+		return Color(0, 1, 0) if (near_hem or near_waist) else Color(1, 0, 0)
+	_shell(arrays, take_leg, leg_push, leg_color, out, per)
+	# Upper cloth: a smooth ribbon from the left shoulder to the right hip,
+	# over the front and the back, laid on the body's surface.
+	var width: float = 0.12 if not spec.get("wide_cloth", false) else 0.2
+	_ribbon(arrays, dominant, Vector2(0.085, shoulder + 0.01), Vector2(-0.17, waist - 0.06), width, out, per)
+
+	var a := []
+	a.resize(Mesh.ARRAY_MAX)
+	a[Mesh.ARRAY_VERTEX] = out["v"]
+	a[Mesh.ARRAY_NORMAL] = out["n"]
+	a[Mesh.ARRAY_COLOR] = out["c"]
+	a[Mesh.ARRAY_TEX_UV] = out["uv"]
+	a[Mesh.ARRAY_BONES] = out["b"]
+	a[Mesh.ARRAY_WEIGHTS] = out["w"]
+	a[Mesh.ARRAY_INDEX] = out["i"]
+	var gm := ArrayMesh.new()
+	var flags := Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS if per == 8 else 0
+	gm.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a, [], {}, flags)
+	var cm := ShaderMaterial.new()
+	cm.shader = load("res://assets/shaders/cloth.gdshader")
+	cm.set_shader_parameter(&"region_r", spec.get("dhoti", Color(0.9, 0.7, 0.18)))
+	cm.set_shader_parameter(&"region_g", spec.get("zari", Color(0.85, 0.62, 0.2)))
+	cm.set_shader_parameter(&"region_b", spec.get("upper", Color(0.85, 0.38, 0.12)))
+	gm.surface_set_material(0, cm)
+	var mi := MeshInstance3D.new()
+	mi.name = "Garment"
+	mi.mesh = gm
+	mi.skin = skin
+	print("  garment: %d triangles" % ((out["i"] as PackedInt32Array).size() / 3))
+	return mi
+
+
+## A ribbon of cloth across the torso from `from` to `to` (in the X-Y plane,
+## seen from the front), once over the chest and once over the back: each
+## grid point sits on the nearest torso vertex (front-most or back-most),
+## pushed out along its normal, and takes that vertex's skinning. Gold
+## borders along both edges.
+func _ribbon(arrays: Array, dominant: PackedStringArray, from: Vector2, to: Vector2, width: float, out: Dictionary, per: int) -> void:
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var bones: PackedInt32Array = arrays[Mesh.ARRAY_BONES]
+	var weights: PackedFloat32Array = arrays[Mesh.ARRAY_WEIGHTS]
+	var torso := []
+	for v in verts.size():
+		if dominant[v] in TORSO_BONES:
+			torso.append(v)
+	var along_n := 28
+	var across_n := 5
+	var dir := (to - from).normalized()
+	var side := Vector2(-dir.y, dir.x)
+	var length := from.distance_to(to)
+	var ov: PackedVector3Array = out["v"]
+	var on: PackedVector3Array = out["n"]
+	var oc: PackedColorArray = out["c"]
+	var ouv: PackedVector2Array = out["uv"]
+	var ob: PackedInt32Array = out["b"]
+	var ow: PackedFloat32Array = out["w"]
+	var oi: PackedInt32Array = out["i"]
+	for face in [1.0, -1.0]:
+		var base: int = ov.size()
+		for i in along_n + 1:
+			var t := float(i) / along_n
+			for j in across_n + 1:
+				var u := float(j) / across_n
+				var q := from + dir * (length * t) + side * (width * (u - 0.5))
+				# the outermost surface on this side within 2 cm of the point
+				var best := -1
+				var best_z := -1e9
+				var near := -1
+				var near_d := 1e9
+				for v: int in torso:
+					if normals[v].z * face < 0.2:
+						continue
+					var d := Vector2(verts[v].x, verts[v].y).distance_squared_to(q)
+					if d < near_d:
+						near_d = d
+						near = v
+					if d < 0.0004 and verts[v].z * face > best_z:
+						best_z = verts[v].z * face
+						best = v
+				if best < 0:
+					best = near
+				# smooth: blend the surface points near the outermost one
+				var acc := Vector3.ZERO
+				var nacc := Vector3.ZERO
+				var wsum := 0.0
+				for v: int in torso:
+					if normals[v].z * face < 0.2 or verts[v].z * face < best_z - 0.012:
+						continue
+					var d := Vector2(verts[v].x, verts[v].y).distance_to(q)
+					if d < 0.025:
+						var wv := 1.0 / (d + 0.004)
+						acc += verts[v] * wv
+						nacc += normals[v] * wv
+						wsum += wv
+				var pos := acc / wsum if wsum > 0.0 else verts[best]
+				var nrm := (nacc / wsum).normalized() if wsum > 0.0 else normals[best]
+				ov.append(pos + nrm * 0.014)
+				on.append(nrm)
+				var edge := u < 0.12 or u > 0.88
+				oc.append(Color(0, 1, 0) if edge else Color(0, 0, 1))
+				ouv.append(Vector2(u * 0.4, t * 2.5))
+				for k in per:
+					ob.append(bones[best * per + k])
+					ow.append(weights[best * per + k])
+		var row := across_n + 1
+		for i in along_n:
+			for j in across_n:
+				var a0 := base + i * row + j
+				if face > 0.0:
+					oi.append_array(PackedInt32Array([a0, a0 + 1, a0 + row, a0 + 1, a0 + row + 1, a0 + row]))
+				else:
+					oi.append_array(PackedInt32Array([a0, a0 + row, a0 + 1, a0 + 1, a0 + row, a0 + row + 1]))
+	out["v"] = ov
+	out["n"] = on
+	out["c"] = oc
+	out["uv"] = ouv
+	out["b"] = ob
+	out["w"] = ow
+	out["i"] = oi
+
+
+## Copies the body's triangles whose three vertices pass `take`, each vertex
+## pushed by `push` and coloured by `color`, into `out` (keeping skinning).
+func _shell(arrays: Array, take: Callable, push: Callable, color: Callable, out: Dictionary, per: int) -> void:
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+	var bones: PackedInt32Array = arrays[Mesh.ARRAY_BONES]
+	var weights: PackedFloat32Array = arrays[Mesh.ARRAY_WEIGHTS]
+	var index: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	var ok := PackedByteArray()
+	ok.resize(verts.size())
+	for v in verts.size():
+		ok[v] = 1 if take.call(v) else 0
+	var remap := {}
+	var ov: PackedVector3Array = out["v"]
+	var on: PackedVector3Array = out["n"]
+	var oc: PackedColorArray = out["c"]
+	var ouv: PackedVector2Array = out["uv"]
+	var ob: PackedInt32Array = out["b"]
+	var ow: PackedFloat32Array = out["w"]
+	var oi: PackedInt32Array = out["i"]
+	for t in range(0, index.size(), 3):
+		if not (ok[index[t]] and ok[index[t + 1]] and ok[index[t + 2]]):
+			continue
+		for k in 3:
+			var v := index[t + k]
+			if not remap.has(v):
+				remap[v] = ov.size()
+				ov.append(verts[v] + push.call(v))
+				on.append(normals[v])
+				oc.append(color.call(v))
+				ouv.append(Vector2(verts[v].x * 3.0 + verts[v].z * 3.0, verts[v].y * 3.0))
+				for k2 in per:
+					ob.append(bones[v * per + k2])
+					ow.append(weights[v * per + k2])
+			oi.append(remap[v])
+	out["v"] = ov
+	out["n"] = on
+	out["c"] = oc
+	out["uv"] = ouv
+	out["b"] = ob
+	out["w"] = ow
+	out["i"] = oi
 
 
 ## A beard grown from the face's own lower jaw, chin, cheeks and upper lip
@@ -529,6 +933,25 @@ func _save_textures(mi: MeshInstance3D, dir: String, part: String) -> void:
 		mat = st
 	mi.mesh.surface_set_material(0, mat)
 	print("  ", path, " ", img.get_size())
+
+
+## A node under a BoneAttachment3D, in the skeleton's rest space.
+func _rest_global(node: Node3D, sk: Skeleton3D) -> Transform3D:
+	var xf := node.transform
+	var p := node.get_parent()
+	while p and not (p is BoneAttachment3D):
+		xf = (p as Node3D).transform * xf
+		p = p.get_parent()
+	if p is BoneAttachment3D:
+		return sk.get_bone_global_rest(sk.find_bone((p as BoneAttachment3D).bone_name)) * xf
+	return xf
+
+
+func _top_y(mesh: Mesh) -> float:
+	var top := -1e9
+	for v: Vector3 in (mesh as ArrayMesh).surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
+		top = maxf(top, v.y)
+	return top
 
 
 ## Mean colour of the skin texture (opaque, non-black texels): the skin

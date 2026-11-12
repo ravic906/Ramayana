@@ -16,6 +16,8 @@ extends LightmapGI
 ## can deadlock the renderer (seen on the Sarayu road with Godot 4.7).
 @export_file("*.lmbake") var baked_data := ""
 
+var _env: Node
+
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -25,6 +27,13 @@ func _ready() -> void:
 		path = owner.scene_file_path.get_basename() + ".lmbake"  # the baker's naming
 	if light_data == null and path != "" and ResourceLoader.exists(path):
 		light_data = load(path)
+	# Everything outside the level's environment (characters, props, arrows,
+	# effects) is lit by the light probes: a geometry left "static" without a
+	# lightmap slot would get no ambient light at all.
+	_env = get_parent().get_node_or_null("Environment")
+	for gi: GeometryInstance3D in get_parent().find_children("*", "GeometryInstance3D", true, false):
+		_make_dynamic(gi)
+	get_tree().node_added.connect(_on_node_added)
 	var fill := environment_custom_color * environment_custom_energy * fill_strength
 	if environment_mode != LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR:
 		fill = Color(0.45, 0.45, 0.5)
@@ -34,3 +43,15 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if not Engine.is_editor_hint():
 		RenderingServer.global_shader_parameter_set(&"gi_fill", Color(0, 0, 0, 1))
+
+
+func _on_node_added(node: Node) -> void:
+	if node is GeometryInstance3D and is_inside_tree() and get_parent().is_ancestor_of(node):
+		_make_dynamic(node)
+
+
+func _make_dynamic(gi: GeometryInstance3D) -> void:
+	if _env and _env.is_ancestor_of(gi):
+		return
+	if gi.gi_mode == GeometryInstance3D.GI_MODE_STATIC:
+		gi.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC

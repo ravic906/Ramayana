@@ -34,6 +34,7 @@ shape = SubResource("Shape_body")
 [node name="Visual" type="Node3D" parent="."]
 
 [node name="RamaModel" parent="Visual" instance=ExtResource("8_model")]
+realistic_body = "res://characters/people/rama/rama_body.scn"
 
 [node name="BowMuzzle" type="Marker3D" parent="Visual"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.4, -0.6)

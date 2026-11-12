@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://characters/npc/npc_model.tscn" id="1_base"]
 
 [node name="Dasharatha" instance=ExtResource("1_base")]
+realistic_body = "res://characters/people/dasharatha/dasharatha_body.scn"
 skin = Color(0.78, 0.6, 0.45, 1)
 garment = Color(0.6, 0.12, 0.15, 1)
 trim = Color(0.85, 0.65, 0.2, 1)

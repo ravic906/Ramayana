@@ -82,7 +82,8 @@ func test_rama_model_is_rigged_and_dressed() -> void:
 	var rama: Rama = level.get_node("Rama")
 	await _frames(2)
 	assert_true(rama.model != null, "RamaModel present")
-	assert_eq(rama.model.skeleton.get_bone_count(), 65)
+	# 65 bones on the stylised body, 53 on the realistic one (no finger tips)
+	assert_true(rama.model.skeleton.get_bone_count() in [53, 65], "Rama's skeleton")
 	for clip in ["idle", "walk", "run", "roll", "shoot", "hit"]:
 		assert_true(rama.model.anim_player.has_animation(clip), "missing clip " + clip)
 	assert_true(rama.model.skeleton.find_child("Att_Head", false, false) != null, "crown attachment")

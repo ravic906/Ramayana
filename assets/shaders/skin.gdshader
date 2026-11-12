@@ -18,7 +18,7 @@ uniform sampler2D detail_normal : hint_normal, filter_linear_mipmap, repeat_enab
 uniform float detail_normal_strength : hint_range(0.0, 1.0) = 0.25;
 uniform float detail_scale = 18.0;
 // Subsurface look: how far each channel's light wraps past the terminator.
-uniform vec3 wrap = vec3(0.45, 0.22, 0.16);
+uniform vec3 wrap = vec3(0.3, 0.14, 0.1);
 uniform vec4 scatter_tint : source_color = vec4(0.85, 0.32, 0.22, 1.0);
 uniform float roughness : hint_range(0.1, 1.0) = 0.5;
 uniform float specular_strength : hint_range(0.0, 1.0) = 0.35;
@@ -46,7 +46,7 @@ void light() {
 	// The wrapped band beyond the plain Lambert term glows warm (scattered light).
 	float lambert = clamp(ndl, 0.0, 1.0);
 	vec3 band = max(w - vec3(lambert), vec3(0.0));
-	vec3 diffuse = vec3(lambert) + band * scatter_tint.rgb * 1.6;
+	vec3 diffuse = vec3(lambert) + band * scatter_tint.rgb * 0.6;
 	DIFFUSE_LIGHT += diffuse * ATTENUATION * LIGHT_COLOR / PI;
 	// Sheen: normalised Blinn-Phong with Schlick Fresnel.
 	vec3 h = normalize(VIEW + LIGHT);
