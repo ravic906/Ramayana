@@ -25,6 +25,8 @@ Status:
 | 14 | **The woman's body** | Taste: sari, blouse and pallu as real geometry, hair gathered into a bun, ornaments (portraits and expression sheet sent) | **Review** | 2026-11-11 |
 | 15 | **Review Vishala's and the ashram's words** | King Sumati's welcome, the churning of the ocean told by the sage, the weaver, the oil-seller, the priest, the ashram lines (`data/dialogue/part01/{vishala_welcome,churning,ahalya}.tres`, `kandas/01_bala/{vishala,gautama_ashram}.gd`) | **Review** | 2026-11-11 |
 | 16 | **Music for Vishala and the ashram** | Taste | **Review**. Claude picked *Eastern Thought* (Vishala at evening) and *That Zen Moment* (the silent ashram); Ahalya's moment uses *Peaceful Desolation*. Options: *Dhaka*, *Mystery Bazaar*, *Tabuk*; *Ishikari Lore*, *Nu Flute*, *Healing* | 2026-11-11 |
+| 17 | **The realistic cast** | Taste and reverence: the faces, complexions (Rama dusky blue-dark, as you chose), hair, beards and costumes of Rama, Lakshmana, Vishvamitra, Vasishtha and Dasharatha | **Review**. Portraits, the gate scene before/after video and the APK (Realistic look) | 2026-11-12 |
+| 18 | **Open world?** | Design direction | **Review**. Claude recommends wide chapters with optional exploration and open hubs, plus a few larger open regions later (Dandaka forest, Panchavati, Kishkindha), rather than one open world | 2026-11-12 |
 | 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review

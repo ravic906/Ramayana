@@ -50,4 +50,7 @@ owner before it ships.
 | Women | Only a male body existed; a painted sari read as a bodysuit | A woman's body with garments as real geometry (sari, blouse, pallu), hair gathered into a bun, a face rig of its own |
 | Ahalya | Risk of a sensational retelling | Valmiki's version: unseen penance ended, radiance, reverence; the past only in a neutral codex leaf |
 | Ashram huts | Mud walls the colour of the ground: roofs seemed to float | Ochre plaster on a stone plinth |
+| Engine | Godot 4.3: no AgX, no spring bones, older mobile renderer | Godot 4.7.2 with Jolt physics |
+| Lighting | Flat fill light; foliage and characters lit alike | Baked bounce light and occlusion in every level; AgX and a colour grade per mood; probes light everything that moves |
+| People | Stylised low-poly bodies, painted outfits | Realistic MakeHuman bodies (photographic skin with complexion per character, clear eyes, hair cards, beards), cloth garments as geometry, ARKit face units; the gate cast first |
 | Score | Licensed placeholders | A commissioned score (Indian classical + orchestra + choir) is the goal for launch |

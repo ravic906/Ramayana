@@ -452,6 +452,31 @@ through Play Games Services and iCloud later.
 - **Mission select:** `PartFlow.start_at(mission, chapter)` and `ensure_story_state(n)`;
   checkpoints `gate`, `sarayu`, `camp`, `forest_c2`, `night_N`, `ashram`.
 
+### Quality pass: engine, baked light, realistic people
+- **Engine:** Godot 4.7.2 (Jolt physics). Skinned meshes set `skeleton` explicitly
+  (`tools/fix_skeleton_paths.gd`, `test_skinning.gd`).
+- **Baked light:** `BakedLighting` (LightmapGI subclass) per level.
+  - `tools/bake_lightmaps.sh` runs the editor on Mesa lavapipe; `addons/baker` presses
+    "Bake Lightmaps".
+  - It bakes only the level's `Environment` (Realistic look), places a probe grid, and saves
+    the data path (`baked_data`); the level loads it on the main thread (a scene reference
+    deadlocked the threaded load).
+  - Everything else is set dynamic at run time (probe-lit).
+  - Foliage batches take the `gi_fill` shader global.
+  - Lightmap UVs: `tools/lightmap_uv.gd`.
+- **Grades:** `tools/make_luts.py`, LUTs in `assets/grading/`, AgX in the realistic environments.
+- **Realistic people:** `tools/mpfb_export.py` (Blender + MPFB2), then `tools/build_person.gd`.
+  - The body is posed into the game skeleton's rest shape and baked; the animation library is
+    copied (pelvis motion scaled).
+  - Face units live on a `Face` mesh; garments, beards and the princes' trimmed hair are built
+    there.
+  - Meta `realistic` and `ref_offsets` (props authored for the stylised body shift by bone; head
+    props by eye height).
+  - `RealisticBody.apply()` swaps the body in `NpcModel` / `RamaModel` when the Realistic look
+    is on.
+  - `FaceController` drives the ARKit units.
+  - Shaders: `skin`, `eye`, `hair_card`, `cloth`.
+
 ### New enemies (Rakshasa variants)
 - **Shield-bearer:** `shield`. A `Health.damage_filter` cuts frontal hits to 10%; astras
   (`Health.from_astra`) and flank shots pass. Lakshmana's shove calls `break_shield()`.
