@@ -13,6 +13,9 @@ uniform float sway_height = 3.0;
 uniform vec4 shadow_tint : source_color = vec4(0.55, 0.5, 0.7, 1.0);
 uniform vec4 rim_color : source_color = vec4(1.0, 0.8, 0.5, 1.0);
 uniform float rim_strength = 0.25;
+// Ambient fill for baked-lighting levels (set by BakedLighting): foliage
+// batches get no light from the lightmap probes on the Mobile renderer.
+global uniform vec4 gi_fill;
 
 void vertex() {
 	vec3 world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -31,5 +34,5 @@ void fragment() {
 	SPECULAR = 0.25;
 	BACKLIGHT = vec3(0.35, 0.4, 0.15);
 	float rim = pow(1.0 - clamp(abs(dot(NORMAL, VIEW)), 0.0, 1.0), 3.0);
-	EMISSION = rim_color.rgb * ALBEDO * rim * rim_strength;
+	EMISSION = rim_color.rgb * ALBEDO * rim * rim_strength + ALBEDO * gi_fill.rgb;
 }

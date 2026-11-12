@@ -1,5 +1,10 @@
 ; Engine configuration file.
-; Godot 4.3+
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -9,8 +14,8 @@ config/name="Ramayana: The Journey of Rama"
 config/description="Stylized 3D action-adventure following Shri Rama through the seven kandas."
 run/main_scene="res://ui/journey_menu.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
 run/max_fps=60
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -35,6 +40,10 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/baker/plugin.cfg")
+
 [gui]
 
 theme/custom_font="res://assets/fonts/NotoSans.ttf"
@@ -56,17 +65,22 @@ pointing/emulate_touch_from_mouse=true
 
 3d/physics_engine="Jolt Physics"
 
+[ramayana]
+
+parts/base_url=""
+
+[shader_globals]
+
+gi_fill={
+"type": "color",
+"value": Color(0, 0, 0, 1)
+}
+
 [rendering]
 
 renderer/rendering_method="mobile"
-renderer/rendering_method.mobile="mobile"
 textures/vram_compression/import_etc2_astc=true
-anti_aliasing/quality/msaa_3d=0
+textures/vram_compression/compress_with_gpu=false
 scaling_3d/mode=1
 scaling_3d/scale=0.75
 mesh_lod/lod_change/threshold_pixels=2.0
-
-[ramayana]
-
-; Host for downloadable Part packs (empty = downloads unavailable).
-parts/base_url=""

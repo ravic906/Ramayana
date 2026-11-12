@@ -1,9 +1,9 @@
-[gd_resource type="ShaderMaterial" load_steps=5 format=3]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cc35mebcdes8p"]
 
-[ext_resource type="Shader" path="res://assets/shaders/toon.gdshader" id="1_toon"]
-[ext_resource type="Texture2D" path="res://characters/rama/model/textures/rama_skin_detail.png" id="2_detail"]
-[ext_resource type="Texture2D" path="res://characters/rama/model/textures/rama_skin_normal.png" id="3_normal"]
-[ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="4_outline"]
+[ext_resource type="Shader" uid="uid://bhwmjm8xd18rn" path="res://assets/shaders/toon.gdshader" id="1_toon"]
+[ext_resource type="Texture2D" uid="uid://be0ocec4f0a8d" path="res://characters/rama/model/textures/rama_skin_detail.png" id="2_detail"]
+[ext_resource type="Texture2D" uid="uid://c45g8tvimhoxg" path="res://characters/rama/model/textures/rama_skin_normal.png" id="3_normal"]
+[ext_resource type="Shader" uid="uid://sgwy4x2yqr3c" path="res://assets/shaders/outline.gdshader" id="4_outline"]
 
 [sub_resource type="ShaderMaterial" id="Outline"]
 render_priority = 0
@@ -12,6 +12,7 @@ shader_parameter/outline_color = Color(0.1, 0.06, 0.05, 1)
 shader_parameter/outline_width = 0.006
 
 [resource]
+render_priority = 0
 next_pass = SubResource("Outline")
 shader = ExtResource("1_toon")
 shader_parameter/tint = Color(1, 1, 1, 1)
@@ -24,6 +25,13 @@ shader_parameter/detail_tex = ExtResource("2_detail")
 shader_parameter/detail_strength = 0.45
 shader_parameter/normal_tex = ExtResource("3_normal")
 shader_parameter/normal_strength = 0.6
-shader_parameter/inner_glow = 0.12
+shader_parameter/shadow_tint = Color(0.62, 0.58, 0.78, 1)
+shader_parameter/band_softness = 0.03
+shader_parameter/rim_color = Color(1, 0.92, 0.75, 1)
 shader_parameter/rim_strength = 0.35
+shader_parameter/inner_glow = 0.12
+shader_parameter/rim_power = 3.0
 shader_parameter/specular_strength = 0.0
+shader_parameter/flash_color = Color(1, 0.2, 0.1, 1)
+shader_parameter/flash = 0.0
+shader_parameter/specular_size = 0.94

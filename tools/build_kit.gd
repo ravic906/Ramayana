@@ -36,6 +36,7 @@ func _initialize() -> void:
 	env_root.add_child(body)
 	build()
 	flush()
+	print("Lightmap UVs: %d meshes" % LightmapUV.unwrap_all(env_root, 0.3))
 	_own(env_root, env_root)
 	var packed := PackedScene.new()
 	var err := packed.pack(env_root)

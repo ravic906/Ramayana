@@ -76,6 +76,7 @@ func _initialize() -> void:
 	_banners()
 	_nature()
 	_build_archery_butt()
+	print("Lightmap UVs: %d meshes" % LightmapUV.unwrap_all(env_root, 0.3))
 
 	_own(env_root, env_root)
 	var packed := PackedScene.new()
