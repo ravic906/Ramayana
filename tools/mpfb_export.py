@@ -22,13 +22,50 @@ from bl_ext.blender_org.mpfb.services.targetservice import TargetService
 ## mix weighted to MakeHuman's caucasian and african bases (its "asian" is
 ## East Asian), warm brown skins.
 CAST = {
+    # Rama, about sixteen: noble, oval face, large calm eyes, a firm jaw.
     "rama": {
-        "phenotype": {"gender": 1.0, "age": 0.43, "muscle": 0.62, "weight": 0.45, "proportions": 0.75,
-                      "height": 0.62, "race": {"caucasian": 0.6, "african": 0.3, "asian": 0.1}},
-        "targets": {"head-oval": 0.5, "nose-greek-incr": 0.3, "r-eye-scale-incr": 0.2,
-                    "l-eye-scale-incr": 0.2, "chin-height-incr": 0.15, "nose-point-width-decr": 0.3},
-        "skin": "young_african_male/young_african_male.mhmat",
-        "brows": "eyebrow010", "hair": "",
+        "phenotype": {"gender": 1.0, "age": 0.45, "muscle": 0.66, "weight": 0.45, "proportions": 0.8,
+                      "height": 0.64, "race": {"caucasian": 0.62, "african": 0.3, "asian": 0.08}},
+        "targets": {"head-oval": 0.4, "r-eye-scale-incr": 0.25, "l-eye-scale-incr": 0.25,
+                    "chin-width-incr": 0.3, "chin-prominent-incr": 0.25, "nose-point-width-decr": 0.2,
+                    "l-cheek-bones-incr": 0.3, "r-cheek-bones-incr": 0.3, "eyebrows-trans-down": 0.15,
+                    "mouth-lowerlip-volume-incr": 0.2, "neck-scale-horiz-incr": 0.3},
+        "skin": "young_african_male/young_african_male.mhmat", "brows": "eyebrow012",
+    },
+    # Lakshmana, a little younger: leaner face, quicker brows.
+    "lakshmana": {
+        "phenotype": {"gender": 1.0, "age": 0.43, "muscle": 0.7, "weight": 0.4, "proportions": 0.78,
+                      "height": 0.6, "race": {"caucasian": 0.68, "african": 0.25, "asian": 0.07}},
+        "targets": {"head-oval": 0.2, "chin-prominent-incr": 0.35, "chin-width-incr": 0.2,
+                    "l-cheek-volume-decr": 0.3, "r-cheek-volume-decr": 0.3, "nose-greek-incr": 0.2,
+                    "eyebrows-angle-up": 0.25, "neck-scale-horiz-incr": 0.3},
+        "skin": "young_caucasian_male/young_caucasian_male.mhmat", "brows": "eyebrow003",
+    },
+    # Vishvamitra, about sixty: gaunt, a strong hooked nose, fierce brows.
+    "vishvamitra": {
+        "phenotype": {"gender": 1.0, "age": 0.82, "muscle": 0.55, "weight": 0.32, "proportions": 0.7,
+                      "height": 0.62, "race": {"caucasian": 0.6, "african": 0.32, "asian": 0.08}},
+        "targets": {"head-rectangular": 0.3, "nose-hump-incr": 0.5, "nose-greek-incr": 0.2,
+                    "l-cheek-volume-decr": 0.6, "r-cheek-volume-decr": 0.6, "l-cheek-bones-incr": 0.5,
+                    "r-cheek-bones-incr": 0.5, "eyebrows-angle-down": 0.4, "eyebrows-trans-down": 0.25,
+                    "chin-prominent-incr": 0.3, "forehead-temple-decr": 0.4},
+        "skin": "old_caucasian_male/old_caucasian_male.mhmat", "brows": "eyebrow009", "hair": "long01",
+    },
+    # Vasishtha, about seventy: gentle, fuller face, soft brows.
+    "vasishtha": {
+        "phenotype": {"gender": 1.0, "age": 0.9, "muscle": 0.4, "weight": 0.55, "proportions": 0.6,
+                      "height": 0.55, "race": {"caucasian": 0.6, "african": 0.32, "asian": 0.08}},
+        "targets": {"head-round": 0.3, "l-cheek-volume-incr": 0.3, "r-cheek-volume-incr": 0.3,
+                    "eyebrows-angle-up": 0.2, "nose-point-width-incr": 0.2, "mouth-angles-up": 0.2},
+        "skin": "old_caucasian_male/old_caucasian_male.mhmat", "brows": "eyebrow009", "hair": "long01",
+    },
+    # Dasharatha, about sixty: broad, kingly, weary.
+    "dasharatha": {
+        "phenotype": {"gender": 1.0, "age": 0.8, "muscle": 0.55, "weight": 0.62, "proportions": 0.7,
+                      "height": 0.6, "race": {"caucasian": 0.62, "african": 0.3, "asian": 0.08}},
+        "targets": {"head-square": 0.35, "chin-width-incr": 0.4, "neck-scale-horiz-incr": 0.4,
+                    "eyebrows-angle-up": 0.15, "mouth-angles-down": 0.15, "nose-width1-incr": 0.2},
+        "skin": "middleage_caucasian_male/middleage_caucasian_male.mhmat", "brows": "eyebrow002", "hair": "long01",
     },
 }
 
