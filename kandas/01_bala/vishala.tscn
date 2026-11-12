@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" path="res://kandas/01_bala/env/vishala.scn" id="2_env"]
 [ext_resource type="Script" uid="uid://c0ne2cvj4h2kt" path="res://core/visual/style_switcher.gd" id="3_style"]
 [ext_resource type="PackedScene" path="res://characters/rama/rama.tscn" id="4_rama"]
-[ext_resource type="LightmapGIData" uid="uid://b7xabmgj33qfe" path="res://kandas/01_bala/vishala.lmbake" id="4_u42et"]
 [ext_resource type="PackedScene" path="res://core/camera/follow_camera.tscn" id="5_cam"]
 [ext_resource type="PackedScene" path="res://characters/companions/lakshmana/lakshmana.tscn" id="6_lak"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="7_hud"]
@@ -52,8 +51,8 @@ max_texture_size = 4096
 environment_mode = 3
 environment_custom_color = Color(0.62, 0.58, 0.72, 1)
 environment_custom_energy = 1.35
-light_data = ExtResource("4_u42et")
 script = ExtResource("99_baked")
+baked_data = "res://kandas/01_bala/vishala.lmbake"
 
 [node name="StyleSwitcher" type="Node" parent="." unique_id=560914911]
 script = ExtResource("3_style")

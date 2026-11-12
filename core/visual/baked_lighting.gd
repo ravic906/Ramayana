@@ -11,11 +11,20 @@ extends LightmapGI
 
 ## Share of the bake's ambient given to foliage.
 @export var fill_strength := 0.85
+## The baked data (.lmbake). Loaded here, on the main thread, rather than
+## as part of the level's scene: loaded inside the scene's threaded load it
+## can deadlock the renderer (seen on the Sarayu road with Godot 4.7).
+@export_file("*.lmbake") var baked_data := ""
 
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	var path := baked_data
+	if path == "" and owner and owner.scene_file_path != "":
+		path = owner.scene_file_path.get_basename() + ".lmbake"  # the baker's naming
+	if light_data == null and path != "" and ResourceLoader.exists(path):
+		light_data = load(path)
 	var fill := environment_custom_color * environment_custom_energy * fill_strength
 	if environment_mode != LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR:
 		fill = Color(0.45, 0.45, 0.5)

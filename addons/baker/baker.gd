@@ -72,6 +72,11 @@ func _go() -> void:
 	if not ok:
 		lm.light_data = old
 	printerr("BAKER: done=", ok, " in ", (Time.get_ticks_msec() - t0) / 1000.0, " s")
+	# The level loads the data itself (BakedLighting.baked_data), on the main
+	# thread: referenced from the scene it can deadlock the threaded load.
+	if ok and "baked_data" in lm:
+		lm.set("baked_data", lm.light_data.resource_path)
+		lm.light_data = null
 	_restore(restore)
 	for gi: GeometryInstance3D in excluded:
 		gi.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
