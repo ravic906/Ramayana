@@ -15,8 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GODOT_VERSION: "4.3"
-  GODOT_URL: https://github.com/godotengine/godot/releases/download/4.3-stable
+  GODOT_VERSION: "4.7.2"
+  GODOT_SERIES: "4.7"   # editor settings are named per major.minor
+  GODOT_URL: https://github.com/godotengine/godot/releases/download/4.7.2-stable
 
 jobs:
   test-and-build:
@@ -58,7 +59,7 @@ jobs:
           keytool -genkeypair -v -keystore ~/.local/share/godot/keystores/debug.keystore \
             -storepass android -alias androiddebugkey -keypass android -keyalg RSA \
             -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          cat > ~/.config/godot/editor_settings-${GODOT_VERSION}.tres <<SETTINGS
+          cat > ~/.config/godot/editor_settings-${GODOT_SERIES}.tres <<SETTINGS
           [gd_resource type="EditorSettings" format=3]
 
           [resource]

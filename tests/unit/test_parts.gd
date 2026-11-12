@@ -26,7 +26,7 @@ func test_catalog_has_eight_parts_in_order() -> void:
 			assert_true(parts[i].product_id.begins_with("ramayana_part_"))
 	assert_eq(ids.size(), 8, "unique ids")
 	var first := parts[0]
-	assert_true(first.free and first.released and first.is_built_in())
+	assert_true(first.free and first.released and first.is_shipped_in_app())
 	assert_true(ResourceLoader.exists(first.scene_path), "Part 1 scene exists")
 	assert_eq(parts[5].kanda, "Yuddha Kanda I")
 	assert_eq(parts[6].kanda, "Yuddha Kanda II")

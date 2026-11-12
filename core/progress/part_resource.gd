@@ -22,5 +22,5 @@ extends Resource
 @export var cover_color := Color(0.85, 0.55, 0.2)
 
 
-func is_built_in() -> bool:
+func is_shipped_in_app() -> bool:
 	return pack_file.is_empty()

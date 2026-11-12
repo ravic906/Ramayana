@@ -1,4 +1,4 @@
-class_name VirtualJoystick
+class_name TouchJoystick
 extends Control
 ## Floating multitouch joystick. A touch that starts inside this control's
 ## rect spawns the stick at the finger and drives the four move actions.

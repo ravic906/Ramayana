@@ -27,13 +27,13 @@ static func pack_path(part: PartResource) -> String:
 
 ## True when the Part's content is on the device (built in or downloaded).
 static func is_installed(part: PartResource) -> bool:
-	return part.is_built_in() or FileAccess.file_exists(pack_path(part))
+	return part.is_shipped_in_app() or FileAccess.file_exists(pack_path(part))
 
 
 ## Mounts a downloaded Part so its scene can load. Returns whether the
 ## Part's scene is now available.
 static func mount(part: PartResource) -> bool:
-	if not part.is_built_in():
+	if not part.is_shipped_in_app():
 		if not FileAccess.file_exists(pack_path(part)):
 			return false
 		if not ProjectSettings.load_resource_pack(pack_path(part), false):
@@ -50,7 +50,7 @@ func download(part: PartResource) -> void:
 	if _http != null:
 		finished.emit(part, false, "Another download is in progress.")
 		return
-	if not can_download() or part.is_built_in():
+	if not can_download() or part.is_shipped_in_app():
 		finished.emit(part, false, "Downloads are not available yet.")
 		return
 	DirAccess.make_dir_recursive_absolute(PARTS_DIR)
