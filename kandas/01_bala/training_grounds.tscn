@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" path="res://kandas/01_bala/env/ayodhya_grounds.scn" id="7_env"]
 [ext_resource type="Script" uid="uid://b2e856m41hlef" path="res://kandas/01_bala/env/ambience.gd" id="8_ambience"]
 [ext_resource type="Material" path="res://assets/materials/env/sky.tres" id="9_sky"]
-[ext_resource type="Script" path="res://core/visual/baked_lighting.gd" id="11_baked"]
 [ext_resource type="Script" uid="uid://c0ne2cvj4h2kt" path="res://core/visual/style_switcher.gd" id="10_style"]
+[ext_resource type="Script" uid="uid://i2ali61ao60f" path="res://core/visual/baked_lighting.gd" id="11_baked"]
 
 [sub_resource type="Sky" id="Sky_res"]
 sky_material = ExtResource("9_sky")
@@ -43,7 +43,7 @@ script = ExtResource("5_level")
 environment = SubResource("Env")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1673020755]
-transform = Transform3D(-0.4225924, 0.21921802, -0.87940836, 0, 0.97030663, 0.24187717, 0.90631986, 0.10221543, -0.4100443, 0, 20, 0)
+transform = Transform3D(-0.4225924, 0.219218, -0.87940836, 0, 0.9703066, 0.24187715, 0.90631986, 0.10221542, -0.4100443, 0, 20, 0)
 light_color = Color(1, 0.71, 0.4, 1)
 light_energy = 1.25
 shadow_enabled = true
@@ -53,13 +53,13 @@ directional_shadow_max_distance = 32.0
 [node name="Environment" parent="." unique_id=229498649 instance=ExtResource("7_env")]
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=891155654]
-script = ExtResource("11_baked")
 bounces = 4
 max_texture_size = 4096
 environment_mode = 3
 environment_custom_color = Color(0.62, 0.6, 0.74, 1)
 environment_custom_energy = 1.45
 light_data = ExtResource("4_umty8")
+script = ExtResource("11_baked")
 
 [node name="StyleSwitcher" type="Node" parent="." unique_id=482980551]
 script = ExtResource("10_style")

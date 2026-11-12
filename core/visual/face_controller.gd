@@ -12,6 +12,21 @@ extends Node
 const HEAD_SHAPES := ["jaw_open", "mouth_smile", "mouth_frown", "mouth_wide", "mouth_round", "lips_press", "cheek_raise"]
 const BROW_SHAPES := ["brow_raise", "brow_furrow", "brow_sad"]
 const LID_OPEN_DEG := -58.0
+## Realistic people (tools/build_person.gd) carry the 52 ARKit face units as
+## blend shapes on every face mesh instead of the hand-built head rig; the
+## same expressions map onto them.
+const UNITS := {
+	"jaw_open": {"jawOpen": 1.0},
+	"mouth_smile": {"mouthSmileLeft": 1.0, "mouthSmileRight": 1.0},
+	"mouth_frown": {"mouthFrownLeft": 1.0, "mouthFrownRight": 1.0},
+	"mouth_wide": {"mouthStretchLeft": 0.8, "mouthStretchRight": 0.8},
+	"mouth_round": {"mouthFunnel": 0.8, "mouthPucker": 0.4},
+	"lips_press": {"mouthPressLeft": 1.0, "mouthPressRight": 1.0, "mouthClose": 0.2},
+	"cheek_raise": {"cheekSquintLeft": 1.0, "cheekSquintRight": 1.0},
+	"brow_raise": {"browOuterUpLeft": 1.0, "browOuterUpRight": 1.0, "browInnerUp": 0.5},
+	"brow_furrow": {"browDownLeft": 1.0, "browDownRight": 1.0},
+	"brow_sad": {"browInnerUp": 1.0},
+}
 ## Faces further than this from the camera are left alone.
 const ACTIVE_DISTANCE := 14.0
 
@@ -62,10 +77,17 @@ var _wince := 0.0
 var _talk_phase := 0.0
 var _ready_rig := false
 var _voice: Node  # the Voice autoload, looked up at run time (this script also loads in tools)
+var _arkit := false
+## mesh -> {unit name: blend shape index}, for the face-unit meshes
+var _unit_meshes := {}
+var _unit_values := {}
 
 
 ## Finds the rig parts under `skeleton`. Returns false if this body has no face rig.
 func setup(skeleton: Skeleton3D) -> bool:
+	var body := skeleton.get_node_or_null("Body") as MeshInstance3D
+	if body and body.mesh and body.find_blend_shape_by_name(&"jawOpen") >= 0:
+		return _setup_units(skeleton, body)
 	_head = skeleton.get_node_or_null("Head") as MeshInstance3D
 	_brows = skeleton.get_node_or_null("Eyebrows") as MeshInstance3D
 	if _head == null or _head.mesh == null:
@@ -85,6 +107,39 @@ func setup(skeleton: Skeleton3D) -> bool:
 	_next_blink = randf_range(1.0, 4.0)
 	_ready_rig = true
 	return true
+
+
+func _setup_units(skeleton: Skeleton3D, body: MeshInstance3D) -> bool:
+	_arkit = true
+	_head = body
+	for mi: MeshInstance3D in skeleton.find_children("*", "MeshInstance3D", false, false):
+		var mesh := mi.mesh as ArrayMesh
+		if mesh == null or mesh.get_blend_shape_count() == 0:
+			continue
+		var idx := {}
+		for i in mesh.get_blend_shape_count():
+			idx[String(mesh.get_blend_shape_name(i))] = i
+		_unit_meshes[mi] = idx
+	emotion = default_emotion
+	_voice = skeleton.get_node_or_null("/root/Voice")
+	_next_blink = randf_range(1.0, 4.0)
+	_ready_rig = true
+	return true
+
+
+## Sets one face unit on every face mesh that has it (only when it changes).
+func _set_unit(unit: String, value: float) -> void:
+	if absf(_unit_values.get(unit, 0.0) - value) < 0.0005:
+		return
+	_unit_values[unit] = value
+	for mi: MeshInstance3D in _unit_meshes:
+		var i: int = _unit_meshes[mi].get(unit, -1)
+		if i >= 0:
+			mi.set_blend_shape_value(i, value)
+
+
+func unit_value(unit: String) -> float:
+	return _unit_values.get(unit, 0.0)
 
 
 ## Sets the expression the face eases toward.
@@ -144,6 +199,10 @@ func _update_blink(delta: float) -> void:
 	var lid := maxf(closed, clampf(preset.get("lid", 0.0) + effort * 0.2 + _wince * 0.6, 0.0, 1.0))
 	# Looking down, the lids follow the eyes a little.
 	lid = clampf(lid + maxf(-_gaze.y, 0.0) * 0.6, 0.0, 1.0)
+	if _arkit:
+		_set_unit("eyeBlinkLeft", lid)
+		_set_unit("eyeBlinkRight", lid)
+		return
 	for l in _lids:
 		l.rotation.x = deg_to_rad(lerpf(LID_OPEN_DEG, 0.0, lid))
 
@@ -154,14 +213,31 @@ func _update_gaze(delta: float) -> void:
 		_next_saccade = randf_range(0.4, 2.2)
 		_saccade = Vector2(randf_range(-0.07, 0.07), randf_range(-0.04, 0.04))
 	var want := _saccade
-	if look_target is Vector3 and not _balls.is_empty():
-		var pivot := _balls[0].get_parent() as Node3D
+	var pivot: Node3D = null
+	if not _balls.is_empty():
+		pivot = _balls[0].get_parent() as Node3D
+	elif _arkit:
+		pivot = _head.get_parent().get_node_or_null("HeadAttachment") as Node3D
+	if look_target is Vector3 and pivot:
 		var local := pivot.global_transform.affine_inverse() * (look_target as Vector3)
 		var yaw := atan2(local.x, local.z)
 		var pitch := atan2(local.y, Vector2(local.x, local.z).length())
 		want += Vector2(clampf(yaw, -0.45, 0.45), clampf(pitch, -0.3, 0.3))
 	# Saccades are fast; the eyes snap rather than drift.
 	_gaze = _gaze.lerp(want, minf(delta * 22.0, 1.0))
+	if _arkit:
+		# x > 0: toward the character's left; units reach 1 at ~0.5 rad.
+		var x := clampf(_gaze.x / 0.5, -1.0, 1.0)
+		var y := clampf(_gaze.y / 0.4, -1.0, 1.0)
+		_set_unit("eyeLookOutLeft", maxf(x, 0.0))
+		_set_unit("eyeLookInRight", maxf(x, 0.0))
+		_set_unit("eyeLookInLeft", maxf(-x, 0.0))
+		_set_unit("eyeLookOutRight", maxf(-x, 0.0))
+		_set_unit("eyeLookUpLeft", maxf(y, 0.0))
+		_set_unit("eyeLookUpRight", maxf(y, 0.0))
+		_set_unit("eyeLookDownLeft", maxf(-y, 0.0))
+		_set_unit("eyeLookDownRight", maxf(-y, 0.0))
+		return
 	for b in _balls:
 		b.rotation = Vector3(-_gaze.y, _gaze.x, 0.0)
 
@@ -198,10 +274,22 @@ func _update_shapes(delta: float) -> void:
 			continue  # settled: no work for the renderer either
 		cur = nxt
 		_weights[k] = cur
+		if _arkit:
+			continue
 		if _head_idx.get(k, -1) >= 0:
 			_head.set_blend_shape_value(_head_idx[k], cur)
 		elif _brow_idx.get(k, -1) >= 0:
 			_brows.set_blend_shape_value(_brow_idx[k], cur)
+
+
+	if _arkit:
+		var units := {}
+		for k in UNITS:
+			var w: float = _weights.get(k, 0.0)
+			for u: String in UNITS[k]:
+				units[u] = minf(units.get(u, 0.0) + w * UNITS[k][u], 1.0)
+		for u: String in units:
+			_set_unit(u, units[u])
 
 
 ## Puts `mat` on every skin surface of the rig (body, head, eyelids).

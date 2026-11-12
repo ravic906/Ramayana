@@ -36,6 +36,7 @@ func _initialize() -> void:
 	_ashram_undergrowth()
 	_night_life()
 	_ashram_markers()
+	print("Lightmap UVs: %d meshes" % LightmapUV.unwrap_all(env_root, 0.4))
 	_own(env_root, env_root)
 	var packed := PackedScene.new()
 	var err := packed.pack(env_root)

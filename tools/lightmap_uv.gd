@@ -28,57 +28,10 @@ static func unwrap_all(root: Node, texel := 0.25) -> int:
 			mi.material_override = mat
 		mi.gi_mode = GeometryInstance3D.GI_MODE_STATIC
 		n += 1
-	for mmi: MultiMeshInstance3D in root.find_children("*", "MultiMeshInstance3D", true, false):
-		split_into_clusters(mmi)
-	# Batches (trees, plants, props) are lit by the baked light probes. They
-	# must stay out of the bake itself (addons/baker excludes them while it
-	# runs), or the probes come out black around them.
+	# Batches (trees, plants, props) stay out of the bake (addons/baker
+	# excludes dynamic objects while it runs); foliage takes its ambient from
+	# the gi_fill shader global (see core/visual/baked_lighting.gd).
 	for mmi: MultiMeshInstance3D in root.find_children("*", "MultiMeshInstance3D", true, false):
 		mmi.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 	return n
 
-
-## A MultiMesh takes its light from the probes at one point, the centre of
-## its bounds; for a batch scattered across a level that point can be inside
-## a wall, which turns the whole batch black. Splits a batch into clusters of
-## nearby instances (cells of `cell` metres), each sampling near its own trees.
-static func split_into_clusters(mmi: MultiMeshInstance3D, cell := 10.0) -> void:
-	var mm := mmi.multimesh
-	if mm == null or mm.instance_count < 2:
-		return
-	var cells := {}
-	for i in mm.instance_count:
-		var xf := mm.get_instance_transform(i)
-		var key := Vector2i(floori(xf.origin.x / cell), floori(xf.origin.z / cell))
-		if not cells.has(key):
-			cells[key] = []
-		(cells[key] as Array).append(xf)
-	if cells.size() < 2:
-		return
-	var parent := mmi.get_parent()
-	var k := 0
-	for key: Vector2i in cells:
-		var xfs: Array = cells[key]
-		var part := MultiMeshInstance3D.new()
-		var pm := MultiMesh.new()
-		pm.transform_format = MultiMesh.TRANSFORM_3D
-		pm.mesh = mm.mesh
-		pm.instance_count = xfs.size()
-		for i in xfs.size():
-			pm.set_instance_transform(i, xfs[i])
-		part.multimesh = pm
-		part.name = "%s_c%d" % [mmi.name, k]
-		part.transform = mmi.transform
-		part.visible = mmi.visible
-		part.material_override = mmi.material_override
-		part.cast_shadow = mmi.cast_shadow
-		part.visibility_range_end = mmi.visibility_range_end
-		for g in mmi.get_groups():
-			if not String(g).begins_with("_"):
-				part.add_to_group(g, true)
-		for meta in mmi.get_meta_list():
-			part.set_meta(meta, mmi.get_meta(meta))
-		parent.add_child(part)
-		k += 1
-	parent.remove_child(mmi)
-	mmi.free()

@@ -1,17 +1,19 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene format=3 uid="uid://cvbxfjn551gl0"]
 
-[ext_resource type="Script" path="res://kandas/01_bala/siddhashrama.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://cld3omorfnara" path="res://kandas/01_bala/siddhashrama.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://kandas/01_bala/env/siddhashrama.scn" id="2_env"]
-[ext_resource type="Script" path="res://core/visual/style_switcher.gd" id="3_style"]
+[ext_resource type="Script" uid="uid://c0ne2cvj4h2kt" path="res://core/visual/style_switcher.gd" id="3_style"]
+[ext_resource type="LightmapGIData" uid="uid://cb6qh8o7f7gf" path="res://kandas/01_bala/siddhashrama.lmbake" id="4_ow7r0"]
 [ext_resource type="PackedScene" path="res://characters/rama/rama.tscn" id="4_rama"]
 [ext_resource type="PackedScene" path="res://core/camera/follow_camera.tscn" id="5_cam"]
 [ext_resource type="PackedScene" path="res://characters/companions/lakshmana/lakshmana.tscn" id="6_lak"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="7_hud"]
-[ext_resource type="Script" path="res://kandas/01_bala/wave_spawner.gd" id="8_spawner"]
+[ext_resource type="Script" uid="uid://2n8xvdnb4ubq" path="res://kandas/01_bala/wave_spawner.gd" id="8_spawner"]
 [ext_resource type="Material" path="res://assets/materials/env/sky_night.tres" id="9_sky"]
-[ext_resource type="Script" path="res://kandas/01_bala/sacred_fire.gd" id="10_fire"]
+[ext_resource type="Script" uid="uid://bj60tbhnwfkj0" path="res://kandas/01_bala/sacred_fire.gd" id="10_fire"]
 [ext_resource type="PackedScene" path="res://characters/bosses/sky_rakshasa/subahu.tscn" id="11_subahu"]
 [ext_resource type="PackedScene" path="res://characters/bosses/sky_rakshasa/maricha.tscn" id="12_maricha"]
+[ext_resource type="Script" uid="uid://i2ali61ao60f" path="res://core/visual/baked_lighting.gd" id="99_baked"]
 
 [sub_resource type="Sky" id="Sky_res"]
 sky_material = ExtResource("9_sky")
@@ -26,75 +28,81 @@ tonemap_mode = 2
 tonemap_exposure = 1.1
 glow_enabled = true
 glow_intensity = 0.55
-glow_hdr_threshold = 1.0
 fog_enabled = true
 fog_light_color = Color(0.12, 0.15, 0.24, 1)
-fog_light_energy = 1.0
 fog_density = 0.02
 fog_sky_affect = 0.3
 adjustment_enabled = true
 adjustment_saturation = 0.95
 
-[node name="Siddhashrama" type="Node3D"]
+[node name="Siddhashrama" type="Node3D" unique_id=1511834689]
 script = ExtResource("1_level")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1471354539]
 environment = SubResource("Env")
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
-rotation = Vector3(-0.85, 2.4, 0)
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1009975928]
+transform = Transform3D(-0.7373938, -0.50746226, 0.44579428, 0, 0.65998316, 0.7512804, -0.67546314, 0.5539895, -0.48666748, 0, 20, 0)
 light_color = Color(0.62, 0.72, 1, 1)
 light_energy = 0.55
 shadow_enabled = true
 directional_shadow_mode = 1
 directional_shadow_max_distance = 30.0
 
-[node name="Environment" parent="." instance=ExtResource("2_env")]
+[node name="Environment" parent="." unique_id=1952229103 instance=ExtResource("2_env")]
 
-[node name="StyleSwitcher" type="Node" parent="."]
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=1196760631]
+bounces = 4
+max_texture_size = 4096
+environment_mode = 3
+environment_custom_color = Color(0.32, 0.38, 0.55, 1)
+environment_custom_energy = 0.75
+light_data = ExtResource("4_ow7r0")
+script = ExtResource("99_baked")
+
+[node name="StyleSwitcher" type="Node" parent="." unique_id=1742770450]
 script = ExtResource("3_style")
+realistic_environment = "res://assets/env/real/realistic_night_environment.tres"
 world_environment_path = NodePath("../WorldEnvironment")
 sun_path = NodePath("../Sun")
-realistic_environment = "res://assets/env/real/realistic_night_environment.tres"
 realistic_sun_pitch_deg = -42.0
 realistic_sun_energy = 0.7
 realistic_sun_color = Color(0.62, 0.72, 1, 1)
 
-[node name="SacredFire" type="Node3D" parent="."]
+[node name="SacredFire" type="Node3D" parent="." unique_id=78496725]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 script = ExtResource("10_fire")
 
-[node name="Rama" parent="." instance=ExtResource("4_rama")]
+[node name="Rama" parent="." unique_id=1630675833 instance=ExtResource("4_rama")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 15)
 camera_rig_path = NodePath("../FollowCamera")
 
-[node name="FollowCamera" parent="." instance=ExtResource("5_cam")]
+[node name="FollowCamera" parent="." unique_id=1101665216 instance=ExtResource("5_cam")]
 target_path = NodePath("../Rama")
 
-[node name="Lakshmana" parent="." instance=ExtResource("6_lak")]
+[node name="Lakshmana" parent="." unique_id=1524476517 instance=ExtResource("6_lak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 17.4)
 
-[node name="Defence" type="Node3D" parent="."]
+[node name="Defence" type="Node3D" parent="." unique_id=1511525069]
 script = ExtResource("8_spawner")
 auto_start = false
 break_time = 6.0
 waves = Array[PackedStringArray]([PackedStringArray("grunt", "raider", "grunt", "raider"), PackedStringArray("grunt", "grunt", "raider", "grunt", "grunt", "raider", "grunt"), PackedStringArray("raider", "archer", "grunt", "raider", "archer", "grunt", "raider", "grunt")])
 
-[node name="North" type="Marker3D" parent="Defence"]
+[node name="North" type="Marker3D" parent="Defence" unique_id=1521789605]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -42)
 
-[node name="West" type="Marker3D" parent="Defence"]
+[node name="West" type="Marker3D" parent="Defence" unique_id=555398311]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42, 0, -4)
 
-[node name="East" type="Marker3D" parent="Defence"]
+[node name="East" type="Marker3D" parent="Defence" unique_id=541387459]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 6)
 
-[node name="Subahu" parent="." instance=ExtResource("11_subahu")]
+[node name="Subahu" parent="." unique_id=463988943 instance=ExtResource("11_subahu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 30, -50)
 
-[node name="Maricha" parent="." instance=ExtResource("12_maricha")]
+[node name="Maricha" parent="." unique_id=206853858 instance=ExtResource("12_maricha")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 30, -50)
 
-[node name="HUD" parent="." instance=ExtResource("7_hud")]
+[node name="HUD" parent="." unique_id=1750878709 instance=ExtResource("7_hud")]
 player_path = NodePath("../Rama")

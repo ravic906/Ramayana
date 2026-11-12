@@ -65,6 +65,7 @@ func _initialize() -> void:
 	_bloom_flowers()
 	_grove_gate()
 	_markers()
+	print("Lightmap UVs: %d meshes" % LightmapUV.unwrap_all(env_root, 0.4))
 	_own(env_root, env_root)
 	var packed := PackedScene.new()
 	var err := packed.pack(env_root)

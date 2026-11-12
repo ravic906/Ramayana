@@ -69,13 +69,6 @@ pointing/emulate_touch_from_mouse=true
 
 parts/base_url=""
 
-[shader_globals]
-
-gi_fill={
-"type": "color",
-"value": Color(0, 0, 0, 1)
-}
-
 [rendering]
 
 renderer/rendering_method="mobile"
@@ -84,3 +77,10 @@ textures/vram_compression/compress_with_gpu=false
 scaling_3d/mode=1
 scaling_3d/scale=0.75
 mesh_lod/lod_change/threshold_pixels=2.0
+
+[shader_globals]
+
+gi_fill={
+"type": "color",
+"value": Color(0, 0, 0, 1)
+}

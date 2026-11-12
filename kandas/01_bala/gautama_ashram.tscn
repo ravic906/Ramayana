@@ -1,14 +1,16 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3 uid="uid://cak2fo302txan"]
 
-[ext_resource type="Script" path="res://kandas/01_bala/gautama_ashram.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://df3bqmo5gv84j" path="res://kandas/01_bala/gautama_ashram.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://kandas/01_bala/env/gautama_ashram.scn" id="2_env"]
-[ext_resource type="Script" path="res://core/visual/style_switcher.gd" id="3_style"]
+[ext_resource type="Script" uid="uid://c0ne2cvj4h2kt" path="res://core/visual/style_switcher.gd" id="3_style"]
+[ext_resource type="LightmapGIData" uid="uid://fv51h62ef8h3" path="res://kandas/01_bala/gautama_ashram.lmbake" id="4_fnnnl"]
 [ext_resource type="PackedScene" path="res://characters/rama/rama.tscn" id="4_rama"]
 [ext_resource type="PackedScene" path="res://core/camera/follow_camera.tscn" id="5_cam"]
 [ext_resource type="PackedScene" path="res://characters/companions/lakshmana/lakshmana.tscn" id="6_lak"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="7_hud"]
-[ext_resource type="Script" path="res://kandas/01_bala/env/ambience.gd" id="8_ambience"]
+[ext_resource type="Script" uid="uid://b2e856m41hlef" path="res://kandas/01_bala/env/ambience.gd" id="8_ambience"]
 [ext_resource type="Material" path="res://assets/materials/env/sky_dusk.tres" id="9_sky"]
+[ext_resource type="Script" uid="uid://i2ali61ao60f" path="res://core/visual/baked_lighting.gd" id="99_baked"]
 
 [sub_resource type="Sky" id="Sky_res"]
 sky_material = ExtResource("9_sky")
@@ -19,59 +21,64 @@ sky = SubResource("Sky_res")
 ambient_light_source = 3
 ambient_light_energy = 0.6
 tonemap_mode = 2
-tonemap_exposure = 1.0
 glow_enabled = true
 glow_intensity = 0.4
 glow_hdr_threshold = 1.2
 fog_enabled = true
 fog_light_color = Color(0.62, 0.64, 0.7, 1)
-fog_light_energy = 1.0
 fog_density = 0.035
 fog_sky_affect = 0.2
 adjustment_enabled = true
-adjustment_saturation = 1.0
 
-[node name="GautamaAshram" type="Node3D"]
+[node name="GautamaAshram" type="Node3D" unique_id=366249708]
 script = ExtResource("1_level")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=777019940]
 environment = SubResource("Env")
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
-rotation = Vector3(-0.42, 2.0, 0)
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1079066089]
+transform = Transform3D(-0.4161468, -0.37077552, 0.83026934, 0, 0.91308886, 0.40776044, -0.90929735, 0.16968822, -0.37997904, 0, 20, 0)
 light_color = Color(1, 0.86, 0.66, 1)
 light_energy = 1.2
 shadow_enabled = true
 directional_shadow_mode = 1
 directional_shadow_max_distance = 30.0
 
-[node name="Environment" parent="." instance=ExtResource("2_env")]
+[node name="Environment" parent="." unique_id=22510313 instance=ExtResource("2_env")]
 
-[node name="StyleSwitcher" type="Node" parent="."]
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=2085024005]
+bounces = 4
+max_texture_size = 4096
+environment_mode = 3
+environment_custom_color = Color(0.62, 0.58, 0.72, 1)
+environment_custom_energy = 1.35
+light_data = ExtResource("4_fnnnl")
+script = ExtResource("99_baked")
+
+[node name="StyleSwitcher" type="Node" parent="." unique_id=1150721344]
 script = ExtResource("3_style")
+realistic_environment = "res://assets/env/real/realistic_dusk_environment.tres"
 world_environment_path = NodePath("../WorldEnvironment")
 sun_path = NodePath("../Sun")
-realistic_environment = "res://assets/env/real/realistic_dusk_environment.tres"
 realistic_sun_pitch_deg = -22.0
 realistic_sun_energy = 2.6
 realistic_sun_color = Color(1, 0.8, 0.58, 1)
 
-[node name="Ambience" type="Node3D" parent="."]
+[node name="Ambience" type="Node3D" parent="." unique_id=1302921225]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
 script = ExtResource("8_ambience")
 flocks = 2
 birds_per_flock = 9
 dust_amount = 60
 
-[node name="Rama" parent="." instance=ExtResource("4_rama")]
+[node name="Rama" parent="." unique_id=1959418058 instance=ExtResource("4_rama")]
 camera_rig_path = NodePath("../FollowCamera")
 
-[node name="FollowCamera" parent="." instance=ExtResource("5_cam")]
+[node name="FollowCamera" parent="." unique_id=813835712 instance=ExtResource("5_cam")]
 target_path = NodePath("../Rama")
 
-[node name="Lakshmana" parent="." instance=ExtResource("6_lak")]
+[node name="Lakshmana" parent="." unique_id=910259418 instance=ExtResource("6_lak")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 2.4)
 
-[node name="HUD" parent="." instance=ExtResource("7_hud")]
+[node name="HUD" parent="." unique_id=824726035 instance=ExtResource("7_hud")]
 player_path = NodePath("../Rama")

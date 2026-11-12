@@ -1,6 +1,7 @@
 [gd_resource type="Environment" load_steps=4 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/env/real/sky_belfast_sunset_2k.hdr" id="1_hdr"]
+[ext_resource type="Texture3D" path="res://assets/grading/dusk_gold.png" id="2_lut"]
 
 [sub_resource type="PanoramaSkyMaterial" id="Sky_mat"]
 panorama = ExtResource("1_hdr")
@@ -18,9 +19,8 @@ ambient_light_source = 2
 ambient_light_color = Color(0.62, 0.58, 0.72, 1)
 ambient_light_energy = 1.35
 reflected_light_source = 2
-tonemap_mode = 2
-tonemap_exposure = 1.0
-tonemap_white = 6.0
+tonemap_mode = 4
+tonemap_exposure = 1.15
 glow_enabled = true
 glow_intensity = 0.4
 glow_bloom = 0.04
@@ -33,5 +33,6 @@ fog_density = 0.0045
 fog_aerial_perspective = 0.7
 fog_sky_affect = 0.0
 adjustment_enabled = true
+adjustment_color_correction = ExtResource("2_lut")
 adjustment_contrast = 1.05
 adjustment_saturation = 1.06
