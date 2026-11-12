@@ -263,6 +263,8 @@ func build(glb: String, person: String) -> Error:
 						a.track_set_key_value(t, k, (a.track_get_key_value(t, k) as Vector3) * ratio)
 				else:
 					a.remove_track(t)
+			if a_name == &"idle":
+				_calm(a, 0.3, 1.4)
 			lib.add_animation(a_name, a)
 		anim.add_animation_library(lib_name, lib)
 
@@ -861,6 +863,34 @@ func _skin_arrays(arrays: Array, xfs: Array[Transform3D]) -> Array:
 			tt[v * 4 + 2] = t.z
 		a[Mesh.ARRAY_TANGENT] = tt
 	return a
+
+
+## A quieter idle for close-ups: every joint keeps only `keep` of its motion
+## around its average pose, and the cycle is stretched by `slow` (the pack's
+## idle rocks the head ~4.5 cm every 2.5 s; a person standing still breathes
+## every 3-4 s and barely moves the head).
+func _calm(a: Animation, keep: float, slow: float) -> void:
+	for t in a.get_track_count():
+		var n := a.track_get_key_count(t)
+		if n == 0:
+			continue
+		match a.track_get_type(t):
+			Animation.TYPE_ROTATION_3D:
+				var mean: Quaternion = a.track_get_key_value(t, 0)
+				for k in range(1, n):
+					mean = mean.slerp(a.track_get_key_value(t, k), 1.0 / (k + 1))
+				for k in n:
+					a.track_set_key_value(t, k, mean.slerp(a.track_get_key_value(t, k), keep))
+			Animation.TYPE_POSITION_3D:
+				var avg := Vector3.ZERO
+				for k in n:
+					avg += a.track_get_key_value(t, k)
+				avg /= n
+				for k in n:
+					a.track_set_key_value(t, k, avg.lerp(a.track_get_key_value(t, k), keep))
+		for k in range(n - 1, -1, -1):
+			a.track_set_key_time(t, k, a.track_get_key_time(t, k) * slow)
+	a.length *= slow
 
 
 func _part_name(src_name: String) -> String:

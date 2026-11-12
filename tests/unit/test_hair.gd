@@ -41,5 +41,9 @@ func test_sages_keep_long_hair_and_rakshasas_wild_hair() -> void:
 	var sage := _add("res://characters/npc/vishvamitra.tscn")
 	var raksha := _add("res://characters/enemies/rakshasa/rakshasa_grunt.tscn")
 	await get_tree().process_frame
-	assert_true(_hair(sage, "HairLong").visible and not _hair(sage, "Hair").visible, "the sage's long hair")
+	if RealisticBody.is_realistic(sage.skeleton):
+		# the realistic sage: his own long hair and a beard
+		assert_true(_hair(sage, "Hair") != null and _hair(sage, "Beard") != null, "the sage's long hair and beard")
+	else:
+		assert_true(_hair(sage, "HairLong").visible and not _hair(sage, "Hair").visible, "the sage's long hair")
 	assert_true(_hair(raksha, "HairLong").visible and not _hair(raksha, "Hair").visible, "the rakshasa's wild hair")

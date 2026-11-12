@@ -25,8 +25,10 @@ func test_foliage_fill_is_set_and_cleared() -> void:
 	lm.environment_custom_color = Color(0.5, 0.5, 0.5)
 	lm.environment_custom_energy = 2.0
 	add_child(lm)
-	var fill: Color = RenderingServer.global_shader_parameter_get(&"gi_fill")
-	assert_true(fill.r > 0.5, "fill set while the level runs")
+	var got = RenderingServer.global_shader_parameter_get(&"gi_fill")
+	if got == null:
+		lm.free()
+		return  # the headless renderer keeps no shader globals
+	assert_true((got as Color).r > 0.5, "fill set while the level runs")
 	lm.free()
-	fill = RenderingServer.global_shader_parameter_get(&"gi_fill")
-	assert_true(fill.r == 0.0, "fill cleared when it leaves")
+	assert_true((RenderingServer.global_shader_parameter_get(&"gi_fill") as Color).r == 0.0, "fill cleared when it leaves")

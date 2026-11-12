@@ -51,3 +51,28 @@ func test_the_camp_chapter_starts_at_the_camp() -> void:
 	await get_tree().process_frame
 	assert_true(level.at_camp and level.camp_seat.enabled, "ready to sit by the fire")
 	assert_true(level.rama.global_position.distance_to(level.m("CampCenter")) < 8.0)
+
+
+func test_again_names_the_last_jump_and_it_persists() -> void:
+	var menu := load("res://ui/journey_menu.gd")
+	assert_eq(menu.jump_name(2, 1), "Mission 2: The Sage at the Gate")
+	var before := Settings.last_jump
+	Settings.last_jump = Vector2i(5, 3)
+	Settings.save_settings()
+	Settings.last_jump = Vector2i.ZERO
+	Settings.load_settings()
+	assert_eq(Settings.last_jump, Vector2i(5, 3), "the last jump survives a restart")
+	Settings.last_jump = before
+	Settings.save_settings()
+
+
+func test_pause_menu_offers_the_missions_list() -> void:
+	var hud := (load("res://ui/hud.tscn") as PackedScene).instantiate()
+	add_child(hud)
+	await get_tree().process_frame
+	var found := false
+	for b: Button in hud.find_children("*", "Button", true, false):
+		if b.text == "Missions":
+			found = true
+	assert_true(found, "the pause menu has Missions")
+	hud.queue_free()

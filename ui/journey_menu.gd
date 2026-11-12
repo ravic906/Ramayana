@@ -193,7 +193,7 @@ func _build() -> void:
 	bottom.add_child(skills)
 	var missions := Button.new()
 	missions.name = "MissionsButton"
-	missions.text = "Missions"
+	missions.text = "Missions & Chapters"
 	missions.custom_minimum_size = Vector2(0, 72)
 	missions.add_theme_font_size_override(&"font_size", 26)
 	for s in [&"normal", &"hover", &"pressed", &"focus"]:
@@ -202,6 +202,18 @@ func _build() -> void:
 	missions.pressed.connect(func() -> void:
 		MissionsScreen.open(self, 1).mission_chosen.connect(play_mission))
 	bottom.add_child(missions)
+	# One tap back to the last mission and chapter started from the list.
+	if Settings.last_jump.x > 0 and PartFlow.get_mission(1, Settings.last_jump.x) != null:
+		var again := Button.new()
+		again.name = "AgainButton"
+		again.text = "Again: %s" % jump_name(Settings.last_jump.x, Settings.last_jump.y)
+		again.custom_minimum_size = Vector2(0, 72)
+		again.add_theme_font_size_override(&"font_size", 26)
+		for s in [&"normal", &"hover", &"pressed", &"focus"]:
+			again.add_theme_stylebox_override(s, PartCard._style(Color(0.45, 0.24, 0.1), PartCard.GOLD, 4, 16))
+		again.add_theme_color_override(&"font_color", Color(1, 0.93, 0.75))
+		again.pressed.connect(func() -> void: play_mission(Settings.last_jump.x, Settings.last_jump.y))
+		bottom.add_child(again)
 	var mode := Button.new()
 	mode.name = "ModeButton"
 	mode.text = "Mode: %s" % Settings.mode_name()
@@ -314,12 +326,32 @@ func play_mission(number: int, chapter := 0) -> void:
 	if not Settings.difficulty_chosen:
 		choose_mode(func() -> void: play_mission(number, chapter))
 		return
+	launch(get_tree(), number, chapter)
+
+
+## Starts a mission of Part 1 at a chapter, from anywhere (the Journey or the
+## in-game pause menu), and remembers it for the Journey's "Again" button.
+static func launch(tree: SceneTree, number: int, chapter := 0) -> void:
+	var part := PartCatalog.by_number(1)
 	if part:
 		PartLoader.mount(part)
 	GameState.story_session = true
 	var scene := PartFlow.start_at(number, chapter)
+	if scene == "":
+		return
+	Settings.last_jump = Vector2i(number, chapter)
+	Settings.save_settings()
 	SaveSystem.save_game()
-	get_tree().change_scene_to_file(scene)
+	tree.paused = false
+	tree.change_scene_to_file(scene)
+
+
+## "M2 · The Sage at the Gate" for a mission and chapter.
+static func jump_name(number: int, chapter: int) -> String:
+	var m := PartFlow.get_mission(1, number)
+	var list := PartFlow.chapters(number)
+	var where: String = list[chapter][0] if chapter < list.size() else (m.title if m else "")
+	return "Mission %d: %s" % [number, where]
 
 
 ## Asked once, on the first Play: how would you like to journey?

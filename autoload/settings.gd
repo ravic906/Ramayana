@@ -37,6 +37,8 @@ var story_mode: bool:
 	set(value):
 		difficulty = Difficulty.STORY if value else (Difficulty.WARRIOR if difficulty == Difficulty.STORY else difficulty)
 var difficulty_chosen := false
+## The last mission and chapter started from the Missions list (for "Again").
+var last_jump := Vector2i(0, 0)
 var music_volume := 0.8
 var sfx_volume := 1.0
 var voice_volume := 1.0
@@ -139,6 +141,7 @@ func save_settings() -> Error:
 	cfg.set_value("graphics", "quality", quality)
 	cfg.set_value("gameplay", "difficulty", difficulty)
 	cfg.set_value("gameplay", "difficulty_chosen", difficulty_chosen)
+	cfg.set_value("gameplay", "last_jump", last_jump)
 	cfg.set_value("audio", "music_volume", music_volume)
 	cfg.set_value("audio", "sfx_volume", sfx_volume)
 	cfg.set_value("audio", "voice_volume", voice_volume)
@@ -157,6 +160,8 @@ func load_settings() -> void:
 	var legacy := Difficulty.STORY if bool(cfg.get_value("gameplay", "story_mode", false)) else Difficulty.WARRIOR
 	difficulty = clampi(int(cfg.get_value("gameplay", "difficulty", legacy)), 0, 2) as Difficulty
 	difficulty_chosen = bool(cfg.get_value("gameplay", "difficulty_chosen", false))
+	var lj = cfg.get_value("gameplay", "last_jump", Vector2i.ZERO)
+	last_jump = lj if lj is Vector2i else Vector2i.ZERO
 	music_volume = clampf(float(cfg.get_value("audio", "music_volume", 0.8)), 0.0, 1.0)
 	sfx_volume = clampf(float(cfg.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)
 	voice_volume = clampf(float(cfg.get_value("audio", "voice_volume", 1.0)), 0.0, 1.0)

@@ -416,7 +416,12 @@ func _build_pause() -> void:
 	var look := ["Look: %s" % Settings.style_name(), func() -> void: pass]
 	var mode := ["Mode: %s" % Settings.mode_name(), func() -> void: pass]
 	var quality := ["Quality: %s" % Settings.quality_name(), func() -> void: pass]
-	for entry in [["Resume", set_paused.bind(false)], ["Skills", func() -> void: SkillsScreen.open(self)], ["Log", func() -> void: JournalScreen.open(self)], ["Map", open_map], mode, quality, look, ["Back to the Journey", back_to_journey]]:
+	var jump := func() -> void:
+		var ms := MissionsScreen.open(self, 1)
+		ms.process_mode = Node.PROCESS_MODE_ALWAYS
+		ms.mission_chosen.connect(func(n: int, c: int) -> void:
+			load("res://ui/journey_menu.gd").launch(get_tree(), n, c))
+	for entry in [["Resume", set_paused.bind(false)], ["Missions", jump], ["Skills", func() -> void: SkillsScreen.open(self)], ["Log", func() -> void: JournalScreen.open(self)], ["Map", open_map], mode, quality, look, ["Back to the Journey", back_to_journey]]:
 		var b := Button.new()
 		b.text = entry[0]
 		b.custom_minimum_size = Vector2(0, 80)
