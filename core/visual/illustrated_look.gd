@@ -1,8 +1,9 @@
 class_name IllustratedLook
 extends Node
-## The illustrated look (after the owner's reference clip): a violet dusk sky with a
-## coral and gold horizon, golden stone with violet shadows, crimson, teal and gold
-## accents, flat cel shading with hand-painted texture, ink lines and drifting petals.
+## The "premium clear" look for the trial level: a clean bright day (deep blue sky, soft
+## clouds), warm ivory stone with crimson, teal and gold accents, saturated flat colour with
+## soft cel shading, glossy gold, real soft shadows, full-resolution render and no ink lines,
+## texture grain or haze, so everything reads crystal clear.
 ##
 ## Add as a child of a level (StoryLevel does it when `illustrated` is set). It restyles
 ## the level's own geometry and environment in place, so layout, collisions, baked light
@@ -12,39 +13,39 @@ extends Node
 
 const TOON := "res://assets/shaders/toon_painted.gdshader"
 const TEX := "res://assets/textures/painted/paint_%s.png"
-const SHADOW_TINT := Color(0.58, 0.42, 0.8)
-const RIM := Color(1.0, 0.8, 0.55)
+const SHADOW_TINT := Color(0.56, 0.6, 0.88)
+const RIM := Color(1.0, 0.95, 0.82)
 const INK_SHADER := "res://assets/shaders/ink_edges.gdshader"
 const SKY_SHADER := "res://assets/shaders/sky_painted.gdshader"
 
 ## Level materials (by resource path) -> [colour, painted texture, tiles per metre, paint strength, extras].
+## Paint strength is 0 everywhere: clean flat colour, no grain.
 const LOOK := {
-	"res://assets/materials/env/arch.tres": [Color(1, 1, 1), "stone", 0.25, 0.1, {"use_regions": 1.0,
-		"region_base": Color(1.0, 0.8, 0.5), "region_r": Color(0.72, 0.1, 0.22),
-		"region_g": Color(1.0, 0.9, 0.7), "region_b": Color(0.34, 0.2, 0.26)}],
-	"res://assets/materials/env/red_sandstone.tres": [Color(0.74, 0.18, 0.2), "carving", 0.9, 0.2, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/sandstone.tres": [Color(1.0, 0.8, 0.5), "stone", 0.25, 0.1, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/marble.tres": [Color(1.0, 0.88, 0.64), "stone", 0.3, 0.08, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/dark_stone.tres": [Color(0.36, 0.22, 0.28), "stone", 0.3, 0.15, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/gold.tres": [Color(1.0, 0.74, 0.2), "gold", 1.0, 0.25, {"spec_strength": 1.4,
-		"spec_size": 0.9, "rim_strength": 0.7, "vertex_shade": 0.0}],
-	"res://assets/materials/env/cloth_red.tres": [Color(0.72, 0.1, 0.22), "cloth", 0.8, 0.35, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/wood.tres": [Color(0.45, 0.22, 0.12), "wood", 0.5, 0.35, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/hills.tres": [Color(0.32, 0.2, 0.4), "ground", 0.05, 0.2, {"vertex_shade": 0.0,
+	"res://assets/materials/env/arch.tres": [Color(1, 1, 1), "stone", 0.25, 0.0, {"use_regions": 1.0,
+		"region_base": Color(0.96, 0.86, 0.68), "region_r": Color(0.78, 0.1, 0.18),
+		"region_g": Color(1.0, 0.97, 0.9), "region_b": Color(0.1, 0.45, 0.55)}],
+	"res://assets/materials/env/red_sandstone.tres": [Color(0.8, 0.14, 0.18), "stone", 0.9, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/sandstone.tres": [Color(0.98, 0.93, 0.84), "stone", 0.25, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/marble.tres": [Color(1.0, 0.98, 0.94), "stone", 0.3, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/dark_stone.tres": [Color(0.3, 0.26, 0.34), "stone", 0.3, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/gold.tres": [Color(1.0, 0.76, 0.2), "gold", 1.0, 0.0, {"spec_strength": 1.6,
+		"spec_size": 0.9, "rim_strength": 0.5, "vertex_shade": 0.0}],
+	"res://assets/materials/env/cloth_red.tres": [Color(0.8, 0.1, 0.2), "cloth", 0.8, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/wood.tres": [Color(0.5, 0.26, 0.14), "wood", 0.5, 0.0, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/hills.tres": [Color(0.46, 0.62, 0.7), "ground", 0.05, 0.0, {"vertex_shade": 0.0,
 		"rim_strength": 0.0}],
 }
-## Paving keeps its own tile-and-medallion shader, recoloured.
+## Paving keeps its own tile-and-medallion shader, recoloured with clear grout lines.
 const PAVING := {
-	"stone_a": Color(0.9, 0.68, 0.48), "stone_b": Color(0.84, 0.62, 0.44), "grout": Color(0.82, 0.6, 0.43),
-	"inlay_saffron": Color(1.0, 0.62, 0.12), "inlay_red": Color(0.72, 0.1, 0.22),
-	"inlay_white": Color(1.0, 0.92, 0.74), "inlay_blue": Color(0.08, 0.42, 0.56),
+	"stone_a": Color(0.92, 0.76, 0.52), "stone_b": Color(0.86, 0.68, 0.46), "grout": Color(0.52, 0.38, 0.3),
+	"inlay_saffron": Color(1.0, 0.6, 0.1), "inlay_red": Color(0.8, 0.1, 0.18),
+	"inlay_white": Color(1.0, 0.97, 0.88), "inlay_blue": Color(0.06, 0.45, 0.6),
 }
 ## Foliage keeps its alpha-cut, wind-swayed shader, recoloured toward the dusk palette.
-const FOLIAGE := {"tint": Color(0.62, 0.78, 0.6), "shadow_tint": Color(0.5, 0.38, 0.72),
-	"rim_color": Color(1.0, 0.72, 0.42), "rim_strength": 0.45}
+const FOLIAGE := {"tint": Color(0.8, 1.0, 0.7), "shadow_tint": Color(0.45, 0.55, 0.75),
+	"rim_color": Color(1.0, 0.95, 0.7), "rim_strength": 0.3}
 
 var _toon_cache := {}
-var _ink: MeshInstance3D
 
 
 func _ready() -> void:
@@ -54,8 +55,7 @@ func _ready() -> void:
 	var level := get_parent()
 	_restyle_tree(level)
 	_environment(level)
-	_add_ink(level)
-	_add_petals(level)
+	_crisp_render()
 	get_tree().node_added.connect(_on_node_added)
 
 
@@ -71,7 +71,7 @@ func _restyle_tree(root: Node) -> void:
 
 
 func _restyle_node(node: Node) -> void:
-	if not is_instance_valid(node) or node == _ink:
+	if not is_instance_valid(node):
 		return
 	var gi := node as GeometryInstance3D
 	if gi.material_override:
@@ -122,17 +122,11 @@ func _swap(m: Material) -> Material:
 	elif shader_path.ends_with("toon_foliage.gdshader"):
 		out = _recolour(sm, FOLIAGE)
 	elif shader_path.ends_with("/toon.gdshader"):
-		# Characters, enemies and small props on the toon shader: dusk rim, violet shadows, firm ink.
+		# Characters, enemies and small props on the toon shader: clean rim and cool shadows, outline unchanged.
 		out = sm.duplicate()
-		out.set_shader_parameter("rim_strength", 0.7)
+		out.set_shader_parameter("rim_strength", 0.45)
 		out.set_shader_parameter("rim_color", RIM)
 		out.set_shader_parameter("shadow_tint", SHADOW_TINT)
-		var o := (out as ShaderMaterial).next_pass as ShaderMaterial
-		if o:
-			o = o.duplicate()
-			o.set_shader_parameter("outline_width", 0.012)
-			o.set_shader_parameter("outline_color", Color(0.2, 0.08, 0.18))
-			(out as ShaderMaterial).next_pass = o
 	_toon_cache[m] = out
 	_toon_cache[out] = out
 	return out
@@ -167,10 +161,10 @@ static func make_toon(colour: Color, tex: String, scale: float, strength: float,
 static func sky_material() -> ShaderMaterial:
 	var sky_mat := ShaderMaterial.new()
 	sky_mat.shader = load(SKY_SHADER)
-	for kv in [["zenith", Color(0.1, 0.08, 0.3)], ["mid", Color(0.4, 0.24, 0.52)], ["horizon", Color(1.0, 0.6, 0.4)],
-			["haze_warm", Color(1.0, 0.8, 0.42)], ["cloud_lit", Color(1.0, 0.72, 0.56)], ["cloud_shade", Color(0.48, 0.32, 0.56)],
-			["hill_near", Color(0.2, 0.14, 0.3)], ["hill_far", Color(0.48, 0.3, 0.5)], ["cloud_cover", 0.36],
-			["sun_dir", Vector3(-0.42, 0.1, -1.0)], ["sun_col", Color(1.0, 0.9, 0.62)], ["sun_size", 0.06], ["glow_amount", 0.85]]:
+	for kv in [["zenith", Color(0.06, 0.26, 0.74)], ["mid", Color(0.22, 0.54, 0.95)], ["horizon", Color(0.78, 0.92, 1.0)],
+			["haze_warm", Color(1.0, 0.95, 0.8)], ["cloud_lit", Color(1.0, 1.0, 1.0)], ["cloud_shade", Color(0.72, 0.8, 0.95)],
+			["hill_near", Color(0.34, 0.55, 0.52)], ["hill_far", Color(0.62, 0.78, 0.9)], ["cloud_cover", 0.3],
+			["sun_dir", Vector3(-0.35, 0.45, -1.0)], ["sun_col", Color(1.0, 0.97, 0.85)], ["sun_size", 0.05], ["glow_amount", 0.4]]:
 		sky_mat.set_shader_parameter(kv[0], kv[1])
 	return sky_mat
 
@@ -181,23 +175,19 @@ static func apply_environment(e: Environment) -> void:
 	e.background_mode = Environment.BG_SKY
 	e.sky = sky
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.62, 0.48, 0.8)
-	e.ambient_light_energy = 0.45
+	e.ambient_light_color = Color(0.6, 0.7, 0.92)
+	e.ambient_light_energy = 0.32
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	e.tonemap_exposure = 0.76
-	e.glow_enabled = true
-	e.glow_intensity = 0.9
-	e.glow_bloom = 0.08
-	e.glow_hdr_threshold = 1.0
-	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
+	e.tonemap_exposure = 0.72
+	e.glow_enabled = false
 	e.fog_enabled = true
-	e.fog_light_color = Color(0.85, 0.55, 0.6)
-	e.fog_density = 0.0016
-	e.fog_aerial_perspective = 0.6
+	e.fog_light_color = Color(0.8, 0.9, 1.0)
+	e.fog_density = 0.0004
+	e.fog_aerial_perspective = 0.0
 	e.fog_sky_affect = 0.0
 	e.adjustment_enabled = true
-	e.adjustment_contrast = 1.08
-	e.adjustment_saturation = 1.15
+	e.adjustment_contrast = 1.1
+	e.adjustment_saturation = 1.2
 
 
 func _environment(level: Node) -> void:
@@ -211,62 +201,24 @@ func _environment(level: Node) -> void:
 		if switcher and "_stylised_env" in switcher:
 			switcher._stylised_env = e
 	if sun:
-		sun.light_color = Color(1.0, 0.74, 0.42)
-		sun.light_energy = 1.1
+		sun.light_color = Color(1.0, 0.95, 0.82)
+		sun.light_energy = 0.95
 		if switcher and "_stylised_sun" in switcher and not switcher._stylised_sun.is_empty():
 			switcher._stylised_sun["color"] = sun.light_color
 			switcher._stylised_sun["energy"] = sun.light_energy
 
 
-## Screen-space ink lines: one full-screen quad, drawn for whichever camera is current.
-## Off on the Battery preset (one extra full-screen pass).
-func _add_ink(level: Node) -> void:
+## Full-resolution, smooth edges for this level (a clear picture beats a few frames per second here).
+## Battery keeps its cheaper settings. Settings.apply_quality() restores the preset when the level closes.
+func _crisp_render() -> void:
 	if Settings.quality == Settings.Quality.BATTERY:
 		return
-	var q := QuadMesh.new()
-	q.size = Vector2(2, 2)
-	_ink = MeshInstance3D.new()
-	_ink.name = "InkLines"
-	_ink.mesh = q
-	_ink.extra_cull_margin = 16384.0
-	_ink.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var m := ShaderMaterial.new()
-	m.shader = load(INK_SHADER)
-	_ink.material_override = m
-	level.add_child(_ink)
+	var vp := get_tree().root
+	vp.scaling_3d_scale = 1.0
+	vp.msaa_3d = Viewport.MSAA_4X
+	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 
 
-## Marigold and rose petals drifting over the courtyard, and fine gold motes.
-func _add_petals(level: Node) -> void:
-	var p := CPUParticles3D.new()
-	p.name = "Petals"
-	p.amount = 90 if Settings.quality == Settings.Quality.BATTERY else 140
-	p.lifetime = 11.0
-	p.preprocess = 11.0
-	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	p.emission_box_extents = Vector3(26, 1, 30)
-	p.position = Vector3(0, 13, -16)
-	p.direction = Vector3(0.4, -1, 0.1)
-	p.spread = 25.0
-	p.initial_velocity_min = 0.4
-	p.initial_velocity_max = 0.9
-	p.gravity = Vector3(0.12, -0.35, 0.05)
-	p.angle_max = 360.0
-	p.angular_velocity_min = -35.0
-	p.angular_velocity_max = 35.0
-	p.scale_amount_min = 0.7
-	p.scale_amount_max = 1.3
-	var g := Gradient.new()
-	g.offsets = PackedFloat32Array([0.0, 0.35, 0.7, 1.0])
-	g.colors = PackedColorArray([Color(1.0, 0.55, 0.05), Color(1.0, 0.75, 0.1), Color(0.95, 0.3, 0.4), Color(1.0, 0.92, 0.85)])
-	p.color_initial_ramp = g
-	var q := QuadMesh.new()
-	q.size = Vector2(0.16, 0.1)
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.vertex_color_use_as_albedo = true
-	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	m.cull_mode = BaseMaterial3D.CULL_DISABLED
-	q.material = m
-	p.mesh = q
-	level.add_child(p)
+func _exit_tree() -> void:
+	if is_inside_tree() or get_tree() != null:
+		Settings.apply_quality()
