@@ -243,9 +243,10 @@ func apply_quality() -> void:
 	var vp := get_tree().root
 	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if RenderingServer.get_rendering_device() != null \
 		else Viewport.SCALING_3D_MODE_BILINEAR
-	vp.scaling_3d_scale = [0.6, 0.75, 0.85][quality]
-	vp.msaa_3d = Viewport.MSAA_DISABLED
-	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA if quality == Quality.HIGH else Viewport.SCREEN_SPACE_AA_DISABLED
+	vp.scaling_3d_scale = [0.7, 0.85, 1.0][quality]
+	# Smooth edges: FXAA everywhere (cheap), plus hardware MSAA on Balanced and High.
+	vp.msaa_3d = [Viewport.MSAA_DISABLED, Viewport.MSAA_2X, Viewport.MSAA_4X][quality]
+	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 
 
 ## Per-level: the sun's shadows, the environment's glow, and ambient particles.
