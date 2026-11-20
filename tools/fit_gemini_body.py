@@ -108,8 +108,8 @@ def seg_dist(p, a, b):
 
 for v in body.data.vertices:
     p = body.matrix_world @ v.co
-    ds = sorted(((seg_dist(p, a, b), n) for n, a, b in segs))[:3]
-    ws = [1.0 / (d + 0.01) ** 3 for d, _ in ds]
+    ds = sorted(((seg_dist(p, a, b), n) for n, a, b in segs))[:4]
+    ws = [1.0 / (d + 0.03) ** 2 for d, _ in ds]
     s = sum(ws)
     for (d, n), w in zip(ds, ws):
         body.vertex_groups[n].add([v.index], w / s, "REPLACE")
