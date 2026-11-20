@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XLV, XLVII"
 id = &"vishala_founding"
 title = "Vishala, Son of Ikshvaku"
 text = "Valmiki says the city was founded by Vishala, a son of Ikshvaku and Alambusa, and named for him. Its kings, down to Sumati who welcomed Vishvamitra and the princes, were cousins of Rama's own line."

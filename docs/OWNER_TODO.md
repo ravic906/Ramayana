@@ -27,6 +27,7 @@ Status:
 | 16 | **Music for Vishala and the ashram** | Taste | **Review**. Claude picked *Eastern Thought* (Vishala at evening) and *That Zen Moment* (the silent ashram); Ahalya's moment uses *Peaceful Desolation*. Options: *Dhaka*, *Mystery Bazaar*, *Tabuk*; *Ishikari Lore*, *Nu Flute*, *Healing* | 2026-11-11 |
 | 17 | **The realistic cast** | Taste and reverence: the faces, complexions (Rama dusky blue-dark, as you chose), hair, beards and costumes of Rama, Lakshmana, Vishvamitra, Vasishtha and Dasharatha | **Review**. Portraits, the gate scene before/after video and the APK (Realistic look) | 2026-11-12 |
 | 18 | **Open world?** | Design direction | **Review**. Claude recommends wide chapters with optional exploration and open hubs, plus a few larger open regions later (Dandaka forest, Panchavati, Kishkindha), rather than one open world | 2026-11-12 |
+| 19 | **The Valmiki canon reference** | The game now has a written reference (`docs/canon/`, Bala Kanda complete) and a rule: every scene, quest, lore leaf and mission cites it or is marked invented (test enforced). Please read `01_bala_kanda.md` and `ADDITIONS.md`; the cultural consultant should check them | **Review** | 2026-11-20 |
 | 8 | **Review the expanded scenes** | The words put in Rama's, Dasharatha's and the sages' mouths | **Review**. *Sage at the Gate* now follows Valmiki in full; the trials, forest, Tataka, Siddhashrama and dawn scenes are deepened (`data/dialogue/part01/`). For the cultural consultant too (item 5) | 2026-11-11 |
 
 ## Provisional decisions to review

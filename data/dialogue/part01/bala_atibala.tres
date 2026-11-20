@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXIV"
 text = "|camp_wide||
 Narration|camp_wide||They walked until the sun lay low over the Sarayu, and there, on the southern bank, the sage stopped.
 Vishvamitra|close||Rama. Go down to the water. Sip it, and wash your hands and face. What I give now must be received clean.|calm

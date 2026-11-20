@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXXII"
 text = "|dawn_wide|dawn|
 Narration|||And at dawn on the seventh day, the yagna was complete.
 Vishvamitra|close||The fire is whole. You kept your word, Rama, and you kept your mercy.|smile

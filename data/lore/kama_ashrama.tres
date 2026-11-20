@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XXV"
 id = &"kama_ashrama"
 title = "The Hermitage of Kama"
 text = "Near the confluence stood an ashram where Shiva once sat in tapas. When Kama, the god of love, tried to disturb his meditation, Shiva's third eye burned him to ash, and the land took the name Anga, the bodiless. The sages there welcomed the princes for a night."

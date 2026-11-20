@@ -23,6 +23,11 @@ extends Resource
 			if not row.strip_edges().is_empty():
 				lines.append(row.strip_edges())
 
+## Where this scene comes from in the Valmiki Ramayana, e.g. "Griffith XX-XXIII" (docs/canon).
+@export var canon := ""
+## True when the scene is the game's own (docs/canon/ADDITIONS.md).
+@export var invented := false
+
 ## The parsed lines (filled from `text`; tests may also set them directly).
 var lines: PackedStringArray = []
 

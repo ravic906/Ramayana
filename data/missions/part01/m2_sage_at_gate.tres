@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith XX-XXIV: Vishvamitra's request, Dasharatha's refusal, Vasishtha's counsel, the departure"
 number = 2
 id = &"sage_at_gate"
 title = "Ayodhya: The Sage at the Gate"

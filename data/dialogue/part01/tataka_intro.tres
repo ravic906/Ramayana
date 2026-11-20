@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXVI-XXVII"
 text = "|grove_wide|wait:0.6|
 Tataka|tataka||Princes of men, in my forest? I will grind your bones to dust as I did the others.|fury
 Rama|close||Guru-dev, she is a woman. Is there no other way?|concern

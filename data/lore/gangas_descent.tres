@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XXXVI, XLIII-XLIV"
 id = &"gangas_descent"
 title = "The Descent of the Ganga"
 text = "On the way to Mithila Vishvamitra told how King Bhagiratha brought the heavenly Ganga down to earth to free the souls of his ancestors, how Shiva caught her fall in his matted locks, and how she followed Bhagiratha's chariot to the sea. Rama was of Bhagiratha's line."

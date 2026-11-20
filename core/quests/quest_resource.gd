@@ -14,3 +14,7 @@ extends Resource
 @export var return_text := ""
 @export var reward_punya := 0
 @export var reward_dharma := 0
+## Where this comes from in the Valmiki Ramayana, e.g. "Griffith XX-XXIV" (see docs/canon).
+@export var canon := ""
+## True for content the game adds that Valmiki does not contain (docs/canon/ADDITIONS.md).
+@export var invented := false

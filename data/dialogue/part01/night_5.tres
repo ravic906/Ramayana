@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXXII (the vigil); this night's events are invented"
 text = "Narration|||On the fifth night, the whole forest seemed to march on the ashram.
 Lakshmana|brothers||Brother... that one is the size of a tree.
 Rama|rama||Size is not strength, brother. Stand with me."

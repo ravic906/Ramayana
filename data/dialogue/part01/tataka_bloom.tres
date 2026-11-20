@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXVIII (the wood freed from the curse)"
 text = "|grove_wide|bloom|
 |grove_wide|wait:3.0|
 Lakshmana|close||Brother... look. The forest is breathing again.|wonder

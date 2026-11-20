@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_q")
+invented = true
 id = &"archers_challenge"
 title = "The Archer's Challenge"
 giver = "Sumantra"

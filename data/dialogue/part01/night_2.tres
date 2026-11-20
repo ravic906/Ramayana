@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXXII (the vigil); this night's events are invented"
 text = "Narration|||On the second night, a fog of maya rose from the forest.
 Vishvamitra|altar||Illusions, Rama. Of every shape you see, only one is true. Look for the one that shimmers."

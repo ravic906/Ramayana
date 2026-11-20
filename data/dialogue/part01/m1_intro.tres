@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+invented = true
 text = "Narration|||Golden Ayodhya, on the banks of the Sarayu. The princes trained beneath their guru's eye...
 Vasishtha|vasishtha||Again, Rama. Not faster. Truer.|calm
 Rama|close||The bow pulls when I breathe, Guru-dev.|concern

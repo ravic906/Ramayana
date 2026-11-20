@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith V-VI"
 id = &"ayodhya"
 title = "Ayodhya"
 text = "The name Ayodhya means 'the unconquerable', a city that cannot be fought. Valmiki describes it as wide and well-ordered, with broad streets, gardens, and gates guarded day and night."

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XLV"
 text = "|||
 Narration|||That night, as the lamps burned low, Rama asked the sage the story of this place.
 Rama|close||Guru-dev, who built Vishala? It feels older than its walls.|wonder

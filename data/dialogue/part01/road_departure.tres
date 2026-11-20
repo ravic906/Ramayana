@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXIV"
 text = "|city||
 Narration|city||Behind them, the walls of Ayodhya. Ahead, a river road that no prince of the Raghus had walked alone.
 Lakshmana|close||The city looks small from here, brother.|concern

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+invented = true
 text = "Rama|close||It burned without touching me, Guru-dev. Is that what power is?|wonder
 Vasishtha|close||That is what restraint is. Remember the feeling.|calm
 Vasishtha|close||Another teacher will place that fire in your hands. When he does, it will weigh more than it did today.|concern

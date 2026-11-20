@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XLVII"
 text = "|court||
 Narration|court||By evening they came to Vishala, a fair city of lamps, ruled by Sumati of the line of Ikshvaku.
 Sumati|close||Great sage, you honour my city. Who could have hoped to see Vishvamitra at our gate?|joy

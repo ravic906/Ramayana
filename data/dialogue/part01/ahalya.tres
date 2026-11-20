@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XLVIII-XLIX"
 text = "|heart||
 Narration|heart||For years beyond counting, Ahalya had kept her penance here, unseen by any eye, like a flame veiled in smoke.
 Vishvamitra|close||Rama. The one who lives here has waited a long time for a guest. Go in.|reverence

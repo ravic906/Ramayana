@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXXI"
 text = "Narration|||Vishvamitra led the princes to Siddhashrama, where the sages would keep a sacred fire for six nights.
 Vishvamitra|close||This is Siddhashrama. Vishnu himself once sat here in tapas, as Vamana. Sages have kept fire here ever since.|reverence
 Vishvamitra|altar||Here the yagna begins. For six nights the sages will not speak, and this fire must not fail.|calm

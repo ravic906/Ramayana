@@ -1,5 +1,10 @@
 # Art Bible
 
+> **Canon first.** How people and places look comes from the Valmiki reference in
+> [`docs/canon/`](canon/README.md) (appearance, dress, places, objects). Where this Art Bible's
+> style notes and the canon differ, the canon decides. The Realistic look (the default) has
+> replaced the stylised direction below for the named cast; the stylised look remains an option.
+
 ## Direction
 
 **Stylized 3D inspired by Indian temple sculpture and Rajput/Pahari miniature painting.**

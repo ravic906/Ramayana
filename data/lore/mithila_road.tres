@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XXXIII-XXXVI"
 id = &"mithila_road"
 title = "The Road to Mithila"
 text = "From Vishala the sage and the princes went north to Mithila, King Janaka's city, where a great sacrifice was being prepared and where Shiva's bow was kept, which no one had ever been able to lift."

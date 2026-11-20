@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XX-XXIII"
 text = "Narration|gate||Then came a sage to the palace gate, and with him the first step of a long road.
 Dasharatha|||Vishvamitra! Rain has come to a dry field. Ask, great one. Whatever you ask is already given.|joy
 Vishvamitra|||You have said it, King, and a king's word is a vow. Hear what I ask before you say it again.|calm

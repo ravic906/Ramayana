@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith XLV-XLIX: Vishala and Sumati, the churning, Ahalya freed"
 number = 6
 id = &"stone_and_dawn"
 title = "The Stone and the Dawn"

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith XXV-XXVI: Kama's hermitage, Malaja and Karusha, the way to Tataka's forest"
 number = 3
 id = &"silent_forest"
 title = "The Silent Forest"

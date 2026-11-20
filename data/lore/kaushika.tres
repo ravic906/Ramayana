@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith LI-LV"
 id = &"kaushika"
 title = "Kaushika, the King Who Became a Sage"
 text = "Before he was Vishvamitra, he was King Kaushika, a mighty ruler. Turned back by the power of Vasishtha's austerity, he set aside his crown and undertook tapas of his own for thousands of years, until even Vasishtha named him a brahmarshi. The friend of all the world: that is what his name means."

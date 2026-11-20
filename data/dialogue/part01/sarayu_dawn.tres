@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXV"
 text = "|dawn_wide|dawn|
 Vishvamitra|close||Kausalya's son, Rama. The dawn has come. Rise, tiger among men: the gods' rites are waiting.|smile
 Rama|close||We are awake, Guru-dev.|calm

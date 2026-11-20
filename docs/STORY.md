@@ -1,6 +1,8 @@
 # Story Bible — *Ramayana: The Journey of Rama*
 
-> Companion to the [GDD](GDD.md). Primary source: Valmiki Ramayana. All dialogue here is original
+> Companion to the [GDD](GDD.md). Primary source: Valmiki Ramayana (popular recension). The
+> canon reference is [`docs/canon/`](canon/README.md): descriptions of people and places come
+> from there, and every scene cites it or is marked invented. All dialogue here is original
 > working text for the cultural consultant to review, not quoted from any translation.
 > Regional variants (Kamba Ramayanam, Ramcharitmanas, Ranganatha, Krittivasi) go into the
 > **lore codex**, not the main storyline.

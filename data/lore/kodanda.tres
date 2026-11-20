@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XXIV (Rama's bow); the name Kodanda belongs to later kandas, to verify"
 id = &"kodanda"
 title = "The Kodanda"
 text = "Rama's great bow is called the Kodanda. In the tradition it is so strong that only a hand trained in dharma as well as in archery can draw it to the full."

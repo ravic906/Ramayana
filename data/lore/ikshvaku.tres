@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith V, LXX"
 id = &"ikshvaku"
 title = "The Line of Ikshvaku"
 text = "Rama is born in the solar dynasty of Ikshvaku, descended from Surya through Manu. Kings of this line, Raghu among them, were remembered for keeping their word; Rama is often called Raghava, 'of Raghu's line'."

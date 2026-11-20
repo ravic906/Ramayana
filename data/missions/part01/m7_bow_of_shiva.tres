@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith L, LXVI-LXVII: Mithila and the bow"
 number = 7
 id = &"bow_of_shiva"
 title = "The Bow of Shiva"

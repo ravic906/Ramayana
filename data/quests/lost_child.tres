@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_q")
+invented = true
 id = &"lost_child"
 title = "The Lost Child"
 giver = "A worried grandfather"

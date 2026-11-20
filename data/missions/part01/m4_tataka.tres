@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith XXVI-XXVIII: Tataka's forest and her death"
 number = 4
 id = &"tataka"
 title = "Tataka"

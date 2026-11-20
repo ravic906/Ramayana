@@ -12,6 +12,10 @@ extends Resource
 ## Where in the scene the mission starts (level-specific).
 @export var checkpoint := &""
 @export var available := true
+## Where this comes from in the Valmiki Ramayana, e.g. "Griffith XX-XXIV" (see docs/canon).
+@export var canon := ""
+## True for content the game adds that Valmiki does not contain (docs/canon/ADDITIONS.md).
+@export var invented := false
 ## Up to three goals, each "kind[:param]|label". Kinds:
 ##   finish, no_fall, perfect:N, damage_under:N, fact:key, fire:P (percent)
 ## Missions without goals (pure cutscenes) show no summary.

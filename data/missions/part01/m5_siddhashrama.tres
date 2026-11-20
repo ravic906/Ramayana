@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith XXIX-XXXII: the divine arms, Siddhashrama, the six days and nights, Maricha and Subahu"
 number = 5
 id = &"siddhashrama"
 title = "Six Nights at Siddhashrama"

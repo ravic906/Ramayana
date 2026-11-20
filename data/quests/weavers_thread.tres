@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_q")
+invented = true
 id = &"weavers_thread"
 title = "The Weaver's Thread"
 giver = "A Weaver of Vishala"

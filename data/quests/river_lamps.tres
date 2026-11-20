@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_q")
+invented = true
 id = &"river_lamps"
 title = "Lamps for the River"
 giver = "A Ferryman's Widow"

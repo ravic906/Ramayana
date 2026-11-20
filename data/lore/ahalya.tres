@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XLVIII-XLIX"
 id = &"ahalya"
 title = "Ahalya"
 text = "Ahalya was the wife of the sage Gautama. By his word she lived for many years in the ashram unseen, living on air, until Rama should come; when she received him as a guest, her penance would be complete. In Valmiki she is not turned to stone: the stone is a later tradition, told in many regional retellings. Valmiki also records why Gautama spoke as he did, an episode involving Indra's deception, which the game leaves to the text itself."

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_q")
+invented = true
 id = &"leaves_of_old"
 title = "Leaves of the Old Tales"
 giver = "The Palace Scribe"

@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_d")
+canon = "Griffith XXVI"
 text = "Narration|||They walked into lands where no bird sang: the lands of Malada and Karusha.
 Lakshmana|close||Guru-dev, these fields were farmed once. Who would leave land like this?|concern
 Vishvamitra|sage||No bird sings here. Listen to what silence costs a land.|grief

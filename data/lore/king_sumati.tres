@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_l")
+canon = "Griffith XLVII"
 id = &"king_sumati"
 title = "King Sumati"
 text = "Hearing that Vishvamitra had come, King Sumati went out with his priests to honour him, and asked at once who the two young men with him were, who walked like lions and seemed fit to be gods. Learning they were Dasharatha's sons, he received them as kin."

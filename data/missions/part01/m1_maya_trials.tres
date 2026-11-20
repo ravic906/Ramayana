@@ -4,6 +4,8 @@
 
 [resource]
 script = ExtResource("1_m")
+canon = "Griffith VII (Vasishtha, the family priest), XIX (Rama's skill with the bow)"
+invented = true
 number = 1
 id = &"maya_trials"
 title = "Golden Hour"
