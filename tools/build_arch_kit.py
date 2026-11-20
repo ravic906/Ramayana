@@ -20,15 +20,21 @@ from mathutils import Matrix, Vector
 random.seed(7)
 OUT = Path(sys.argv[sys.argv.index("--") + 1]) if "--" in sys.argv else Path("gate_slice.glb")
 
-PALETTE = {  # name: (base colour, emission colour or None, emission strength)
-    "plaster": ((0.93, 0.70, 0.50, 1), None, 0),
-    "red": ((0.72, 0.22, 0.16, 1), None, 0),
-    "stone": ((0.62, 0.40, 0.30, 1), None, 0),
-    "dark": ((0.20, 0.10, 0.10, 1), None, 0),
-    "gold": ((1.0, 0.68, 0.16, 1), (1.0, 0.55, 0.08, 1), 0.55),
-    "flame": ((1.0, 0.8, 0.3, 1), (1.0, 0.7, 0.2, 1), 3.0),
-    "paving": ((0.86, 0.62, 0.42, 1), None, 0),
-    "paving2": ((0.78, 0.52, 0.36, 1), None, 0),
+PALETTE = {  # name: (base colour, emission colour or None, emission strength); palette sampled from the reference clip
+    "plaster": ((0.93, 0.68, 0.36, 1), None, 0),
+    "red": ((0.80, 0.50, 0.24, 1), None, 0),
+    "stone": ((0.88, 0.58, 0.28, 1), None, 0),
+    "marble": ((0.96, 0.78, 0.52, 1), None, 0),
+    "dark": ((0.22, 0.11, 0.07, 1), None, 0),
+    "wood": ((0.22, 0.09, 0.08, 1), None, 0),
+    "gold": ((1.0, 0.72, 0.18, 1), (1.0, 0.5, 0.08, 1), 0.35),
+    "flame": ((1.0, 0.8, 0.3, 1), (1.0, 0.7, 0.2, 1), 3.5),
+    "glow": ((1.0, 0.72, 0.3, 1), (1.0, 0.55, 0.15, 1), 2.0),
+    "saffron": ((0.95, 0.4, 0.1, 1), None, 0),
+    "carpet": ((0.9, 0.38, 0.08, 1), None, 0),
+    "paving": ((0.74, 0.52, 0.32, 1), None, 0),
+    "paving2": ((0.66, 0.45, 0.28, 1), None, 0),
+    "mortar": ((0.18, 0.1, 0.12, 1), None, 0),
 }
 bms = {k: bmesh.new() for k in PALETTE}
 
@@ -51,130 +57,224 @@ def sphere(mat, c, r, seg=14):
     bmesh.ops.create_uvsphere(bms[mat], u_segments=seg, v_segments=max(6, seg // 2), radius=r, matrix=Matrix.Translation(c))
 
 
-# --- Pieces -----------------------------------------------------------------
+# --- Pieces: a royal fort gate (Ayodhya: walls, gates, towers; Bala V) -----------
 
 def pillar(x, y, z0, h):
-    box("stone", Vector((x, y, z0 + 0.15)), (0.62, 0.62, 0.3))          # plinth
-    box("plaster", Vector((x, y, z0 + 0.34)), (0.5, 0.5, 0.08))
-    cyl("red", Vector((x, y, z0 + h / 2)), 0.2, 0.17, h - 0.8, 12)       # shaft
-    for k in range(3):                                                    # carved rings
-        cyl("gold", Vector((x, y, z0 + 0.6 + k * 0.05)), 0.215 - k * 0.005, 0.215 - k * 0.005, 0.03, 12)
-    cyl("gold", Vector((x, y, z0 + h - 0.62)), 0.23, 0.23, 0.05, 12)
-    box("plaster", Vector((x, y, z0 + h - 0.45)), (0.52, 0.52, 0.12))    # capital
-    box("stone", Vector((x, y, z0 + h - 0.32)), (0.68, 0.68, 0.14))
-    box("plaster", Vector((x, y, z0 + h - 0.2)), (0.84, 0.84, 0.14))
+    box("marble", Vector((x, y, z0 + 0.2)), (0.9, 0.9, 0.4))
+    box("gold", Vector((x, y, z0 + 0.43)), (0.78, 0.78, 0.06))
+    cyl("red", Vector((x, y, z0 + h / 2)), 0.27, 0.23, h - 1.1, 14)
+    for k in range(3):
+        cyl("gold", Vector((x, y, z0 + 0.75 + k * 0.07)), 0.29, 0.29, 0.035, 14)
+    cyl("gold", Vector((x, y, z0 + h - 0.8)), 0.31, 0.31, 0.06, 14)
+    box("marble", Vector((x, y, z0 + h - 0.6)), (0.7, 0.7, 0.16))
+    box("gold", Vector((x, y, z0 + h - 0.46)), (0.9, 0.9, 0.08))
+    box("marble", Vector((x, y, z0 + h - 0.3)), (1.1, 1.1, 0.2))
 
 
-def colonnade(x0, x1, y, n, h=3.2):
+def colonnade(x0, x1, y, n, h=4.2):
     xs = [x0 + (x1 - x0) * i / (n - 1) for i in range(n)]
     for x in xs:
         pillar(x, y, 0.0, h)
     mid = (x0 + x1) / 2
-    w = abs(x1 - x0) + 1.0
-    box("plaster", Vector((mid, y, h + 0.2)), (w, 0.8, 0.4))             # architrave
-    box("red", Vector((mid, y - 0.05, h + 0.52)), (w + 0.2, 0.9, 0.24))
-    box("gold", Vector((mid, y - 0.52, h + 0.52)), (w + 0.2, 0.04, 0.08))
-    for i in range(len(xs) - 1):                                          # arch infill
+    w = abs(x1 - x0) + 1.4
+    box("marble", Vector((mid, y, h + 0.25)), (w, 1.1, 0.5))
+    box("red", Vector((mid, y - 0.05, h + 0.65)), (w + 0.2, 1.2, 0.3))
+    box("gold", Vector((mid, y - 0.64, h + 0.65)), (w + 0.2, 0.05, 0.1))
+    # Scalloped arches between the pillars.
+    for i in range(len(xs) - 1):
         cx = (xs[i] + xs[i + 1]) / 2
-        box("dark", Vector((cx, y - 0.2, h - 0.35)), (abs(xs[1] - xs[0]) - 0.8, 0.14, 0.1))
+        gap = abs(xs[1] - xs[0]) - 1.1
+        box("gold", Vector((cx, y - 0.5, h - 0.55)), (gap, 0.06, 0.1))
+        for r in (0.0,):
+            box("glow", Vector((cx, y - 0.1, h - 1.5)), (0.22, 0.05, 0.22))  # hanging lamp glow
 
 
-def wall(x0, x1, y):
+def merlons(x0, x1, y, z, depth=1.2):
+    n = int(abs(x1 - x0) / 1.3)
+    for i in range(n):
+        cx = x0 + (i + 0.5) * (x1 - x0) / n
+        box("stone", Vector((cx, y, z + 0.45)), (0.8, depth, 0.9))
+        box("gold", Vector((cx, y - depth / 2 - 0.01, z + 0.95)), (0.5, 0.04, 0.1))
+
+
+def wall(x0, x1, y, h=6.2):
     mid = (x0 + x1) / 2
     w = abs(x1 - x0)
-    box("plaster", Vector((mid, y, 1.6)), (w, 1.0, 3.2))
-    box("stone", Vector((mid, y - 0.05, 0.25)), (w, 1.1, 0.5))           # plinth
-    box("plaster", Vector((mid, y - 0.05, 3.35)), (w, 1.3, 0.3))         # cornice
-    box("red", Vector((mid, y - 0.1, 3.58)), (w, 1.4, 0.16))
-    n = int(w / 0.9)
-    for i in range(n):                                                    # merlon-like finials
-        sphere("gold", Vector((x0 + (i + 0.5) * w / n, y - 0.1, 3.82)), 0.1, 8)
-        cyl("gold", Vector((x0 + (i + 0.5) * w / n, y - 0.1, 3.72)), 0.06, 0.03, 0.14, 8)
-    for i in range(int(w / 3.0)):                                         # blind niches
-        cx = x0 + (i + 0.5) * w / int(w / 3.0)
-        box("dark", Vector((cx, y - 0.52, 1.7)), (0.9, 0.08, 1.5))
-        box("gold", Vector((cx, y - 0.54, 2.5)), (1.0, 0.06, 0.08))
+    box("stone", Vector((mid, y, h / 2)), (w, 1.6, h))
+    box("marble", Vector((mid, y - 0.1, 0.45)), (w, 1.9, 0.9))                 # plinth
+    box("red", Vector((mid, y - 0.1, h - 0.7)), (w, 1.9, 0.35))                 # frieze band
+    box("gold", Vector((mid, y - 1.06, h - 0.7)), (w, 0.04, 0.1))
+    box("marble", Vector((mid, y - 0.1, h + 0.1)), (w, 2.0, 0.3))               # cornice
+    merlons(x0, x1, y - 0.1, h + 0.25)
+    n = int(w / 3.2)
+    for i in range(n):                                                          # arrow-slit niches
+        cx = x0 + (i + 0.5) * w / n
+        box("dark", Vector((cx, y - 0.82, h * 0.52)), (0.35, 0.06, 1.5))
+        box("gold", Vector((cx, y - 0.85, h * 0.52 + 0.85)), (0.55, 0.05, 0.08))
+    for k in range(10):                                                         # fine stone courses
+        box("mortar", Vector((mid, y - 0.81, 1.1 + k * 0.5)), (w, 0.02, 0.03))
 
 
-def tower():
-    # Base block with the arched gateway.
-    box("stone", Vector((0, 0, 0.3)), (11.4, 5.4, 0.6))
-    box("plaster", Vector((0, 0, 3.1)), (10.4, 4.6, 5.0))
-    box("red", Vector((0, -2.31, 3.1)), (10.4, 0.1, 5.0))
-    for sx in (-1, 1):  # flanking pilasters
-        for k in range(3):
-            box("plaster", Vector((sx * (3.0 + k * 0.001), -2.45, 3.1)), (0.7, 0.35, 4.8))
-            box("gold", Vector((sx * 3.0, -2.62, 5.3)), (0.8, 0.05, 0.1))
-    # Doorway: dark opening with a round arch and gold arch rings.
-    box("dark", Vector((0, -2.32, 2.0)), (3.0, 0.12, 3.4))
-    cyl("dark", Vector((0, -2.32, 3.7)), 1.5, 1.5, 0.12, 24, "Y")
-    for r, th in ((1.6, 0.1), (1.82, 0.14)):  # moulded arch rims (rings of segments)
-        n = 28
+def bastion(x, y, r, h):
+    cyl("marble", Vector((x, y, 0.5)), r + 0.35, r + 0.45, 1.0, 20)
+    cyl("stone", Vector((x, y, h / 2)), r, r + 0.1, h, 20)
+    for k in range(3):
+        cyl("gold", Vector((x, y, h * (0.35 + 0.22 * k))), r + 0.14, r + 0.14, 0.12, 20)
+    cyl("red", Vector((x, y, h - 0.5)), r + 0.25, r + 0.25, 0.7, 20)
+    cyl("marble", Vector((x, y, h + 0.1)), r + 0.55, r + 0.55, 0.3, 20)
+    for i in range(10):                                                          # parapet round the top
+        a = math.tau * i / 10
+        box("stone", Vector((x + (r + 0.35) * math.cos(a), y + (r + 0.35) * math.sin(a), h + 0.6)), (0.7, 0.5, 0.8), rot_z=a)
+    # chhatri: slim pillars under a golden dome
+    for i in range(6):
+        a = math.tau * i / 6
+        cyl("red", Vector((x + r * 0.6 * math.cos(a), y + r * 0.6 * math.sin(a), h + 1.4)), 0.1, 0.1, 2.2, 8)
+    cyl("marble", Vector((x, y, h + 2.55)), r * 0.85, r * 0.85, 0.2, 20)
+    sphere("gold", Vector((x, y, h + 2.55)), r * 0.8, 18)
+    cyl("gold", Vector((x, y, h + 2.55 + r * 0.8 + 0.2)), 0.1, 0.0, 0.8, 8)
+    for i in range(4):                                                           # slit windows
+        a = math.pi / 2 + i * 0.35 - 0.5
+        box("dark", Vector((x + (r + 0.02) * math.cos(a), y + (r + 0.02) * math.sin(a), h * 0.55)), (0.3, 0.1, 1.2), rot_z=a)
+
+
+def banner(x, y, z0, h, face=-1.0):
+    cyl("gold", Vector((x, y, z0 + h / 2)), 0.06, 0.06, h, 8)
+    sphere("gold", Vector((x, y, z0 + h + 0.06)), 0.12, 8)
+    # Swallow-tailed saffron flag with a golden sun disc (the Ikshvaku solar line).
+    box("saffron", Vector((x + 0.85, y, z0 + h - 0.8)), (1.7, 0.03, 1.1))
+    box("saffron", Vector((x + 0.2, y, z0 + h - 0.8)), (0.3, 0.03, 1.1))
+    cyl("gold", Vector((x + 0.6, y - 0.03, z0 + h - 0.8)), 0.28, 0.28, 0.03, 16, "Y")
+    for k in range(10):
+        a = math.tau * k / 10
+        box("gold", Vector((x + 0.6 + 0.4 * math.cos(a), y - 0.03, z0 + h - 0.8 + 0.4 * math.sin(a))), (0.1, 0.02, 0.1))
+
+
+def shikhara(cx, cy, z0, W, H, n=16, flag=False):
+    """Curvilinear Nagara spire: stacked tapering layers, a rib on each face, urushringa
+    (mini spires) clinging to the corners, amalaka, kalasha and optional flag."""
+    lh = H / n
+    for i in range(n):
+        u = i / n
+        w = W * (1.0 - u ** 1.35) * (1.0 - 0.1 * u) + 0.5
+        box("stone", Vector((cx, cy, z0 + (i + 0.5) * lh)), (w, w, lh * 1.04))
+        box("plaster", Vector((cx, cy, z0 + i * lh + 0.04)), (w + 0.16, w + 0.16, 0.1))   # ledge
+        for sgn in (-1, 1):                                                              # central ribs (rathas)
+            box("plaster", Vector((cx, cy + sgn * (w / 2 + 0.03), z0 + (i + 0.5) * lh)), (w * 0.34, 0.14, lh * 0.96))
+            box("plaster", Vector((cx + sgn * (w / 2 + 0.03), cy, z0 + (i + 0.5) * lh)), (0.14, w * 0.34, lh * 0.96))
+        if i % 3 == 1 and u < 0.8:                                                       # carved niche
+            box("dark", Vector((cx, cy - w / 2 - 0.07, z0 + (i + 0.5) * lh)), (w * 0.16, 0.06, lh * 0.55))
+    top = z0 + H
+    cyl("stone", Vector((cx, cy, top + 0.25)), 0.9, 1.0, 0.5, 20)
+    cyl("plaster", Vector((cx, cy, top + 0.62)), 1.25, 1.25, 0.26, 20)                  # amalaka
+    for k in range(12):
+        a = math.tau * k / 12
+        sphere("plaster", Vector((cx + 1.25 * math.cos(a), cy + 1.25 * math.sin(a), top + 0.62)), 0.14, 6)
+    cyl("gold", Vector((cx, cy, top + 1.1)), 0.32, 0.22, 0.5, 12)
+    sphere("gold", Vector((cx, cy, top + 1.55)), 0.4, 14)
+    cyl("gold", Vector((cx, cy, top + 2.1)), 0.12, 0.0, 0.8, 8)
+    if flag:
+        cyl("gold", Vector((cx, cy, top + 3.6)), 0.05, 0.05, 2.6, 6)
+        box("saffron", Vector((cx + 0.9, cy, top + 4.4)), (1.7, 0.03, 0.95))
+        box("saffron", Vector((cx + 0.2, cy, top + 4.4)), (0.3, 0.03, 0.95))
+
+
+def mini_spires(cx, cy, z0, W, H):
+    shikhara(cx - W * 0.9, cy, z0, W * 0.42, H * 0.5, 9)
+    shikhara(cx + W * 0.9, cy, z0, W * 0.42, H * 0.5, 9)
+
+
+def hall(cx, cy, w, d, h, spire_w, spire_h, flag=False, porch=True):
+    box("stone", Vector((cx, cy, h / 2 + 1.0)), (w, d, h))
+    box("plaster", Vector((cx, cy - d / 2 - 0.02, h / 2 + 1.0)), (w - 0.4, 0.08, h - 0.5))
+    box("marble", Vector((cx, cy, h + 1.2)), (w + 0.8, d + 0.8, 0.4))                   # eave
+    box("gold", Vector((cx, cy - (d + 0.8) / 2, h + 1.25)), (w + 0.8, 0.05, 0.1))
+    for k in range(int(w / 1.4)):                                                       # carved eave brackets
+        box("plaster", Vector((cx - w / 2 + 0.7 + k * 1.4, cy - d / 2 - 0.3, h + 0.85)), (0.4, 0.5, 0.5))
+    if porch:                                                                           # jharokha balcony arches
+        n = max(2, int(w / 3.0))
         for i in range(n):
-            a = math.pi * (i + 0.5) / n
-            box("gold", Vector((r * math.cos(a), -2.38, 3.7 + r * math.sin(a))),
-                (2 * r * math.sin(math.pi / n) * 1.08, 0.08, th), rot_y=a - math.pi / 2)
-    box("gold", Vector((0, -2.38, 2.0)), (3.4, 0.06, 0.1))
-    box("gold", Vector((-1.7, -2.38, 1.8)), (0.1, 0.06, 3.4))
-    box("gold", Vector((1.7, -2.38, 1.8)), (0.1, 0.06, 3.4))
-    # Cornice over the gateway block.
-    box("stone", Vector((0, -0.1, 5.75)), (11.2, 5.0, 0.3))
-    box("gold", Vector((0, -2.6, 5.75)), (11.2, 0.05, 0.12))
-    # Tiers.
-    z = 5.9
-    w, d = 9.2, 4.0
-    for t in range(6):
-        h = 1.55 - t * 0.05
-        box("plaster", Vector((0, 0, z + h / 2)), (w, d, h))
-        box("red", Vector((0, -d / 2 - 0.02, z + h / 2)), (w - 0.2, 0.08, h - 0.25))
-        n = max(3, int(w / 1.5))
-        for i in range(n):  # windows with gold lintels
-            cx = -w / 2 + (i + 0.5) * w / n
-            box("dark", Vector((cx, -d / 2 - 0.06, z + h * 0.5)), (0.5, 0.1, h * 0.55))
-            box("gold", Vector((cx, -d / 2 - 0.08, z + h * 0.5 + h * 0.3)), (0.62, 0.06, 0.07))
-        box("stone", Vector((0, 0, z + h + 0.08)), (w + 0.7, d + 0.7, 0.16))   # cornice
-        box("gold", Vector((0, -(d + 0.7) / 2, z + h + 0.1)), (w + 0.7, 0.05, 0.08))
-        for sx in (-1, 1):
-            sphere("gold", Vector((sx * (w + 0.7) / 2, -(d + 0.7) / 2, z + h + 0.22)), 0.13, 8)
-        z += h + 0.16
-        w *= 0.8
-        d *= 0.84
-    # Crown: barrel vault and finials.
-    cyl("plaster", Vector((0, 0, z + 0.4)), 1.0, 1.0, w + 0.4, 20, "X")
+            x = cx - w / 2 + (i + 0.5) * w / n
+            box("dark", Vector((x, cy - d / 2 - 0.05, h * 0.55 + 1.0)), (1.0, 0.1, 2.0))
+            box("glow", Vector((x, cy - d / 2 - 0.04, h * 0.55 + 1.0)), (0.6, 0.06, 1.5))
+            box("gold", Vector((x, cy - d / 2 - 0.1, h * 0.55 + 2.1)), (1.2, 0.06, 0.1))
+    shikhara(cx, cy, h + 1.4, spire_w, spire_h, 14, flag)
+
+
+def sanctum():
+    # Great plinth (jagati) in three broad courses, then the main hall, porch and cascading side halls.
+    for k, (w, d) in enumerate(((48, 22), (46, 20), (44, 18))):
+        box("marble", Vector((0, -1.0, 0.25 + k * 0.5)), (w, d, 0.5))
+    hall(0, 0, 14, 12, 8.5, 11.0, 15.0, flag=True)
+    hall(-10.5, -1.0, 7.5, 9, 6.0, 6.2, 7.5, porch=True)
+    hall(10.5, -1.0, 7.5, 9, 6.0, 6.2, 7.5, porch=True)
+    hall(-17.0, -1.5, 6.0, 8, 4.4, 4.6, 4.5, porch=False)
+    hall(17.0, -1.5, 6.0, 8, 4.4, 4.6, 4.5, porch=False)
+    # Pillared porch in front of the central hall: six carved pillars, stepped pyramidal roof.
+    for i in range(6):
+        pillar(-5.0 + i * 2.0, -8.3, 1.0, 5.4)
+    box("marble", Vector((0, -8.3, 6.6)), (13.0, 2.2, 0.5))
+    box("gold", Vector((0, -9.42, 6.6)), (13.0, 0.05, 0.12))
     for k in range(5):
-        x = (k - 2) * (w * 0.4)
-        cyl("gold", Vector((x, 0, z + 1.25)), 0.16, 0.16, 0.5, 10)
-        sphere("gold", Vector((x, 0, z + 1.65)), 0.2, 12)
-        cyl("gold", Vector((x, 0, z + 2.0)), 0.07, 0.0, 0.55, 8)
-    return z
+        w = 12.0 - k * 2.2
+        box("stone", Vector((0, -8.3, 7.15 + k * 0.5)), (w, 2.0 - k * 0.3, 0.5))
+        box("plaster", Vector((0, -8.3 - (1.0 - k * 0.15), 7.15 + k * 0.5)), (w + 0.1, 0.1, 0.3))
+    sphere("gold", Vector((0, -8.3, 9.9)), 0.3, 10)
+    box("dark", Vector((0, -6.1, 4.0)), (3.4, 0.2, 5.4))                                # the great doorway
+    box("glow", Vector((0, -6.05, 4.0)), (2.6, 0.12, 4.6))
+    for r in (1.9, 2.2):
+        for i in range(30):
+            a = math.pi * (i + 0.5) / 30
+            box("gold", Vector((r * math.cos(a), -6.2, 5.6 + r * math.sin(a))),
+                (2 * r * math.sin(math.pi / 30) * 1.1, 0.1, 0.14), rot_y=a - math.pi / 2)
+
+
+def elephant(x, y, face=-1.0):
+    s = 1.0
+    box("marble", Vector((x, y, 0.5)), (2.4, 4.0, 1.0))                                 # plinth
+    cyl("stone", Vector((x, y, 2.3)), 1.0, 1.0, 2.8, 14, "Y")                           # barrel body
+    sphere("stone", Vector((x, y + face * 1.9, 3.0)), 0.95, 12)                         # head
+    for sx in (-1, 1):
+        box("plaster", Vector((x + sx * 1.05, y + face * 1.5, 3.0)), (0.2, 1.1, 1.4))   # ear
+        cyl("marble", Vector((x + sx * 0.5, y + face * 2.9, 2.5)), 0.07, 0.03, 1.0, 6)  # tusk
+        for fz in (-1, 1):
+            cyl("stone", Vector((x + sx * 0.6, y + fz * 1.3, 1.5)), 0.28, 0.3, 1.0, 8)  # legs
+    for k in range(5):                                                                  # curled trunk
+        sphere("stone", Vector((x, y + face * (2.6 + k * 0.08), 2.7 - k * 0.38)), 0.3 - k * 0.03, 8)
+    box("red", Vector((x, y, 3.35)), (1.9, 2.2, 0.12))                                  # howdah cloth
+    box("gold", Vector((x, y, 3.43)), (1.95, 2.25, 0.04))
 
 
 def steps():
-    for k in range(4):
-        box("stone", Vector((0, -3.6 - k * 0.45, 0.12 - k * 0.0 + 0.0)), (4.6 + (3 - k) * 0.0, 0.5, 0.24 * (4 - k)))
-    # flanking guard plinths
+    for k in range(12):  # one broad ceremonial stair up to the porch
+        box("marble", Vector((0, -10.2 - k * 0.55, 0.06 * (12 - k) + 0.04)), (9.0 + (11 - k) * 0.3, 0.55, 0.12 * (12 - k) + 0.08))
     for sx in (-1, 1):
-        box("stone", Vector((sx * 3.7, -3.7, 0.3)), (1.1, 1.1, 0.6))
-        cyl("gold", Vector((sx * 3.7, -3.7, 0.9)), 0.12, 0.1, 0.6, 8)
+        elephant(sx * 6.4, -13.0)
+        for k in range(12):  # balustrade cheeks
+            box("stone", Vector((sx * 4.7, -10.2 - k * 0.55, 0.12 * (12 - k) + 0.45)), (0.4, 0.55, 0.9))
 
 
 def lamp(x, y):
-    box("stone", Vector((x, y, 0.15)), (0.5, 0.5, 0.3))
-    cyl("dark", Vector((x, y, 1.1)), 0.05, 0.07, 1.8, 8)
-    cyl("gold", Vector((x, y, 2.05)), 0.2, 0.1, 0.12, 12)
-    cyl("gold", Vector((x, y, 2.2)), 0.1, 0.22, 0.18, 12)
-    sphere("flame", Vector((x, y, 2.4)), 0.12, 10)
+    box("marble", Vector((x, y, 0.25)), (0.8, 0.8, 0.5))
+    cyl("gold", Vector((x, y, 1.6)), 0.07, 0.1, 2.3, 8)
+    cyl("gold", Vector((x, y, 2.85)), 0.28, 0.12, 0.16, 12)
+    cyl("gold", Vector((x, y, 3.05)), 0.12, 0.28, 0.22, 12)
+    sphere("flame", Vector((x, y, 3.3)), 0.17, 10)
 
 
 def paving():
-    # Slightly separated stone slabs with alternating warm tones.
-    nx, ny, s = 22, 14, 1.4
+    nx, ny, s = 15, 12, 2.0
     for i in range(nx):
         for j in range(ny):
             x = (i - nx / 2 + 0.5) * s
-            y = -4.2 - j * s
-            box("paving" if (i + j) % 2 == 0 else "paving2", Vector((x, y, -0.02)), (s - 0.05, s - 0.05, 0.08))
-    box("stone", Vector((0, -12, -0.15)), (nx * s, ny * s + 8, 0.2))
+            y = -17.2 - j * s
+            box("paving" if (i + j) % 2 == 0 else "paving2", Vector((x, y, -0.02)), (s - 0.07, s - 0.07, 0.08))
+    box("mortar", Vector((0, -28, -0.12)), (nx * s, ny * s + 6, 0.2))
+    # Royal red runner with gold borders from the stair to the courtyard.
+    box("carpet", Vector((0, -22, 0.04)), (3.2, 12, 0.03))
+    for sx in (-1, 1):
+        box("gold", Vector((sx * 1.7, -22, 0.05)), (0.12, 12, 0.03))
+    for k in range(9):
+        box("gold", Vector((0, -17.6 - k * 1.3, 0.055)), (1.3, 0.4, 0.02))
 
 
 def finish():
@@ -195,8 +295,9 @@ def finish():
         lay = me.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
         for poly in me.polygons:
             c = poly.center
-            var = 1.0 + (0.0 if name in ("gold", "flame") else random.uniform(-0.05, 0.05))
-            ground = 0.72 + 0.28 * min(1.0, max(0.0, c.z / 3.0))      # darker near the floor
+            streak = 0.5 + 0.5 * math.sin(c.x * 2.3 + math.sin(c.z * 1.7) * 2.0)
+            var = 1.0 + (0.0 if name in ("gold", "flame", "moss", "vine") else random.uniform(-0.11, 0.08) - 0.08 * streak)
+            ground = 0.55 + 0.45 * min(1.0, max(0.0, c.z / 3.0))      # grime near the floor
             v = var * ground
             for li in poly.loop_indices:
                 lay.data[li].color = (v, v, v, 1)
@@ -205,9 +306,12 @@ def finish():
         mat.use_nodes = True
         bsdf = mat.node_tree.nodes["Principled BSDF"]
         bsdf.inputs["Base Color"].default_value = base
-        bsdf.inputs["Roughness"].default_value = 0.55 if name != "gold" else 0.35
+        # Glossy finish: polished lacquer coat on everything, near-mirror metal for gold.
+        bsdf.inputs["Roughness"].default_value = 0.28 if name != "gold" else 0.16
+        bsdf.inputs["Coat Weight"].default_value = 0.0 if name in ("gold", "flame", "glow", "dark") else 0.7
+        bsdf.inputs["Coat Roughness"].default_value = 0.08
         if name == "gold":
-            bsdf.inputs["Metallic"].default_value = 0.6
+            bsdf.inputs["Metallic"].default_value = 0.95
         if em:
             bsdf.inputs["Emission Color"].default_value = em
             bsdf.inputs["Emission Strength"].default_value = strength
@@ -220,14 +324,21 @@ def finish():
 
 def main():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    tower()
-    wall(-19, -5.7, 0.0)
-    wall(5.7, 19, 0.0)
-    colonnade(-18.5, -6.5, -1.6, 7)
-    colonnade(6.5, 18.5, -1.6, 7)
+    sanctum()
     steps()
+    wall(-46, -20.5, 0.0, 5.2)
+    wall(20.5, 46, 0.0, 5.2)
     for sx in (-1, 1):
-        lamp(sx * 5.4, -5.6)
+        bastion(sx * 47.5, -0.5, 3.2, 9.0)
+        bastion(sx * 21.8, -2.0, 2.2, 7.0)
+        banner(sx * 21.8, -2.0, 7.0 + 3.2, 5.5)
+        banner(sx * 33.0, -0.8, 5.4, 4.6)
+        banner(sx * 8.0, -9.2, 2.6, 6.0)
+    colonnade(-43, -24.5, -3.4, 7, 3.8)
+    colonnade(24.5, 43, -3.4, 7, 3.8)
+    for sx in (-1, 1):
+        for k in range(3):
+            lamp(sx * 5.8, -18.0 - k * 5.0)
     paving()
     finish()
     OUT.parent.mkdir(parents=True, exist_ok=True)
