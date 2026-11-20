@@ -47,9 +47,13 @@ const PEOPLE := {
 	"dasharatha": {"complexion": Color(0.48, 0.34, 0.25), "glow": 0.0, "eyes": "brown", "hair": Color(0.55, 0.53, 0.5), "beard": 0.05,
 		"dhoti": Color(0.92, 0.88, 0.75), "upper": Color(0.62, 0.1, 0.12), "zari": Color(0.88, 0.66, 0.22), "long_dhoti": true, "wide_cloth": true},
 }
+## A body from an image-to-3D model (tools/fit_gemini_body.py): its own painted texture, no face
+## units, garments or hair parts; built with the person name ending in "_g" (e.g. "rama_g").
+const GEMINI := {"complexion": Color(0.5, 0.5, 0.6), "glow": 0.0, "eyes": "brown", "hair": Color(0.03, 0.025, 0.025), "gemini": true}
 const SKIN_SHADER := "res://assets/shaders/skin.gdshader"
 const DETAIL_NORMAL := "res://characters/rama/model/textures/rama_skin_normal.png"
 var person_name := ""
+var gemini_build := false
 const PARTS := {"body": "Body", "high-poly": "Eyes", "low-poly": "Eyes", "eyebrow": "Eyebrows",
 	"eyelashes": "Eyelashes", "teeth": "Teeth", "tongue": "Tongue", "long01": "Hair", "short01": "Hair", "short02": "Hair", "short03": "Hair", "short04": "Hair", "ponytail01": "Hair"}
 
@@ -78,6 +82,8 @@ func build(glb: String, person: String) -> Error:
 	var ref_anim: AnimationPlayer = ref_scene.get_node("AnimationPlayer")
 
 	person_name = person.split("_")[0]  # "rama_short02" is a hair trial of "rama"
+	var gemini := person.ends_with("_g")
+	gemini_build = gemini
 	var dir := OUT_DIR + person + "/"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 
@@ -174,7 +180,7 @@ func build(glb: String, person: String) -> Error:
 		mi.skeleton = NodePath("..")
 		_save_textures(mi, dir, part)
 
-	var spec: Dictionary = PEOPLE.get(person_name, {})
+	var spec: Dictionary = GEMINI if gemini else PEOPLE.get(person_name, {})
 	if spec.get("beard", 0.0) > 0.0:
 		var body_mi := sk.get_node("Body") as MeshInstance3D
 		var beard := _make_beard(body_mi, spec["beard"], new_global["Head"], spec["hair"])
@@ -183,7 +189,7 @@ func build(glb: String, person: String) -> Error:
 
 	if spec.get("face_clear", false) and sk.has_node("Hair"):
 		_clear_face(sk.get_node("Hair") as MeshInstance3D, new_global["Head"])
-	var garment := _make_garments(sk.get_node("Body") as MeshInstance3D, spec)
+	var garment: MeshInstance3D = null if gemini else _make_garments(sk.get_node("Body") as MeshInstance3D, spec)
 	if garment:
 		sk.add_child(garment)
 		garment.skeleton = NodePath("..")
@@ -216,7 +222,8 @@ func build(glb: String, person: String) -> Error:
 	# Size: face units only where the face moves. The body's moving part
 	# becomes "Face" (with the shapes), the rest "Body" (none); the hair
 	# needs none at all.
-	_split_face(sk)
+	if not gemini:
+		_split_face(sk)
 
 	# Characters move: lit by the baked light probes, never baked themselves.
 	for mi: MeshInstance3D in sk.find_children("*", "MeshInstance3D", true, false):
@@ -919,9 +926,15 @@ func _save_textures(mi: MeshInstance3D, dir: String, part: String) -> void:
 	img.save_png(path)
 	# Reference the saved file once it has been imported (run the build,
 	# then --import, then the build again); never embed the image.
-	var spec: Dictionary = PEOPLE.get(person_name, PEOPLE["lakshmana"])
+	var spec: Dictionary = GEMINI if gemini_build else PEOPLE.get(person_name, PEOPLE["lakshmana"])
 	var mat: Material
-	if part == "Body":
+	if part == "Body" and spec.get("gemini", false):
+		var gm := StandardMaterial3D.new()
+		gm.roughness = 0.8
+		if ResourceLoader.exists(path):
+			gm.albedo_texture = load(path)
+		mat = gm
+	elif part == "Body":
 		var sm := ShaderMaterial.new()
 		sm.shader = load(SKIN_SHADER)
 		if ResourceLoader.exists(path):

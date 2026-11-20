@@ -58,15 +58,21 @@ var _astra_fx: Node3D
 @export var speaker_name := "Rama"
 ## The realistic body used when the Realistic look is on (characters/people).
 @export_file("*.scn") var realistic_body := ""
+## The body from an image-to-3D model (Mission 1's illustrated look): it brings its own clothes,
+## hair and jewellery, so the procedural ones are left off; crown, sword, quiver and bow stay.
+@export_file("*.scn") var gemini_body := ""
+var _gemini := false
 var face_rig: FaceController
 
 
 func _enter_tree() -> void:
-	RealisticBody.apply(self, realistic_body)
+	_gemini = RealisticBody.apply_gemini(self, gemini_body)
+	if not _gemini:
+		RealisticBody.apply(self, realistic_body)
 
 
 func _ready() -> void:
-	_crowned = _level_crowned()
+	_crowned = _level_crowned() and not _gemini  # the generated Rama is bare-headed (topknot); the crown is for court scenes
 	_build_ornaments()
 	_build_bow()
 	_build_anim_tree()
@@ -359,38 +365,43 @@ func _build_ornaments() -> void:
 		_cadd("Head", _sphere(0.03), gold, Transform3D(Basis(Vector3.UP, 0.5 * side).scaled(Vector3(0.6, 1.2, 0.14)), Vector3(0.05 * side, 1.795, cz + 0.104)))
 		_cadd("Head", _sphere(0.008), ruby, _at(0.05 * side, 1.785, cz + 0.11))
 		# Makara-kundala earrings.
+		if _gemini:
+			continue
 		_add("Head", _torus(0.012, 0.024, 12), gold,
 			Transform3D(Basis(Vector3.FORWARD, PI / 2), Vector3(0.088 * side, 1.6, -0.01)))
 		_add("Head", _sphere(0.012), gold, _at(0.088 * side, 1.57, -0.01))
 
-	# Necklaces on the upper chest.
-	var neck_tilt := Basis(Vector3.RIGHT, deg_to_rad(28)).scaled(Vector3(1.0, 1.0, 0.85))
-	_add("spine_03", _torus(0.105, 0.118, 24), gold, Transform3D(neck_tilt, Vector3(0, 1.47, -0.03)))
-	_add("spine_03", _torus(0.13, 0.14, 24), pearl,
-		Transform3D(Basis(Vector3.RIGHT, deg_to_rad(38)).scaled(Vector3(1.0, 1.0, 0.85)), Vector3(0, 1.43, -0.03)))
-	_add("spine_03", _sphere(0.026), ruby, _at(0, 1.39, 0.115))
-
-	# Keyura (armlets) and kankana (bracelets). Arms lie along X in rest pose.
 	var along_x := Basis(Vector3.BACK, PI / 2)
-	for side in ["l", "r"]:
-		var s := 1.0 if side == "l" else -1.0
-		_add("upperarm_" + side, _torus(0.056, 0.072, 16), gold, Transform3D(along_x, Vector3(0.33 * s, 1.462, -0.06)))
-		_add("lowerarm_" + side, _torus(0.036, 0.05, 14), gold, Transform3D(along_x, Vector3(0.62 * s, 1.455, -0.066)))
+	if not _gemini:
+		# Necklaces on the upper chest.
+		var neck_tilt := Basis(Vector3.RIGHT, deg_to_rad(28)).scaled(Vector3(1.0, 1.0, 0.85))
+		_add("spine_03", _torus(0.105, 0.118, 24), gold, Transform3D(neck_tilt, Vector3(0, 1.47, -0.03)))
+		_add("spine_03", _torus(0.13, 0.14, 24), pearl,
+			Transform3D(Basis(Vector3.RIGHT, deg_to_rad(38)).scaled(Vector3(1.0, 1.0, 0.85)), Vector3(0, 1.43, -0.03)))
+		_add("spine_03", _sphere(0.026), ruby, _at(0, 1.39, 0.115))
+
+		# Keyura (armlets) and kankana (bracelets). Arms lie along X in rest pose.
+		for side in ["l", "r"]:
+			var s := 1.0 if side == "l" else -1.0
+			_add("upperarm_" + side, _torus(0.056, 0.072, 16), gold, Transform3D(along_x, Vector3(0.33 * s, 1.462, -0.06)))
+			_add("lowerarm_" + side, _torus(0.036, 0.05, 14), gold, Transform3D(along_x, Vector3(0.62 * s, 1.455, -0.066)))
 
 	# Archer's gear (Bala XXVII): leather guard on the left forearm, finger guard
 	# on the right hand, a sword at the left hip.
 	var leather: Material = load(MAT + "wood.tres")
-	_add("lowerarm_l", _cyl(0.05, 0.044, 0.15, 14), leather, Transform3D(along_x, Vector3(0.56, 1.455, -0.066)))
-	_add("lowerarm_r", _cyl(0.04, 0.038, 0.06, 12), leather, Transform3D(along_x, Vector3(-0.7, 1.455, -0.066)))
+	if not _gemini:
+		_add("lowerarm_l", _cyl(0.05, 0.044, 0.15, 14), leather, Transform3D(along_x, Vector3(0.56, 1.455, -0.066)))
+		_add("lowerarm_r", _cyl(0.04, 0.038, 0.06, 12), leather, Transform3D(along_x, Vector3(-0.7, 1.455, -0.066)))
 	var hip := Transform3D(Basis(Vector3.BACK, deg_to_rad(-12)), Vector3(0.2, 0.86, -0.02))
 	_add("pelvis", _cyl(0.026, 0.02, 0.62, 10), leather, hip * _at(0, -0.1, 0))
 	_add("pelvis", _cyl(0.014, 0.014, 0.14, 8), gold_plain, hip * _at(0, 0.27, 0))
 	_add("pelvis", _box(Vector3(0.12, 0.016, 0.03)), gold_plain, hip * _at(0, 0.2, 0))
 
 	# Kamarbandh (waistband) and the pleated front of the dhoti.
-	_add("pelvis", _torus(0.15, 0.172, 24), gold,
-		Transform3D(Basis().scaled(Vector3(1.04, 1.0, 0.8)), Vector3(0, 1.0, -0.025)))
-	if not RealisticBody.is_realistic(skeleton):  # the realistic dhoti has its own pleats
+	if not _gemini:
+		_add("pelvis", _torus(0.15, 0.172, 24), gold,
+			Transform3D(Basis().scaled(Vector3(1.04, 1.0, 0.8)), Vector3(0, 1.0, -0.025)))
+	if not _gemini and not RealisticBody.is_realistic(skeleton):  # the realistic dhoti has its own pleats
 		_add("pelvis", _pleats(), load(MAT + "pitambara.tres"), _at(0, 0.985, 0.108), true)
 
 	# Quiver on the back, its top over the right shoulder.
@@ -405,7 +416,8 @@ func _build_ornaments() -> void:
 		_add("spine_03", _box(Vector3(0.004, 0.07, 0.03)), load(MAT + "saffron.tres"), q * Transform3D(Basis(), off + Vector3(0, 0.09, 0)))
 	_batch.commit()
 	_crown_nodes = _crown_batch.commit()
-	_build_hair_knot()
+	if not _gemini:
+		_build_hair_knot()
 	set_crown(_crowned)
 
 

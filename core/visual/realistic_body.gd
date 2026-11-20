@@ -31,6 +31,29 @@ static func apply(model: Node3D, path: String) -> bool:
 	return true
 
 
+## Same swap, for a body from an image-to-3D model; used only where the level asks for it
+## (Settings.gemini_characters, set by the illustrated Mission 1), whatever the style setting.
+static func apply_gemini(model: Node3D, path: String) -> bool:
+	if path == "" or Engine.is_editor_hint() or not ResourceLoader.exists(path):
+		return false
+	var settings := model.get_node_or_null("/root/Settings")
+	if settings == null or not settings.gemini_characters:
+		return false
+	var old := model.get_node_or_null("Body")
+	if old == null or old.has_meta(&"realistic_swapped"):
+		return false
+	var body := (load(path) as PackedScene).instantiate() as Node3D
+	body.name = "Body"
+	body.transform = old.transform
+	body.set_meta(&"realistic_swapped", true)
+	var at := old.get_index()
+	model.remove_child(old)
+	old.free()
+	model.add_child(body)
+	model.move_child(body, at)
+	return true
+
+
 static func is_realistic(skeleton: Skeleton3D) -> bool:
 	return skeleton != null and skeleton.has_meta(&"realistic")
 

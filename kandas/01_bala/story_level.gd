@@ -56,6 +56,7 @@ func _enter_tree() -> void:
 	_begin_stats.call_deferred()
 	if illustrated:
 		Settings.style_override = Settings.VisualStyle.STYLISED  # before the characters enter
+		Settings.gemini_characters = true
 		if get_node_or_null("IllustratedLook") == null:
 			var look := IllustratedLook.new()
 			look.name = "IllustratedLook"
@@ -65,6 +66,7 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	if illustrated:
 		Settings.style_override = -1
+		Settings.gemini_characters = false
 
 
 func _begin_stats() -> void:

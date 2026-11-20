@@ -117,6 +117,8 @@ func assist_scale() -> float:
 ## A level can force a look for its duration (not saved): -1 = none. The
 ## illustrated trial in Mission 1 forces the stylised bodies and materials.
 var style_override := -1
+## Mission 1's illustrated look: characters with an image-to-3D body wear it (non-saving).
+var gemini_characters := false
 
 
 ## The look actually in use: the level's override, or the player's choice.

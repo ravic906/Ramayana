@@ -64,3 +64,7 @@ Status:
 | Ayodhya | uh-YODE-yah | EYE-uh-dee-uh |
 | Ahalya, Gautama, Sumati, Vishala | uh-HUL-yaa, GOW-tuma, SU-muti, vi-SHAA-laa (new) | |
 | Rama, Sita, dharma, Subahu, Vishvamitra, Vasishtha, Dasharatha, Tataka, the astras | unchanged (they already sound right) | |
+
+## 22. Generated Rama body (Mission 1 only)
+- Rama's Mission 1 body is the Tripo model (`characters/people/rama_g/`), skinned to the game skeleton by `tools/fit_gemini_body.py`; bare-headed with his own topknot (crown stays for court scenes later). Hands are rigid (no finger curl) because the model's fingers are fused.
+- With you: confirm the commercial-use terms of your Tripo plan and Google's terms for the Gemini pictures it was made from. Send further character models (Bala Kanda list in the report).

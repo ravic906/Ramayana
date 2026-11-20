@@ -88,7 +88,10 @@ from mathutils import Vector
 body.parent = None
 for g in list(body.vertex_groups):
     body.vertex_groups.remove(g)
-names = [vg.name for vg in donor.vertex_groups if vg.name in arm.data.bones]
+# Generated hands are one solid mitt (fingers fused), so the game's finger-curl clips would fold it
+# into flat blades: no finger bones, the whole hand follows the hand bone.
+FINGERS = ("thumb_", "index_", "middle_", "ring_", "pinky_")
+names = [vg.name for vg in donor.vertex_groups if vg.name in arm.data.bones and not vg.name.startswith(FINGERS)]
 segs = []
 for n in names:
     b = arm.data.bones[n]
