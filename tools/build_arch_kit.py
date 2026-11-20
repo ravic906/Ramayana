@@ -193,9 +193,9 @@ def mini_spires(cx, cy, z0, W, H):
 
 def hall(cx, cy, w, d, h, spire_w, spire_h, flag=False, porch=True):
     box("stone", Vector((cx, cy, h / 2 + 1.0)), (w, d, h))
-    box("teal", Vector((cx, cy - d / 2 - 0.02, h / 2 + 1.0)), (w - 0.4, 0.08, h - 0.5))
-    box("gold", Vector((cx, cy - d / 2 - 0.05, h / 2 + 1.0)), (w - 0.2, 0.05, h - 0.3))
-    box("marble", Vector((cx, cy - d / 2 - 0.07, h / 2 + 1.0)), (w - 0.65, 0.05, h - 0.75))
+    for zb in (1.55, h + 0.35):                                                         # tiled bands, gold-edged
+        box("gold", Vector((cx, cy - d / 2 - 0.04, zb)), (w - 0.2, 0.06, 0.62))
+        box("teal", Vector((cx, cy - d / 2 - 0.07, zb)), (w - 0.4, 0.06, 0.48))
     box("marble", Vector((cx, cy, h + 1.2)), (w + 0.8, d + 0.8, 0.4))                   # eave
     box("gold", Vector((cx, cy - (d + 0.8) / 2, h + 1.25)), (w + 0.8, 0.05, 0.1))
     for k in range(int(w / 1.4)):                                                       # carved eave brackets
