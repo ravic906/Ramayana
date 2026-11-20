@@ -22,7 +22,8 @@ OUT = Path(sys.argv[sys.argv.index("--") + 1]) if "--" in sys.argv else Path("ga
 
 PALETTE = {  # name: (base colour, emission colour or None, emission strength); palette sampled from the reference clip
     "plaster": ((0.96, 0.94, 0.88, 1), None, 0),
-    "red": ((0.88, 0.76, 0.68, 1), None, 0),
+    "red": ((0.74, 0.1, 0.14, 1), None, 0),
+    "teal": ((0.04, 0.46, 0.52, 1), None, 0),
     "stone": ((0.92, 0.89, 0.82, 1), None, 0),
     "marble": ((0.98, 0.97, 0.93, 1), None, 0),
     "dark": ((0.24, 0.14, 0.10, 1), None, 0),
@@ -111,6 +112,10 @@ def wall(x0, x1, y, h=6.2):
         cx = x0 + (i + 0.5) * w / n
         box("dark", Vector((cx, y - 0.82, h * 0.52)), (0.35, 0.06, 1.5))
         box("gold", Vector((cx, y - 0.85, h * 0.52 + 0.85)), (0.55, 0.05, 0.08))
+        for sx_ in (-1, 1):
+            box("gold", Vector((cx + sx_ * 1.1, y - 0.83, h * 0.5)), (0.95, 0.04, 1.65))
+            box("teal", Vector((cx + sx_ * 1.1, y - 0.85, h * 0.5)), (0.8, 0.04, 1.5))
+            box("marble", Vector((cx + sx_ * 1.1, y - 0.87, h * 0.5)), (0.3, 0.03, 0.9))
     for k in range(10):                                                         # fine stone courses
         box("mortar", Vector((mid, y - 0.81, 1.1 + k * 0.5)), (w, 0.02, 0.03))
 
@@ -157,12 +162,15 @@ def shikhara(cx, cy, z0, W, H, n=16, flag=False):
         u = i / n
         w = W * (1.0 - u ** 1.35) * (1.0 - 0.1 * u) + 0.5
         box("stone", Vector((cx, cy, z0 + (i + 0.5) * lh)), (w, w, lh * 1.04))
-        box("plaster", Vector((cx, cy, z0 + i * lh + 0.04)), (w + 0.16, w + 0.16, 0.1))   # ledge
+        box("red" if i % 3 == 0 else "plaster", Vector((cx, cy, z0 + i * lh + 0.04)), (w + 0.2, w + 0.2, 0.12))   # ledge
+        if i % 3 == 0:
+            box("gold", Vector((cx, cy, z0 + i * lh + 0.12)), (w + 0.22, w + 0.22, 0.03))
         for sgn in (-1, 1):                                                              # central ribs (rathas)
             box("plaster", Vector((cx, cy + sgn * (w / 2 + 0.03), z0 + (i + 0.5) * lh)), (w * 0.34, 0.14, lh * 0.96))
             box("plaster", Vector((cx + sgn * (w / 2 + 0.03), cy, z0 + (i + 0.5) * lh)), (0.14, w * 0.34, lh * 0.96))
         if i % 3 == 1 and u < 0.8:                                                       # carved niche
-            box("dark", Vector((cx, cy - w / 2 - 0.07, z0 + (i + 0.5) * lh)), (w * 0.16, 0.06, lh * 0.55))
+            box("gold", Vector((cx, cy - w / 2 - 0.06, z0 + (i + 0.5) * lh)), (w * 0.2, 0.05, lh * 0.7))
+            box("teal", Vector((cx, cy - w / 2 - 0.09, z0 + (i + 0.5) * lh)), (w * 0.15, 0.05, lh * 0.55))
     top = z0 + H
     cyl("stone", Vector((cx, cy, top + 0.25)), 0.9, 1.0, 0.5, 20)
     cyl("plaster", Vector((cx, cy, top + 0.62)), 1.25, 1.25, 0.26, 20)                  # amalaka
@@ -185,11 +193,15 @@ def mini_spires(cx, cy, z0, W, H):
 
 def hall(cx, cy, w, d, h, spire_w, spire_h, flag=False, porch=True):
     box("stone", Vector((cx, cy, h / 2 + 1.0)), (w, d, h))
-    box("plaster", Vector((cx, cy - d / 2 - 0.02, h / 2 + 1.0)), (w - 0.4, 0.08, h - 0.5))
+    box("teal", Vector((cx, cy - d / 2 - 0.02, h / 2 + 1.0)), (w - 0.4, 0.08, h - 0.5))
+    box("gold", Vector((cx, cy - d / 2 - 0.05, h / 2 + 1.0)), (w - 0.2, 0.05, h - 0.3))
+    box("marble", Vector((cx, cy - d / 2 - 0.07, h / 2 + 1.0)), (w - 0.65, 0.05, h - 0.75))
     box("marble", Vector((cx, cy, h + 1.2)), (w + 0.8, d + 0.8, 0.4))                   # eave
     box("gold", Vector((cx, cy - (d + 0.8) / 2, h + 1.25)), (w + 0.8, 0.05, 0.1))
     for k in range(int(w / 1.4)):                                                       # carved eave brackets
-        box("plaster", Vector((cx - w / 2 + 0.7 + k * 1.4, cy - d / 2 - 0.3, h + 0.85)), (0.4, 0.5, 0.5))
+        box("red", Vector((cx - w / 2 + 0.7 + k * 1.4, cy - d / 2 - 0.3, h + 0.85)), (0.4, 0.5, 0.5))
+    for k in range(int(w / 0.7)):                                                       # painted frieze under the eave
+        box(("red", "teal", "gold")[k % 3], Vector((cx - w / 2 + 0.35 + k * 0.7, cy - d / 2 - 0.1, h + 0.62)), (0.5, 0.05, 0.36))
     if porch:                                                                           # jharokha balcony arches
         n = max(2, int(w / 3.0))
         for i in range(n):
@@ -261,6 +273,18 @@ def lamp(x, y):
     sphere("flame", Vector((x, y, 3.3)), 0.17, 10)
 
 
+def medallion(cx, cy):
+    """Inlaid ceremonial medallion in the courtyard: concentric rings of crimson, teal and gold."""
+    rings = [(9.0, "mortar"), (8.7, "red"), (8.1, "paving"), (7.3, "teal"), (6.7, "marble"), (5.6, "gold"), (5.3, "red"),
+             (4.2, "marble"), (3.2, "teal"), (2.6, "gold"), (1.8, "red"), (1.0, "gold")]
+    for i, (r, m) in enumerate(rings):
+        cyl(m, Vector((cx, cy, 0.035 + i * 0.004)), r, r, 0.03, 56)
+    for k in range(16):  # lotus petals
+        a = math.tau * k / 16
+        cyl("red" if k % 2 else "gold", Vector((cx + 6.1 * math.cos(a), cy + 6.1 * math.sin(a), 0.06)), 0.34, 0.34, 0.05, 10)
+        box("gold", Vector((cx + 4.5 * math.cos(a), cy + 4.5 * math.sin(a), 0.1)), (0.9, 0.12, 0.03), rot_z=a)
+
+
 def paving():
     nx, ny, s = 15, 12, 2.0
     for i in range(nx):
@@ -270,11 +294,12 @@ def paving():
             box("paving" if (i + j) % 2 == 0 else "paving2", Vector((x, y, -0.02)), (s - 0.07, s - 0.07, 0.08))
     box("mortar", Vector((0, -28, -0.12)), (nx * s, ny * s + 6, 0.2))
     # Royal red runner with gold borders from the stair to the courtyard.
-    box("carpet", Vector((0, -22, 0.04)), (3.2, 12, 0.03))
+    medallion(0, -29.5)
+    box("carpet", Vector((0, -22, 0.12)), (3.2, 12, 0.03))
     for sx in (-1, 1):
-        box("gold", Vector((sx * 1.7, -22, 0.05)), (0.12, 12, 0.03))
+        box("gold", Vector((sx * 1.7, -22, 0.13)), (0.12, 12, 0.03))
     for k in range(9):
-        box("gold", Vector((0, -17.6 - k * 1.3, 0.055)), (1.3, 0.4, 0.02))
+        box("gold", Vector((0, -17.6 - k * 1.3, 0.14)), (1.3, 0.4, 0.02))
 
 
 def finish():
@@ -295,12 +320,17 @@ def finish():
         lay = me.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
         for poly in me.polygons:
             c = poly.center
+            n = poly.normal
+            vein = max(0.0, math.sin(c.x * 1.1 + c.y * 0.6 + math.sin(c.z * 0.9 + c.x * 0.3) * 3.0)) ** 10
             streak = 0.5 + 0.5 * math.sin(c.x * 2.3 + math.sin(c.z * 1.7) * 2.0)
-            var = 1.0 + (0.0 if name in ("gold", "flame", "moss", "vine") else random.uniform(-0.11, 0.08) - 0.08 * streak)
-            ground = 0.55 + 0.45 * min(1.0, max(0.0, c.z / 3.0))      # grime near the floor
-            v = var * ground
+            plain = name in ("gold", "flame", "glow", "teal", "red", "saffron", "carpet")
+            var = 1.0 + random.uniform(-0.05, 0.04) - (0.03 * streak if plain else 0.06 * streak + 0.16 * vein)
+            form = 0.88 + 0.12 * max(0.0, n.z) + 0.05 * (1.0 - abs(n.x))   # tops lit, sides and undersides darker
+            ground = 0.82 + 0.18 * min(1.0, max(0.0, c.z / 3.0))            # grime near the floor
+            v = max(0.0, min(1.0, var * form * ground))
+            cool = 0.0 if plain else 0.05 * (vein + streak * 0.5)           # faint blue-grey in the veins
             for li in poly.loop_indices:
-                lay.data[li].color = (v, v, v, 1)
+                lay.data[li].color = (v, v, min(1.0, v + cool), 1)
         mat = bpy.data.materials.new(name)
         base, em, strength = PALETTE[name]
         mat.use_nodes = True

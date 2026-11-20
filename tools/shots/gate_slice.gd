@@ -39,7 +39,7 @@ func _initialize() -> void:
 	e.ambient_light_color = Color(0.55, 0.62, 0.8)
 	e.ambient_light_energy = 0.4
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	e.tonemap_exposure = 0.78
+	e.tonemap_exposure = 0.88
 	e.glow_enabled = OS.get_environment("NOGLOW") != "1"
 	e.glow_intensity = 0.7
 	e.glow_bloom = 0.14
@@ -92,8 +92,7 @@ func _initialize() -> void:
 
 	var gate := (load("res://assets/arch/gate_slice.glb") as PackedScene).instantiate()
 	w.add_child(gate)
-	if OS.get_environment("REBUILD") == "1":
-		_rebuild_materials(gate)
+	_use_vertex_colors(gate)
 	if OS.get_environment("NONAT") != "1":
 		_nature(w)
 	# Rama (stylised road look) faces the gate.
@@ -235,3 +234,18 @@ func _rebuild_materials(n: Node) -> void:
 ## look_at_from_position needs the node inside the tree, which it is not yet in _initialize.
 func _aim(n: Node3D, from: Vector3, to: Vector3) -> void:
 	n.transform = Transform3D(Basis.looking_at(to - from, Vector3.UP), from)
+
+
+## The baked form shading and marble veining live in the vertex colours; switch them on.
+func _use_vertex_colors(n: Node) -> void:
+	var cache := {}
+	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+		for s in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(s) as BaseMaterial3D
+			if src == null:
+				continue
+			if not cache.has(src):
+				var m := src.duplicate() as BaseMaterial3D
+				m.vertex_color_use_as_albedo = true
+				cache[src] = m
+			mi.set_surface_override_material(s, cache[src])
