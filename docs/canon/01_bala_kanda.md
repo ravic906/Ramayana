@@ -124,7 +124,7 @@ this section is **verified** against Griffith unless marked otherwise.
     his father's order.
 - **Lakshmana** (XXIV, XXVIII). "Closely following"; cuts off Tataka's ears and nose in the
   fight. The brothers are likened to the Ashvin twins and "two fire-born gods of war".
-- **Dasharatha** (XXII). Says he is **nine thousand years** old; calls Rama "my darling with the
+- **Dasharatha** (XXII). Says he is **nine thousand years** old *(the popular text gives a larger number, to verify)*; calls Rama "my darling with the
   lotus eyes" and "a boy unskilled"; offers himself, his bow and his army; is in agony.
 - **Vishvamitra** (XXII-XXXV). "Chief of saints"; furious at a broken promise: calls Dasharatha
   "false scion of Kakutstha's line" (XXIII).
