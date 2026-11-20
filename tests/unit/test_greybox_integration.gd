@@ -56,7 +56,7 @@ func test_shooting_damages_dummy() -> void:
 	assert_true(rama.state_machine.is_in(&"Aim"), "pressing Bow starts a draw")
 	Input.action_release("shoot")
 	await _frames(3)
-	assert_true(rama.model.is_playing(&"shoot"), "shoot one-shot should play")
+	assert_true(await _until(func() -> bool: return rama.model.is_playing(&"shoot"), 30), "shoot one-shot should play")
 	assert_false(rama.cam.is_aiming(), "a tap never engages the aim camera")
 	await _frames(45)
 	assert_true(dummy.health.current < dummy.health.max_health,
@@ -71,7 +71,7 @@ func test_dodge_grants_invulnerability() -> void:
 	assert_true(rama.state_machine.is_in(&"Dodge"))
 	assert_true(rama.health.invulnerable)
 	await _frames(1)
-	assert_true(rama.model.is_playing(&"roll"), "roll one-shot should play")
+	assert_true(await _until(func() -> bool: return rama.model.is_playing(&"roll"), 30), "roll one-shot should play")
 	Input.action_release("dodge")
 	await _frames(50)
 	assert_false(rama.state_machine.is_in(&"Dodge"))

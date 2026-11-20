@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7sude4uwrp3n"
-path="res://.godot/imported/paint_gold.png-951203a56d8a3626102318e3879e5051.ctex"
+uid="uid://1gongk0x30dp"
+path="res://.godot/imported/skyline.png-e432bec12d95322b9ad82e86d22c8aa5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/painted/paint_gold.png"
-dest_files=["res://.godot/imported/paint_gold.png-951203a56d8a3626102318e3879e5051.ctex"]
+source_file="res://assets/art/gemini/skyline.png"
+dest_files=["res://.godot/imported/skyline.png-e432bec12d95322b9ad82e86d22c8aa5.ctex"]
 
 [params]
 

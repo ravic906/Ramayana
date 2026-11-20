@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://by4r7atbs8ofu"
-path="res://.godot/imported/paint_cloth.png-c2e53e2d0990e75d9f5dcfbd3d7e95b2.ctex"
+uid="uid://cn7jpri3d74fd"
+path="res://.godot/imported/marble.png-e660703be0064862a041a867f2eec0d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/painted/paint_cloth.png"
-dest_files=["res://.godot/imported/paint_cloth.png-c2e53e2d0990e75d9f5dcfbd3d7e95b2.ctex"]
+source_file="res://assets/art/gemini/marble.png"
+dest_files=["res://.godot/imported/marble.png-e660703be0064862a041a867f2eec0d4.ctex"]
 
 [params]
 

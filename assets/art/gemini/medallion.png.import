@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bo5b6p2oaeuvp"
-path="res://.godot/imported/paint_carving.png-07b4ac090b1b66b239407db5ec766da3.ctex"
+uid="uid://dhiyg5vp1ma7j"
+path="res://.godot/imported/medallion.png-1699e885f33278077b3383976188ac3d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/painted/paint_carving.png"
-dest_files=["res://.godot/imported/paint_carving.png-07b4ac090b1b66b239407db5ec766da3.ctex"]
+source_file="res://assets/art/gemini/medallion.png"
+dest_files=["res://.godot/imported/medallion.png-1699e885f33278077b3383976188ac3d.ctex"]
 
 [params]
 

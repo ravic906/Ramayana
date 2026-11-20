@@ -9,10 +9,12 @@ extends Node
 ## the level's own geometry and environment in place, so layout, collisions, baked light
 ## and cutscene shots are unchanged. Characters keep their stylised bodies (the level sets
 ## Settings.style_override) and get a warmer rim, violet shadows and a firmer ink line.
-## tools/shots/gate_slice.gd uses the same palette and shaders.
+## All pictures come from Gemini art made for this game (assets/art/gemini, sources in art_source/gemini).
 
 const TOON := "res://assets/shaders/toon_painted.gdshader"
-const TEX := "res://assets/textures/painted/paint_%s.png"
+const TEX := "res://assets/art/gemini/%s.png"
+## Mean brightness of each texture, so only its light/dark detail is applied.
+const TEX_MEAN := {"marble": 0.919, "gold": 0.642, "cloth": 0.53}
 const SHADOW_TINT := Color(0.56, 0.6, 0.88)
 const RIM := Color(1.0, 0.95, 0.82)
 const INK_SHADER := "res://assets/shaders/ink_edges.gdshader"
@@ -21,18 +23,18 @@ const SKY_SHADER := "res://assets/shaders/sky_painted.gdshader"
 ## Level materials (by resource path) -> [colour, painted texture, tiles per metre, paint strength, extras].
 ## Paint strength is 0 everywhere: clean flat colour, no grain.
 const LOOK := {
-	"res://assets/materials/env/arch.tres": [Color(1, 1, 1), "stone", 0.25, 0.0, {"use_regions": 1.0,
+	"res://assets/materials/env/arch.tres": [Color(1, 1, 1), "marble", 0.25, 0.3, {"use_regions": 1.0,
 		"region_base": Color(0.96, 0.86, 0.68), "region_r": Color(0.78, 0.1, 0.18),
 		"region_g": Color(1.0, 0.97, 0.9), "region_b": Color(0.1, 0.45, 0.55)}],
-	"res://assets/materials/env/red_sandstone.tres": [Color(0.8, 0.14, 0.18), "stone", 0.9, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/sandstone.tres": [Color(0.98, 0.93, 0.84), "stone", 0.25, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/marble.tres": [Color(1.0, 0.98, 0.94), "stone", 0.3, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/dark_stone.tres": [Color(0.3, 0.26, 0.34), "stone", 0.3, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/gold.tres": [Color(1.0, 0.76, 0.2), "gold", 1.0, 0.0, {"spec_strength": 1.6,
+	"res://assets/materials/env/red_sandstone.tres": [Color(0.8, 0.14, 0.18), "marble", 0.9, 0.3, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/sandstone.tres": [Color(0.98, 0.93, 0.84), "marble", 0.25, 0.3, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/marble.tres": [Color(1.0, 0.98, 0.94), "marble", 0.3, 0.3, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/dark_stone.tres": [Color(0.3, 0.26, 0.34), "marble", 0.3, 0.3, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/gold.tres": [Color(1.0, 0.76, 0.2), "gold", 1.0, 0.45, {"spec_strength": 1.6,
 		"spec_size": 0.9, "rim_strength": 0.5, "vertex_shade": 0.0}],
-	"res://assets/materials/env/cloth_red.tres": [Color(0.8, 0.1, 0.2), "cloth", 0.8, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/wood.tres": [Color(0.5, 0.26, 0.14), "wood", 0.5, 0.0, {"vertex_shade": 0.0}],
-	"res://assets/materials/env/hills.tres": [Color(0.46, 0.62, 0.7), "ground", 0.05, 0.0, {"vertex_shade": 0.0,
+	"res://assets/materials/env/cloth_red.tres": [Color(0.8, 0.1, 0.2), "cloth", 0.8, 0.45, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/wood.tres": [Color(0.5, 0.26, 0.14), "marble", 0.5, 0.3, {"vertex_shade": 0.0}],
+	"res://assets/materials/env/hills.tres": [Color(0.46, 0.62, 0.7), "marble", 0.05, 0.3, {"vertex_shade": 0.0,
 		"rim_strength": 0.0}],
 }
 ## Paving keeps its own tile-and-medallion shader, recoloured with clear grout lines.
@@ -40,6 +42,7 @@ const PAVING := {
 	"stone_a": Color(0.92, 0.76, 0.52), "stone_b": Color(0.86, 0.68, 0.46), "grout": Color(0.52, 0.38, 0.3),
 	"inlay_saffron": Color(1.0, 0.6, 0.1), "inlay_red": Color(0.8, 0.1, 0.18),
 	"inlay_white": Color(1.0, 0.97, 0.88), "inlay_blue": Color(0.06, 0.45, 0.6),
+	"medallion_radius": 0.01,  # the Gemini medallion is laid over the old procedural one
 }
 ## Foliage keeps its alpha-cut, wind-swayed shader, recoloured toward the dusk palette.
 const FOLIAGE := {"tint": Color(0.8, 1.0, 0.7), "shadow_tint": Color(0.45, 0.55, 0.75),
@@ -56,7 +59,10 @@ func _ready() -> void:
 	_restyle_tree(level)
 	_environment(level)
 	_crisp_render()
+	_hide_old_gate(level)
 	_add_backdrop(level)
+	_add_skyline(level)
+	_add_medallion(level)
 	get_tree().node_added.connect(_on_node_added)
 
 
@@ -146,6 +152,7 @@ static func make_toon(colour: Color, tex: String, scale: float, strength: float,
 	m.shader = load(TOON)
 	m.set_shader_parameter("albedo", colour)
 	m.set_shader_parameter("paint_tex", load(TEX % tex))
+	m.set_shader_parameter("tex_mean_lum", TEX_MEAN.get(tex, 0.5))
 	m.set_shader_parameter("paint_scale", scale)
 	m.set_shader_parameter("paint_strength", strength)
 	m.set_shader_parameter("vertex_shade", 0.4)
@@ -231,7 +238,7 @@ func _add_backdrop(level: Node) -> void:
 	var tex := load("res://assets/art/gemini/gate_front.png") as Texture2D
 	if tex == null:
 		return
-	var width := 150.0
+	var width := 118.0
 	var q := QuadMesh.new()
 	q.size = Vector2(width, width * tex.get_height() / tex.get_width())
 	var m := StandardMaterial3D.new()
@@ -246,5 +253,87 @@ func _add_backdrop(level: Node) -> void:
 	mi.name = "PalaceBackdrop"
 	mi.mesh = q
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mi.position = Vector3(0, q.size.y * 0.5 - 2.0, -150.0)
+	mi.position = Vector3(0, q.size.y * 0.5 - 1.0, -88.0)
 	level.add_child(mi)
+
+
+## The Gemini-made city panorama (assets/art/gemini/skyline.png) on a curved wall far behind the
+## palace gate, so the horizon is Ayodhya instead of empty sky. Unlit, as painted.
+func _add_skyline(level: Node) -> void:
+	var tex := load("res://assets/art/gemini/skyline.png") as Texture2D
+	if tex == null:
+		return
+	var radius := 330.0
+	var arc := deg_to_rad(230.0)
+	var repeats := 2  # the picture is mirrored side by side so its edges meet
+	var height := radius * arc * float(tex.get_height()) / float(tex.get_width()) / repeats
+	var seg := 96
+	var verts := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var idx := PackedInt32Array()
+	for i in seg + 1:
+		var f := float(i) / seg
+		var a := -arc * 0.5 + arc * f  # centred on north (-Z)
+		var x := sin(a) * radius
+		var z := -cos(a) * radius
+		verts.append(Vector3(x, -2.0, z))
+		verts.append(Vector3(x, height - 2.0, z))
+		var u := absf(fposmod(f * repeats, 2.0) - 1.0)
+		uvs.append(Vector2(u, 1.0))
+		uvs.append(Vector2(u, 0.0))
+	for i in seg:
+		var b := i * 2
+		idx.append_array([b, b + 1, b + 2, b + 1, b + 3, b + 2])
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_INDEX] = idx
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_texture = tex
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	m.fog_disabled = true
+	var mi := MeshInstance3D.new()
+	mi.name = "CitySkyline"
+	mi.mesh = mesh
+	mi.material_override = m
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	level.add_child(mi)
+
+
+## The Gemini-made inlaid medallion (assets/art/gemini/medallion.png) on the courtyard floor.
+func _add_medallion(level: Node) -> void:
+	var tex := load("res://assets/art/gemini/medallion.png") as Texture2D
+	if tex == null:
+		return
+	var q := QuadMesh.new()
+	q.size = Vector2(19.0, 19.0)
+	q.orientation = PlaneMesh.FACE_Y
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED  # keeps its painted colours, like the floor around it
+	m.albedo_texture = tex
+	m.albedo_color = Color(1.0, 0.96, 0.88)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var mi := MeshInstance3D.new()
+	mi.name = "GeminiMedallion"
+	mi.mesh = q
+	mi.material_override = m
+	mi.position = Vector3(0.0, 0.04, -28.0)
+	level.add_child(mi)
+
+
+## The Gemini gate replaces our own procedural gate tower, north wall and distant city blocks:
+## hide them (visual only; their colliders stay, so the courtyard still ends at the same wall).
+func _hide_old_gate(level: Node) -> void:
+	var env := level.get_node_or_null("Environment")
+	if env == null:
+		return
+	for n in ["North", "Skyline", "Hills"]:
+		var node := env.get_node_or_null(n) as Node3D
+		if node:
+			node.visible = false

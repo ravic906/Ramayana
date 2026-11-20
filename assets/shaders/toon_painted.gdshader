@@ -6,7 +6,10 @@ shader_type spatial;
 render_mode cull_back, depth_draw_opaque;
 
 uniform vec4 albedo : source_color = vec4(1.0);
+// A Gemini-made texture (assets/art/gemini). Only its light/dark detail is used (divided by its
+// mean brightness), so the flat colour in `albedo` stays in charge of the hue.
 uniform sampler2D paint_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform float tex_mean_lum = 0.5;
 uniform float paint_scale = 0.6;       // tiles per metre
 uniform float paint_strength : hint_range(0.0, 2.0) = 1.0;
 // Painted detail fades with distance so fine marks do not shimmer when the camera moves.
@@ -51,7 +54,8 @@ void fragment() {
 	vec3 paint = triplanar(wpos, wnrm);
 	float dist = length(wpos - CAMERA_POSITION_WORLD);
 	float ps = paint_strength * (1.0 - 0.75 * smoothstep(detail_fade_near, detail_fade_far, dist));
-	vec3 base = albedo.rgb * clamp(vec3(1.0) + (paint - 0.5) * 2.0 * ps, 0.0, 2.0);
+	float lum = dot(paint, vec3(0.3, 0.55, 0.15)) / max(tex_mean_lum, 0.05);
+	vec3 base = albedo.rgb * mix(1.0, clamp(lum, 0.0, 1.6), ps);
 	if (use_regions > 0.5) {
 		vec3 region = region_base.rgb;
 		region = mix(region, region_r.rgb, clamp(COLOR.r, 0.0, 1.0));

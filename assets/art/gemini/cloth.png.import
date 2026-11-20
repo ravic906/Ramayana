@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdt4816a1thyy"
-path="res://.godot/imported/paint_wood.png-eaa20c338709fc0523bf0dea35d47a3e.ctex"
+uid="uid://ddbbyhej0fn38"
+path="res://.godot/imported/cloth.png-08f4869f31ab9dfa2be7d831e08e0522.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/painted/paint_wood.png"
-dest_files=["res://.godot/imported/paint_wood.png-eaa20c338709fc0523bf0dea35d47a3e.ctex"]
+source_file="res://assets/art/gemini/cloth.png"
+dest_files=["res://.godot/imported/cloth.png-08f4869f31ab9dfa2be7d831e08e0522.ctex"]
 
 [params]
 
