@@ -10,7 +10,7 @@ render_mode unshaded, depth_test_disabled, depth_draw_never, cull_disabled, fog_
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
 uniform vec4 ink : source_color = vec4(0.2, 0.08, 0.18, 1.0);
 uniform float thickness = 1.2;      // pixels
-uniform float threshold = 0.3;     // edge strength that starts a line
+uniform float threshold = 0.36;     // edge strength that starts a line
 uniform float softness = 0.06;
 uniform float strength : hint_range(0.0, 1.0) = 0.9;
 uniform float lod = 1.0;            // mip level used for the edge test (softens grain)

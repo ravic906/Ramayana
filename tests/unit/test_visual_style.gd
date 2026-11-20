@@ -6,6 +6,7 @@ var _saved_style := 0
 
 
 func before_each() -> void:
+	StoryLevel.illustrated_trial = false  # this level runs the illustrated trial; test the plain switch
 	_saved_style = Settings.visual_style
 	Settings.config_path = "user://test_settings.cfg"
 	Settings.visual_style = Settings.VisualStyle.STYLISED
@@ -16,6 +17,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	level.queue_free()
+	StoryLevel.illustrated_trial = true
 	Settings.visual_style = _saved_style
 	DirAccess.remove_absolute(Settings.config_path)
 	Settings.config_path = Settings.DEFAULT_PATH

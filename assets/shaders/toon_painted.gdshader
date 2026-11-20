@@ -13,6 +13,13 @@ uniform float paint_strength : hint_range(0.0, 2.0) = 1.0;
 uniform float detail_fade_near = 22.0;
 uniform float detail_fade_far = 70.0;
 uniform float vertex_shade : hint_range(0.0, 1.0) = 1.0;
+// 1.0 = colour by region masks in the vertex colours (the level kit's arch material):
+// none = region_base, R = region_r, G = region_g, B = region_b. Replaces vertex_shade.
+uniform float use_regions : hint_range(0.0, 1.0) = 0.0;
+uniform vec4 region_base : source_color = vec4(1.0);
+uniform vec4 region_r : source_color = vec4(1.0);
+uniform vec4 region_g : source_color = vec4(1.0);
+uniform vec4 region_b : source_color = vec4(1.0);
 uniform vec4 shadow_tint : source_color = vec4(0.52, 0.6, 0.92, 1.0);
 uniform float shadow_floor : hint_range(0.0, 1.0) = 0.5;
 uniform float band_softness : hint_range(0.001, 0.2) = 0.04;
@@ -45,7 +52,15 @@ void fragment() {
 	float dist = length(wpos - CAMERA_POSITION_WORLD);
 	float ps = paint_strength * (1.0 - 0.75 * smoothstep(detail_fade_near, detail_fade_far, dist));
 	vec3 base = albedo.rgb * clamp(vec3(1.0) + (paint - 0.5) * 2.0 * ps, 0.0, 2.0);
-	base *= mix(vec3(1.0), COLOR.rgb, vertex_shade);
+	if (use_regions > 0.5) {
+		vec3 region = region_base.rgb;
+		region = mix(region, region_r.rgb, clamp(COLOR.r, 0.0, 1.0));
+		region = mix(region, region_g.rgb, clamp(COLOR.g, 0.0, 1.0));
+		region = mix(region, region_b.rgb, clamp(COLOR.b, 0.0, 1.0));
+		base *= region;
+	} else {
+		base *= mix(vec3(1.0), COLOR.rgb, vertex_shade);
+	}
 	ALBEDO = base;
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.0;

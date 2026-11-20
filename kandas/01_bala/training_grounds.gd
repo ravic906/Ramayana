@@ -14,6 +14,8 @@ var _vasishtha: Node3D
 
 func _enter_tree() -> void:
 	princes_crowned = true  # worn at court, before the children are ready
+	illustrated = illustrated_trial  # the illustrated-look trial (docs/OWNER_TODO.md)
+	super()
 
 
 func _ready() -> void:

@@ -67,11 +67,11 @@ func _ready() -> void:
 		_reverse[MAP[k]] = k
 	get_tree().node_added.connect(_on_node_added)
 	Settings.style_changed.connect(apply)
-	apply.call_deferred(Settings.visual_style)
+	apply.call_deferred(Settings.effective_style())
 
 
-func apply(new_style: int) -> void:
-	style = new_style
+func apply(_new_style: int) -> void:
+	style = Settings.effective_style()  # a level override (illustrated trial) wins
 	var realistic := style == Settings.VisualStyle.REALISTIC
 	_apply_materials(get_tree().current_scene if get_tree().current_scene else get_parent(), realistic)
 	if _world_env:

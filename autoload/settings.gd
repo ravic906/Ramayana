@@ -114,8 +114,18 @@ func assist_scale() -> float:
 	return [1.6, 1.0, 0.8][difficulty]
 
 
+## A level can force a look for its duration (not saved): -1 = none. The
+## illustrated trial in Mission 1 forces the stylised bodies and materials.
+var style_override := -1
+
+
+## The look actually in use: the level's override, or the player's choice.
+func effective_style() -> int:
+	return style_override if style_override >= 0 else visual_style
+
+
 func is_realistic() -> bool:
-	return visual_style == VisualStyle.REALISTIC
+	return effective_style() == VisualStyle.REALISTIC
 
 
 func set_visual_style(style: int) -> void:

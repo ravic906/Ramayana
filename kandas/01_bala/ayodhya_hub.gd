@@ -29,6 +29,7 @@ var _gate: Interactable
 
 func _enter_tree() -> void:
 	princes_crowned = true  # worn at court, before the children are ready
+	super()
 
 
 func _ready() -> void:

@@ -10,6 +10,10 @@ const LAKSHMANA := preload("res://characters/companions/lakshmana/lakshmana.tscn
 
 ## Crowned (kireeta) at court; false on the road: topknot and side-locks.
 var princes_crowned := false
+## The illustrated look (IllustratedLook) for this level; set in the subclass _enter_tree before super().
+var illustrated := false
+## Global switch for the illustrated-look trial (tests of the Stylised/Realistic switch turn it off).
+static var illustrated_trial := true
 
 ## Camera shots for cutscenes: id -> [position, look_at].
 var shots := {}
@@ -50,6 +54,17 @@ func set_objective(text: String, target: Node3D = null, beacon := true) -> void:
 func _enter_tree() -> void:
 	Settings.set_fps_context("game")
 	_begin_stats.call_deferred()
+	if illustrated:
+		Settings.style_override = Settings.VisualStyle.STYLISED  # before the characters enter
+		if get_node_or_null("IllustratedLook") == null:
+			var look := IllustratedLook.new()
+			look.name = "IllustratedLook"
+			add_child.call_deferred(look)
+
+
+func _exit_tree() -> void:
+	if illustrated:
+		Settings.style_override = -1
 
 
 func _begin_stats() -> void:
