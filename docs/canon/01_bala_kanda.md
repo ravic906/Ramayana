@@ -92,9 +92,102 @@ this section is **verified** against Griffith unless marked otherwise.
 - **Variants:** the nectar's distribution, the "half of Vishnu" division and the horse sacrifice
   details differ in other tellings; the popular television version simplifies all three.
 
----
 
-*Part B (Griffith XXII-XXXV): the departure and the road.*  _in progress_
+## Part B. The departure and the road (Griffith XXII to XXXV)
+
+**Verified** against Griffith (read in full).
+
+### Sequence
+| Griffith | What happens |
+|---|---|
+| XXII | Dasharatha refuses: Rama is a boy ("this year he will be just sixteen"); he offers to go himself with the four-fold army. Vishvamitra names the enemy: Ravana's men **Maricha and Subahu** (Sunda and Upasunda's sons). |
+| XXIII | Vishvamitra rages at the broken promise; **Vasishtha** tells the king to let Rama go: the demons cannot beat him, and Vishvamitra holds the divine arms (from Krishashva's line). |
+| XXIV | The boys depart with their parents' and Vasishtha's blessing. Vishvamitra gives them **two spells** ("the mighty and the mightiest"). They walk **a league and more** along the Sarayu's **southern shore** and sleep on its bank. |
+| XXV | Morning rites; they reach the **meeting of the Sarayu and the Ganga**, the hermitage of **Kama** (who was burned by Shiva's glance; the land is named **Anga**). One night there. |
+| XXVI | They cross the river by barge. Vishvamitra describes the sources of the Sarayu, the lands **Malaja and Karusha**, and the terrifying **forest of Tataka** a league away. |
+| XXVII | Tataka's origin: daughter of the Yaksha Suketu, wife of Sunda, mother of Maricha; strength of a thousand elephants from Brahma; Agastya cursed her and her son. |
+| XXVIII | Rama hesitates (a woman), then agrees. Tataka attacks with stones and dust; Rama cuts off her hands; Lakshmana her ears and nose; at **twilight** Rama kills her with a crescent-headed dart. Indra asks Vishvamitra to give Rama the divine arms. |
+| XXIX-XXX | Vishvamitra gives the **divine arms** and then the charms that restrain them. |
+| XXXI | **Siddhashrama**, "the Perfect Hermitage": the grove where Vishnu as the Dwarf did his penance. |
+| XXXII | Vishvamitra begins his rite; the brothers guard it **six days and nights**. On the sixth day Maricha and Subahu attack with a rain of blood: Rama kills Subahu with a flaming shaft, hurls Maricha a hundred leagues into the ocean with the "mortal" dart and drives off the rest with the Wind-God's dart. |
+| XXXIII | They travel north to Mithila; the bow is described as one no god or fiend can string, given to the king by the gods. They camp by the **Sona**. |
+| XXXIV-XXXV | Vishvamitra's family history told by the Sona at night (Kusha, Kushanabha, the Kanyakubja daughters; Gadhi; his sister Satyavati who became the river Kaushiki). |
+| XXXVI | Crossing the Sona, they reach the Ganga (see Part C). |
+
+### People
+- **Rama** (XXII, XXIV).
+  - Almost sixteen: "this year he will be just sixteen" (XXII). *The popular text says he is
+    "not yet sixteen"; the two agree.*
+  - "Lotus-eyed", bow in hand; hair in side-locks "like the raven's wing" (XXIV: the Kshatriya
+    boy's *kakapaksha*).
+  - Obedient, gentle, and (XXVIII) reluctant to harm a woman, but follows Vishvamitra's word and
+    his father's order.
+- **Lakshmana** (XXIV, XXVIII). "Closely following"; cuts off Tataka's ears and nose in the
+  fight. The brothers are likened to the Ashvin twins and "two fire-born gods of war".
+- **Dasharatha** (XXII). Says he is **nine thousand years** old; calls Rama "my darling with the
+  lotus eyes" and "a boy unskilled"; offers himself, his bow and his army; is in agony.
+- **Vishvamitra** (XXII-XXXV). "Chief of saints"; furious at a broken promise: calls Dasharatha
+  "false scion of Kakutstha's line" (XXIII).
+- **Vasishtha** (XXIII). "Wisest seer", "observant of his vows austere": speaks for Rama.
+- **Tataka** (XXVI-XXVIII).
+  - "A spirit, loving ill"; daughter of Suketu; wife of Sunda; mother of Maricha.
+  - **Strength of a thousand elephants** (XXVI). She hurls stones and dust, changes shape,
+    attacks at twilight.
+  - Her forest is "a gloomy, awe-inspiring wood".
+  - Rama maims, then kills her (see Sequence).
+- **Maricha and Subahu** (XXII, XXVII, XXXII). "Rover of the night" and "man-eaters, foul of
+  mind"; sons of Sunda and Tataka; Maricha cursed by Agastya.
+  - **Game:** Maricha is hurled to the sea and survives: it sets up the golden deer.
+
+### Places
+- **Ayodhya to the Sarayu** (XXIV): "upon fair Sarayu's southern shore", a league and more,
+  night on the bank, the Wind-God's breeze "just waved the trees".
+- **Kama's grove at the confluence** (XXV): "where mix her waters confluent with three-pathed
+  Ganga's tide"; the land of **Anga**; a pure stream on each hand; ascetics "scripture-talking",
+  who control their senses.
+- **The Sarayu's source** (XXVI): Lake **Manasa** under Mount **Kailasa**.
+- **Malaja and Karusha** (XXVI): "two broad and fertile lands", named for the stain Indra washed
+  away there (killing Namuchi). Popular spellings: *Malada* and *Karusha*.
+- **Tataka's forest** (XXVI): a league away, "a gloomy awe-inspiring wood".
+  - Trees: **dhava, sal, bignonia, bel** (Shorea robusta, Aegle marmelos, Grislea tomentosa and
+    others, per the translator's note).
+  - Beasts: lion, rhinoceros, bear, boar, tiger, elephant.
+  - Sounds: shrill cicadas, fowl of dismal note.
+- **Siddhashrama** (XXXI-XXXII): "the Perfect Grove" and "consecrated wood", **the Dwarf's
+  hermitage**; the grove was Vishnu's penance place, where as Vamana he took three steps and
+  sent Bali down.
+- **The Sona** (XXXIII, XXXVI): rises in Budelcund; they camp on its far shore; the Ganga to the
+  north below the snows.
+
+### Weapons, astras, objects, numbers
+- **The two spells** (XXIV): called "the mighty and the mightiest" (the popular names are **Bala**
+  and **Atibala**; Griffith does not print them). Their gifts: no weariness, no age, no hunger or
+  thirst; "powers of darkness ne'er shall smite".
+- **The divine arms** (XXIX; in order): Vengeance, Fate, Right, Vishnu's arm, Indra's
+  thunderbolt, Shiva's trident, Brahma's head, a charmer and a pointed club, Fate's dread net,
+  Justice's noose, Varuna's cord, the moist and the dry thunderbolt, Shiva's dart, **the arm of
+  Fire** ("the Spire"), **the Wind-God's dart** ("Crusher"), the Horse's Head, the Curlew's Bill,
+  two spears, Skull-wreath and mace, Joyous, the gem of swords, the Gandharva charm, Sleep and
+  Rest, the weapons of the Sun and the Rain, Kama's dart, the shadowy powers' arm, the God of
+  Gold's arm, False and True, Illusion, the Dew (the Moon's weapon), Vishvakarma's arm, **"the
+  mortal dart whose point is chill"** (= the *manavastra*, used on Maricha), and Slaughter.
+- **Restraining charms** (XXX): a long list, given so the arms can be controlled and dismissed.
+- Rama's gear on the road (XXIV): "quiver and bow and sword".
+- **Numbers:** a league and more (XXIV); **a thousand elephants** (XXVI); **six days and nights**
+  (XXXII; *the text calls it both the fifth and the sixth day: a known inconsistency*); Maricha
+  hurled **a hundred leagues** (XXXII); **nine thousand years** (Dasharatha, XXII).
+
+### What differs from the popular picture
+- Bala and Atibala are **unnamed** in Griffith (named in the popular text).
+- The list of arms is **much longer** than the usual four or five; only the arm of Fire and the
+  Wind-God's dart, plus the "mortal" dart, are used in the vigil.
+- Tataka's **strength** is a thousand elephants; her forest is **dark, wild and abundant** with
+  beasts, not a barren waste.
+- **Rama maims before he kills.**
+- Maricha is **not killed** and the "mortal" dart is not named in XXXII, only in XXIX.
+- **Vishvamitra rages** before Vasishtha calms the situation.
+
+---
 
 ## Part C. The Ganga, the churning, Vishala and Ahalya (Griffith XXXVI, XXXIX to L)
 

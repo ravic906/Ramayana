@@ -34,7 +34,7 @@ short quotations come from a public-domain translation (R. T. H. Griffith, 1870-
 ## Files
 | File | State |
 |---|---|
-| `01_bala_kanda.md` | in progress (Griffith I-XXI verified) |
+| `01_bala_kanda.md` | complete: Griffith I-LXXVII read (cantos XXXVII-XXXVIII omitted by Griffith) |
 | `ADDITIONS.md` | started |
 | `AUDIT_PART1.md` | planned (after the Bala file is complete) |
 | `02_ayodhya` ... `07_uttara` | written just before each Part is designed |
