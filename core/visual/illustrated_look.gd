@@ -62,11 +62,14 @@ func _ready() -> void:
 	_hide_old_gate(level)
 	_add_backdrop(level)
 	_add_skyline(level)
+	_add_prop_cutouts(level)
 	_add_medallion(level)
 	get_tree().node_added.connect(_on_node_added)
 
 
 func _on_node_added(node: Node) -> void:
+	if node is TargetDummy and is_inside_tree():
+		_dress_target.call_deferred(node)
 	# Characters, enemies and props that spawn later (waves, cutscene actors).
 	if is_inside_tree() and node is GeometryInstance3D and get_parent().is_ancestor_of(node):
 		_restyle_node.call_deferred(node)
@@ -337,3 +340,71 @@ func _hide_old_gate(level: Node) -> void:
 		var node := env.get_node_or_null(n) as Node3D
 		if node:
 			node.visible = false
+
+
+# --- Gemini props: flat cut-outs that turn to face the camera but stay upright --------------------
+
+const PROPS := "res://assets/art/gemini/props/%s.png"
+
+
+## A Gemini picture standing on the ground at `base`, `height` metres tall, always facing the camera.
+func _cutout(parent: Node, tex_name: String, base: Vector3, height: float) -> Sprite3D:
+	var tex := load(PROPS % tex_name) as Texture2D
+	var s := Sprite3D.new()
+	s.name = "Gemini_" + tex_name
+	s.texture = tex
+	s.pixel_size = height / float(tex.get_height())
+	s.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	s.shaded = false
+	s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	s.alpha_scissor_threshold = 0.5
+	s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	s.fixed_size = false
+	s.position = base + Vector3(0, height * 0.5, 0)
+	parent.add_child(s)
+	return s
+
+
+func _dress_target(node: Node) -> void:
+	if not is_instance_valid(node) or node.get_node_or_null("Gemini_target") != null:
+		return
+	var mesh := node.get_node_or_null("Mesh") as Node3D
+	if mesh:
+		mesh.visible = false
+	_cutout(node, "target", Vector3.ZERO, 2.6)
+
+
+func _add_prop_cutouts(level: Node) -> void:
+	var env := level.get_node_or_null("Environment")
+	if env == null:
+		return
+	# Archery targets (the level's dummies keep their colliders, health and hit logic).
+	for d in level.find_children("*", "TargetDummy", true, false):
+		_dress_target(d)
+	# Lamps: stand and flame hidden, the Gemini lamp on the same spot (the warm OmniLights stay).
+	for n in ["LampStands", "LampFlames"]:
+		var mm := env.get_node_or_null(n) as MultiMeshInstance3D
+		if mm:
+			mm.visible = false
+	var stands := env.get_node_or_null("LampStands") as MultiMeshInstance3D
+	if stands and stands.multimesh:
+		for i in stands.multimesh.instance_count:
+			_cutout(level, "lamp", stands.multimesh.get_instance_transform(i).origin, 2.4)
+	# Banners: poles and cloth hidden, the Gemini banner where each pole stood (low ones only).
+	var poles := env.get_node_or_null("BannerPoles") as MultiMeshInstance3D
+	for n in ["BannerPoles", "Banners"]:
+		var mm := env.get_node_or_null(n) as MultiMeshInstance3D
+		if mm:
+			mm.visible = false
+	if poles and poles.multimesh:
+		for i in poles.multimesh.instance_count:
+			var o := poles.multimesh.get_instance_transform(i).origin
+			if o.y < 8.0:
+				_cutout(level, "banner", Vector3(o.x, o.y - 2.25, o.z), 4.8)
+	# Planters: the three marble beds become Gemini marigold planters.
+	var planters := env.get_node_or_null("Planters") as Node3D
+	if planters:
+		planters.visible = false
+	for p in [Vector3(20, 0, -40), Vector3(-20, 0, -40), Vector3(21, 0, 6)]:
+		_cutout(level, "planter", p + Vector3(0, 0.3, 0), 3.6)
