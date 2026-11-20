@@ -220,3 +220,53 @@ bar frame with gold ends, a small square icon frame, all in the same style, no t
   animate the result in the game.
 - Props become models (or flat cut-outs) in the level.
 - Key art and interface frames go in the title screen, menus and HUD.
+
+---
+
+## Rama multi-view (for a 3D tool)
+
+Gemini cannot export a 3D model, but an image-to-3D tool (Meshy, Tripo, Rodin) builds a much better
+character from four views than from one picture. Use the SAME Gemini chat as prompt 09 (Rama on the
+road) and attach the 09 image to every prompt below. Ask for 4 variants each and keep the best.
+
+**Common block (paste at the start of each prompt):**
+```
+Use the attached Rama image as the exact reference: same face, same costume, same colours, same
+proportions, same lighting. Full body from head to feet, perfectly orthographic, no perspective,
+centred, relaxed A-pose with arms slightly away from the body, plain flat light-grey background,
+no shadow on the ground, no text, no watermark. Do not hold the bow: both hands empty and open, the
+bow is not in the picture. Portrait 3:4.
+```
+
+### M1 front
+```
+View: straight from the FRONT, eyes level, symmetrical.
+```
+### M2 back
+```
+View: straight from the BACK. Show the quiver strap, the quiver and the back of the topknot and the
+dhoti knot exactly as they would look from behind.
+```
+### M3 left side
+```
+View: exactly from the LEFT SIDE (profile), body at 90 degrees, showing the sword on the left hip.
+```
+### M4 right side
+```
+View: exactly from the RIGHT SIDE (profile).
+```
+### M5 face close-up (optional, helps the face)
+```
+Head and shoulders only, straight from the front, neutral calm expression, mouth closed, eyes open
+looking at the camera, even soft light. Same face as the reference.
+```
+
+Crowned Rama (prompt 10) is a separate character: generate his views separately, do not mix.
+
+### Then, in the 3D tool
+1. Choose "multi-view" or "image to 3D" and upload front, back, left and right (and the face close-up if it asks).
+2. Options: A-pose; quad topology if offered; about 20,000 to 30,000 triangles; baked colour texture, no
+   heavy lighting effects; split head and body if the tool allows.
+3. Generate, spin it round to check it, try 3 or 4 times and keep the best.
+4. Download as `.glb` and send me the file plus the four pictures. I check the licence terms, fit it to our
+   skeleton, attach the bow, quiver and crown, and test it in Mission 1.
