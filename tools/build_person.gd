@@ -51,7 +51,7 @@ const SKIN_SHADER := "res://assets/shaders/skin.gdshader"
 const DETAIL_NORMAL := "res://characters/rama/model/textures/rama_skin_normal.png"
 var person_name := ""
 const PARTS := {"body": "Body", "high-poly": "Eyes", "low-poly": "Eyes", "eyebrow": "Eyebrows",
-	"eyelashes": "Eyelashes", "teeth": "Teeth", "tongue": "Tongue", "long01": "Hair"}
+	"eyelashes": "Eyelashes", "teeth": "Teeth", "tongue": "Tongue", "long01": "Hair", "short01": "Hair", "short02": "Hair", "short03": "Hair", "short04": "Hair", "ponytail01": "Hair"}
 
 
 func _initialize() -> void:
@@ -77,7 +77,7 @@ func build(glb: String, person: String) -> Error:
 	var sk_ref: Skeleton3D = ref_scene.find_children("*", "Skeleton3D", true, false)[0]
 	var ref_anim: AnimationPlayer = ref_scene.get_node("AnimationPlayer")
 
-	person_name = person
+	person_name = person.split("_")[0]  # "rama_short02" is a hair trial of "rama"
 	var dir := OUT_DIR + person + "/"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 
@@ -174,7 +174,7 @@ func build(glb: String, person: String) -> Error:
 		mi.skeleton = NodePath("..")
 		_save_textures(mi, dir, part)
 
-	var spec: Dictionary = PEOPLE.get(person, {})
+	var spec: Dictionary = PEOPLE.get(person_name, {})
 	if spec.get("beard", 0.0) > 0.0:
 		var body_mi := sk.get_node("Body") as MeshInstance3D
 		var beard := _make_beard(body_mi, spec["beard"], new_global["Head"], spec["hair"])

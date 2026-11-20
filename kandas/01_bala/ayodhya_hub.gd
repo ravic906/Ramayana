@@ -27,6 +27,10 @@ var child_following := false
 var _gate: Interactable
 
 
+func _enter_tree() -> void:
+	princes_crowned = true  # worn at court, before the children are ready
+
+
 func _ready() -> void:
 	var hint := hud.get_node_or_null("Root/HintLabel")
 	if hint:

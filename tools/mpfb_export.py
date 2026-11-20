@@ -30,7 +30,7 @@ CAST = {
                     "chin-width-incr": 0.3, "chin-prominent-incr": 0.25, "nose-point-width-decr": 0.2,
                     "l-cheek-bones-incr": 0.3, "r-cheek-bones-incr": 0.3, "eyebrows-trans-down": 0.15,
                     "mouth-lowerlip-volume-incr": 0.2, "neck-scale-horiz-incr": 0.3},
-        "skin": "young_african_male/young_african_male.mhmat", "brows": "eyebrow012", "hair": "long01",
+        "skin": "young_african_male/young_african_male.mhmat", "brows": "eyebrow012", "hair": "short04",
     },
     # Lakshmana, a little younger: leaner face, quicker brows.
     "lakshmana": {
@@ -39,7 +39,7 @@ CAST = {
         "targets": {"head-oval": 0.2, "chin-prominent-incr": 0.35, "chin-width-incr": 0.2,
                     "l-cheek-volume-decr": 0.3, "r-cheek-volume-decr": 0.3, "nose-greek-incr": 0.2,
                     "eyebrows-angle-up": 0.25, "neck-scale-horiz-incr": 0.3},
-        "skin": "young_caucasian_male/young_caucasian_male.mhmat", "brows": "eyebrow003", "hair": "long01",
+        "skin": "young_caucasian_male/young_caucasian_male.mhmat", "brows": "eyebrow003", "hair": "short04",
     },
     # Vishvamitra, about sixty: gaunt, a strong hooked nose, fierce brows.
     "vishvamitra": {
@@ -109,6 +109,10 @@ def _delete_helpers(body) -> None:
 
 
 def build(name: str, spec: dict, out: Path) -> None:
+    import os
+    if os.environ.get("HAIR_OVERRIDE"):
+        spec = dict(spec, hair=os.environ["HAIR_OVERRIDE"])
+        name = name + "_" + spec["hair"]
     bpy.ops.wm.read_factory_settings(use_empty=True)
     info = HumanService._create_default_human_info_dict()
     info["name"] = name

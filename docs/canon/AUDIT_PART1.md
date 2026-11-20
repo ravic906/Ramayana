@@ -35,7 +35,7 @@ Checked on 2026-11-20 against `01_bala_kanda.md` (Griffith I-LXXVII). Verdicts: 
 ## People (looks)
 | Person | Canon | Game | Verdict |
 |---|---|---|---|
-| Rama | "lotus-eyed", "lustrous dark" skin, long arms, side-locks "like the raven's wing"; bow, quiver, sword, arm and finger guards (XXIV) | dusky blue-dark, long arms; long loose hair with a crown | skin **faithful**; hair and crown **fix queued** (P1-2: side-locks, no crown on the road, arm and finger guards) |
+| Rama | "lotus-eyed", "lustrous dark" skin, long arms, side-locks "like the raven's wing"; bow, quiver, sword, arm and finger guards (XXIV) | dusky blue-dark, long arms; long loose hair with a crown | skin **faithful**; hair, crown, guards and sword **fixed** (topknot and side-locks on the road, the kireeta only at Ayodhya; arm guard, finger guard, sword) |
 | Lakshmana | "closely following", the Ashvin-like twin; guards the sages | same body type | faithful; same dress fix queued |
 | Dasharatha | "lofty-souled", learned, great wealth; says he is nine thousand years old | mature king | faithful; age not shown |
 | Vishvamitra | saint, "pious-souled"; fasting body "dry as a log of wood" (LXV); Kusika's son | gaunt, bearded, long-haired | faithful (his fierceness to be shown in the realistic pass) |
@@ -63,4 +63,4 @@ Checked on 2026-11-20 against `01_bala_kanda.md` (Griffith I-LXXVII). Verdicts: 
 1. **The five raids at Siddhashrama** (nights 1-5): keep (gameplay), or make the first nights
    watchful and quiet and move the fighting to the sixth day, as in the text.
 2. **No maiming of Tataka** (tone): keep the softening, flagged for the consultant.
-3. **Rama's crown**: remove it from the road scenes (queued fix).
+3. **Rama's crown**: remove it from the road scenes (done).

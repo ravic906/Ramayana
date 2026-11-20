@@ -43,6 +43,10 @@ var aim_dir := Vector3.FORWARD
 var _aiming := false
 var _attachments := {}
 var _batch: PropBatch
+var _crown_batch: PropBatch
+var _crown_nodes: Array[MeshInstance3D] = []
+var _knot_nodes: Array[MeshInstance3D] = []
+var _crowned := true
 var _bow_raise := 0.0
 var _bow_mat: ShaderMaterial
 var _string_top: MeshInstance3D
@@ -62,6 +66,7 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	_crowned = _level_crowned()
 	_build_ornaments()
 	_build_bow()
 	_build_anim_tree()
@@ -328,6 +333,7 @@ func _upper_body_paths() -> Array:
 
 func _build_ornaments() -> void:
 	_batch = PropBatch.new(skeleton)
+	_crown_batch = PropBatch.new(skeleton)
 	var gold: Material = load(MAT + "gold.tres")
 	var gold_plain: Material = load(MAT + "gold_plain.tres")
 	var ruby: Material = load(MAT + "ruby.tres")
@@ -336,22 +342,22 @@ func _build_ornaments() -> void:
 	# Kireeta: a tall, tiered crown tapering to a finial, a lotus crest over the
 	# brow with a ruby at its heart (after temple iconography of Rama).
 	var cz := -0.01
-	_add("Head", _cyl(0.116, 0.118, 0.045, 24), gold, _at(0, 1.757, cz))
-	_add("Head", _torus(0.112, 0.124, 24), gold_plain, _at(0, 1.736, cz))
-	_add("Head", _torus(0.108, 0.12, 24), gold_plain, _at(0, 1.779, cz))
+	_cadd("Head", _cyl(0.116, 0.118, 0.045, 24), gold, _at(0, 1.757, cz))
+	_cadd("Head", _torus(0.112, 0.124, 24), gold_plain, _at(0, 1.736, cz))
+	_cadd("Head", _torus(0.108, 0.12, 24), gold_plain, _at(0, 1.779, cz))
 	# One smooth taper with jewelled rings, not stacked drums.
-	_add("Head", _cyl(0.046, 0.104, 0.18, 24), gold, _at(0, 1.87, cz))
+	_cadd("Head", _cyl(0.046, 0.104, 0.18, 24), gold, _at(0, 1.87, cz))
 	for r in [[0.096, 1.81], [0.08, 1.86], [0.064, 1.91]]:
-		_add("Head", _torus(r[0] - 0.005, r[0] + 0.005, 20), gold_plain, _at(0, r[1], cz))
-	_add("Head", _sphere(0.032), gold, _at(0, 1.972, cz))
-	_add("Head", _cyl(0.0, 0.019, 0.075, 10), gold, _at(0, 2.03, cz))
-	_add("Head", _sphere(0.01), ruby, _at(0, 2.07, cz))
+		_cadd("Head", _torus(r[0] - 0.005, r[0] + 0.005, 20), gold_plain, _at(0, r[1], cz))
+	_cadd("Head", _sphere(0.032), gold, _at(0, 1.972, cz))
+	_cadd("Head", _cyl(0.0, 0.019, 0.075, 10), gold, _at(0, 2.03, cz))
+	_cadd("Head", _sphere(0.01), ruby, _at(0, 2.07, cz))
 	# Lotus crest: leaf-shaped petals standing on the band over the forehead.
-	_add("Head", _sphere(0.04), gold, Transform3D(Basis().scaled(Vector3(0.6, 1.3, 0.14)), Vector3(0, 1.808, cz + 0.112)))
-	_add("Head", _sphere(0.014), ruby, _at(0, 1.79, cz + 0.12))
+	_cadd("Head", _sphere(0.04), gold, Transform3D(Basis().scaled(Vector3(0.6, 1.3, 0.14)), Vector3(0, 1.808, cz + 0.112)))
+	_cadd("Head", _sphere(0.014), ruby, _at(0, 1.79, cz + 0.12))
 	for side in [-1.0, 1.0]:
-		_add("Head", _sphere(0.03), gold, Transform3D(Basis(Vector3.UP, 0.5 * side).scaled(Vector3(0.6, 1.2, 0.14)), Vector3(0.05 * side, 1.795, cz + 0.104)))
-		_add("Head", _sphere(0.008), ruby, _at(0.05 * side, 1.785, cz + 0.11))
+		_cadd("Head", _sphere(0.03), gold, Transform3D(Basis(Vector3.UP, 0.5 * side).scaled(Vector3(0.6, 1.2, 0.14)), Vector3(0.05 * side, 1.795, cz + 0.104)))
+		_cadd("Head", _sphere(0.008), ruby, _at(0.05 * side, 1.785, cz + 0.11))
 		# Makara-kundala earrings.
 		_add("Head", _torus(0.012, 0.024, 12), gold,
 			Transform3D(Basis(Vector3.FORWARD, PI / 2), Vector3(0.088 * side, 1.6, -0.01)))
@@ -371,6 +377,16 @@ func _build_ornaments() -> void:
 		_add("upperarm_" + side, _torus(0.056, 0.072, 16), gold, Transform3D(along_x, Vector3(0.33 * s, 1.462, -0.06)))
 		_add("lowerarm_" + side, _torus(0.036, 0.05, 14), gold, Transform3D(along_x, Vector3(0.62 * s, 1.455, -0.066)))
 
+	# Archer's gear (Bala XXVII): leather guard on the left forearm, finger guard
+	# on the right hand, a sword at the left hip.
+	var leather: Material = load(MAT + "wood.tres")
+	_add("lowerarm_l", _cyl(0.05, 0.044, 0.15, 14), leather, Transform3D(along_x, Vector3(0.56, 1.455, -0.066)))
+	_add("lowerarm_r", _cyl(0.04, 0.038, 0.06, 12), leather, Transform3D(along_x, Vector3(-0.7, 1.455, -0.066)))
+	var hip := Transform3D(Basis(Vector3.BACK, deg_to_rad(-12)), Vector3(0.2, 0.86, -0.02))
+	_add("pelvis", _cyl(0.026, 0.02, 0.62, 10), leather, hip * _at(0, -0.1, 0))
+	_add("pelvis", _cyl(0.014, 0.014, 0.14, 8), gold_plain, hip * _at(0, 0.27, 0))
+	_add("pelvis", _box(Vector3(0.12, 0.016, 0.03)), gold_plain, hip * _at(0, 0.2, 0))
+
 	# Kamarbandh (waistband) and the pleated front of the dhoti.
 	_add("pelvis", _torus(0.15, 0.172, 24), gold,
 		Transform3D(Basis().scaled(Vector3(1.04, 1.0, 0.8)), Vector3(0, 1.0, -0.025)))
@@ -388,6 +404,9 @@ func _build_ornaments() -> void:
 		_add("spine_03", _cyl(0.005, 0.005, 0.16, 6), gold_plain, q * Transform3D(Basis(), off))
 		_add("spine_03", _box(Vector3(0.004, 0.07, 0.03)), load(MAT + "saffron.tres"), q * Transform3D(Basis(), off + Vector3(0, 0.09, 0)))
 	_batch.commit()
+	_crown_nodes = _crown_batch.commit()
+	_build_hair_knot()
+	set_crown(_crowned)
 
 
 func _build_bow() -> void:
@@ -496,6 +515,49 @@ func get_bow_tip_position() -> Vector3:
 ## Queues a prop for merging (see PropBatch); committed at the end of _build_ornaments.
 func _add(bone: String, mesh: Mesh, material: Material, rest_xf: Transform3D, casts_shadow: bool = false) -> void:
 	_batch.add(bone, mesh, material, rest_xf, casts_shadow)
+
+
+func _cadd(bone: String, mesh: Mesh, material: Material, rest_xf: Transform3D) -> void:
+	_crown_batch.add(bone, mesh, material, rest_xf, false)
+
+
+## The kireeta is worn at court; on the road the princes wear the hair gathered
+## in a topknot with short side-locks (Valmiki Bala XXI, XXIV).
+## Levels say whether the princes wear the crown (StoryLevel.princes_crowned).
+func _level_crowned() -> bool:
+	var n := get_parent()
+	while n:
+		if "princes_crowned" in n:
+			return n.princes_crowned
+		n = n.get_parent()
+	return true
+
+
+func set_crown(on: bool) -> void:
+	_crowned = on
+	for n in _crown_nodes:
+		if is_instance_valid(n):
+			n.visible = on
+	for n in _knot_nodes:
+		if is_instance_valid(n):
+			n.visible = not on
+
+
+func _build_hair_knot() -> void:
+	var hb := PropBatch.new(skeleton)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.035, 0.028, 0.025)
+	mat.roughness = 0.45
+	mat.rim_enabled = true
+	mat.rim = 0.3
+	var cz := -0.012
+	hb.add("Head", _sphere(0.05), mat, Transform3D(Basis().scaled(Vector3(1, 0.9, 1)), Vector3(0, 1.80, cz - 0.02)))
+	hb.add("Head", _sphere(0.032), mat, _at(0, 1.855, cz - 0.02))
+	for side in [-1.0, 1.0]:
+		for k in 2:
+			hb.add("Head", _sphere(0.018), mat,
+				Transform3D(Basis().scaled(Vector3(0.7, 2.6, 0.9)), Vector3(0.088 * side, 1.665 - k * 0.03, cz + 0.015 - k * 0.006)))
+	_knot_nodes = hb.commit()
 
 
 func _add_to(parent: Node3D, mesh: Mesh, material: Material, xf: Transform3D) -> void:

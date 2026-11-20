@@ -12,6 +12,10 @@ const SARAYU := "res://kandas/01_bala/sarayu_road.tscn"
 var _vasishtha: Node3D
 
 
+func _enter_tree() -> void:
+	princes_crowned = true  # worn at court, before the children are ready
+
+
 func _ready() -> void:
 	# Rama has not yet received any astra: Vishvamitra teaches them after
 	# Tataka. Remove the permanent unlock that earlier prototype builds saved.

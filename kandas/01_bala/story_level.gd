@@ -8,6 +8,9 @@ const LAKSHMANA := preload("res://characters/companions/lakshmana/lakshmana.tscn
 @onready var rama: Rama = $Rama
 @onready var hud: CanvasLayer = $HUD
 
+## Crowned (kireeta) at court; false on the road: topknot and side-locks.
+var princes_crowned := false
+
 ## Camera shots for cutscenes: id -> [position, look_at].
 var shots := {}
 ## Speaker name -> actor (Rama, Lakshmana, spawned NPCs): cutscenes frame and
