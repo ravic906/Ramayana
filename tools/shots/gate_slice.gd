@@ -18,19 +18,19 @@ const TOON := "res://assets/shaders/toon_painted.gdshader"
 
 ## Per glTF material name: colour, painted texture, tiles per metre, paint strength, extras.
 const LOOK := {
-	"stone": [Color(0.97, 0.95, 0.9), "stone", 0.22, 0.5, {}],
-	"marble": [Color(1.0, 0.98, 0.95), "stone", 0.3, 0.45, {}],
-	"plaster": [Color(0.98, 0.95, 0.88), "carving", 0.9, 0.7, {}],
-	"paving": [Color(0.95, 0.92, 0.86), "stone", 0.35, 0.5, {}],
-	"paving2": [Color(0.88, 0.85, 0.8), "stone", 0.35, 0.5, {}],
-	"mortar": [Color(0.6, 0.56, 0.52), "stone", 0.3, 0.5, {}],
-	"red": [Color(0.78, 0.1, 0.15), "carving", 1.1, 0.45, {"rim_strength": 0.4}],
-	"teal": [Color(0.03, 0.5, 0.56), "cloth", 0.9, 0.7, {}],
-	"gold": [Color(1.0, 0.74, 0.2), "gold", 1.0, 0.8, {"spec_strength": 1.4, "spec_size": 0.9, "rim_strength": 0.7, "vertex_shade": 0.0}],
-	"dark": [Color(0.32, 0.17, 0.1), "wood", 0.6, 0.9, {"vertex_shade": 0.3}],
-	"wood": [Color(0.42, 0.2, 0.1), "wood", 0.5, 0.9, {}],
-	"saffron": [Color(1.0, 0.5, 0.08), "cloth", 0.8, 0.8, {"vertex_shade": 0.0}],
-	"carpet": [Color(0.95, 0.42, 0.08), "cloth", 0.6, 0.8, {"vertex_shade": 0.0}],
+	"stone": [Color(1.0, 0.8, 0.5), "stone", 0.22, 0.08, {}],
+	"marble": [Color(1.0, 0.86, 0.62), "stone", 0.3, 0.06, {}],
+	"plaster": [Color(1.0, 0.84, 0.56), "carving", 0.9, 0.35, {}],
+	"paving": [Color(0.94, 0.74, 0.52), "stone", 0.35, 0.1, {}],
+	"paving2": [Color(0.86, 0.64, 0.46), "stone", 0.35, 0.1, {}],
+	"mortar": [Color(0.6, 0.56, 0.52), "stone", 0.3, 0.2, {}],
+	"red": [Color(0.72, 0.1, 0.22), "carving", 1.1, 0.12, {"rim_strength": 0.4}],
+	"teal": [Color(0.08, 0.42, 0.56), "cloth", 0.9, 0.25, {}],
+	"gold": [Color(1.0, 0.74, 0.2), "gold", 1.0, 0.25, {"spec_strength": 1.4, "spec_size": 0.9, "rim_strength": 0.7, "vertex_shade": 0.0}],
+	"dark": [Color(0.32, 0.17, 0.1), "wood", 0.6, 0.3, {"vertex_shade": 0.3}],
+	"wood": [Color(0.42, 0.2, 0.1), "wood", 0.5, 0.35, {}],
+	"saffron": [Color(1.0, 0.5, 0.08), "cloth", 0.8, 0.35, {"vertex_shade": 0.0}],
+	"carpet": [Color(0.95, 0.42, 0.08), "cloth", 0.6, 0.35, {"vertex_shade": 0.0}],
 	"flame": [Color(1.0, 0.85, 0.4), "gold", 1.0, 0.0, {"glow": Color(1.0, 0.7, 0.25), "glow_energy": 2.4, "vertex_shade": 0.0}],
 	"glow": [Color(1.0, 0.8, 0.4), "gold", 1.0, 0.0, {"glow": Color(1.0, 0.62, 0.2), "glow_energy": 1.4, "vertex_shade": 0.0}],
 }
@@ -50,23 +50,28 @@ func _initialize() -> void:
 
 	var sky_mat := ShaderMaterial.new()
 	sky_mat.shader = load("res://assets/shaders/sky_painted.gdshader")
+	for kv in [["zenith", Color(0.1, 0.08, 0.3)], ["mid", Color(0.4, 0.24, 0.52)], ["horizon", Color(1.0, 0.6, 0.4)],
+			["haze_warm", Color(1.0, 0.8, 0.42)], ["cloud_lit", Color(1.0, 0.72, 0.56)], ["cloud_shade", Color(0.48, 0.32, 0.56)],
+			["hill_near", Color(0.2, 0.14, 0.3)], ["hill_far", Color(0.48, 0.3, 0.5)], ["cloud_cover", 0.36],
+			["sun_dir", Vector3(-0.42, 0.1, -1.0)], ["sun_col", Color(1.0, 0.9, 0.62)], ["sun_size", 0.06], ["glow_amount", 0.85]]:
+		sky_mat.set_shader_parameter(kv[0], kv[1])
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	var e := Environment.new()
 	e.background_mode = Environment.BG_SKY
 	e.sky = sky
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.62, 0.7, 0.9)
-	e.ambient_light_energy = 0.42
+	e.ambient_light_color = Color(0.62, 0.48, 0.8)
+	e.ambient_light_energy = 0.45
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	e.tonemap_exposure = 0.9
+	e.tonemap_exposure = 0.85
 	e.glow_enabled = true
-	e.glow_intensity = 0.6
+	e.glow_intensity = 0.9
 	e.glow_bloom = 0.08
 	e.glow_hdr_threshold = 1.0
 	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 	e.fog_enabled = true
-	e.fog_light_color = Color(0.78, 0.86, 0.95)
+	e.fog_light_color = Color(0.85, 0.55, 0.6)
 	e.fog_density = 0.0016
 	e.fog_aerial_perspective = 0.6
 	e.fog_sky_affect = 0.0
@@ -78,11 +83,11 @@ func _initialize() -> void:
 	w.add_child(we)
 
 	var sun := DirectionalLight3D.new()
-	sun.light_color = Color(1.0, 0.94, 0.82)
-	sun.light_energy = 1.15
+	sun.light_color = Color(1.0, 0.74, 0.42)
+	sun.light_energy = 1.35
 	sun.shadow_enabled = false
 	w.add_child(sun)
-	_aim(sun, Vector3(-34, 34, 52), Vector3(0, 3, 0))
+	_aim(sun, Vector3(-50, 16, 45), Vector3(0, 3, 0))  # low golden light on the faces
 
 	var gate := (load("res://assets/arch/gate_slice.glb") as PackedScene).instantiate()
 	w.add_child(gate)
@@ -114,9 +119,10 @@ func _initialize() -> void:
 
 func _place(t: float) -> void:
 	var k := smoothstep(0.0, 1.0, t / LEN)
-	cam.global_position = Vector3(lerpf(-6.0, -2.0, k), lerpf(1.8, 2.4, k), lerpf(68.0, 44.0, k))
+	# A steady, tripod-like shot: a very slow straight push, no drift or tilt.
+	cam.global_position = Vector3(-1.2, 2.3, lerpf(52.0, 48.0, k))
 	if cam.is_inside_tree():
-		cam.look_at(Vector3(lerpf(0.0, 0.4, k), lerpf(13.0, 11.0, k), -4.0))
+		cam.look_at(Vector3(0.2, 10.5, -4.0))
 
 
 func _process(_delta: float) -> bool:
@@ -141,6 +147,11 @@ func _toon(colour: Color, tex: String, scale: float, strength: float, extra: Dic
 	m.set_shader_parameter("paint_tex", load(TEX % tex))
 	m.set_shader_parameter("paint_scale", scale)
 	m.set_shader_parameter("paint_strength", strength)
+	m.set_shader_parameter("vertex_shade", 0.4)
+	m.set_shader_parameter("band_softness", 0.02)
+	m.set_shader_parameter("shadow_tint", Color(0.58, 0.42, 0.8))
+	m.set_shader_parameter("shadow_floor", 0.6)
+	m.set_shader_parameter("rim_color", Color(1.0, 0.8, 0.55))
 	for k in extra:
 		m.set_shader_parameter(k, extra[k])
 	return m
@@ -207,16 +218,15 @@ func _ground(w: Node3D) -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = p
 	mi.position = Vector3(0, -0.16, 0)
-	mi.material_override = _toon(Color(0.66, 0.68, 0.42), "ground", 0.06, 1.0, {"vertex_shade": 0.0})
+	mi.material_override = _toon(Color(0.42, 0.44, 0.26), "ground", 0.06, 0.25, {"vertex_shade": 0.0})
 	w.add_child(mi)
 
 
 func _trees(w: Node3D) -> void:
-	var leaf := _toon(Color(0.22, 0.52, 0.24), "ground", 0.5, 0.8, {"vertex_shade": 0.0, "rim_strength": 0.5,
-		"rim_color": Color(1.0, 1.0, 0.7)})
+	var leaf := _toon(Color(0.12, 0.26, 0.28), "ground", 0.5, 0.3, {"vertex_shade": 0.0, "rim_strength": 0.6,
+		"rim_color": Color(1.0, 0.7, 0.4)})
 	var bark := _toon(Color(0.42, 0.28, 0.2), "wood", 0.4, 0.8, {"vertex_shade": 0.0})
-	for spec in [["CommonTree_5", Vector3(-78, 0, -30), 8.0], ["CommonTree_3", Vector3(80, 0, -34), 8.0],
-			["CommonTree_5", Vector3(-95, 0, -10), 9.0], ["CommonTree_3", Vector3(98, 0, -14), 9.0]]:
+	for spec in [["CommonTree_5", Vector3(-78, 0, -30), 8.0], ["CommonTree_3", Vector3(80, 0, -34), 8.0]]:
 		var n := (load("res://assets/env/nature/" + spec[0] + ".gltf") as PackedScene).instantiate() as Node3D
 		n.position = spec[1]
 		n.scale = Vector3.ONE * spec[2]
@@ -231,7 +241,7 @@ func _trees(w: Node3D) -> void:
 ## Marigold and rose petals drifting down over the courtyard.
 func _petals(w: Node3D) -> void:
 	var p := CPUParticles3D.new()
-	p.amount = 160
+	p.amount = 110
 	p.lifetime = 11.0
 	p.preprocess = 11.0
 	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
@@ -244,8 +254,8 @@ func _petals(w: Node3D) -> void:
 	p.gravity = Vector3(0.12, -0.35, 0.05)
 	p.angle_min = 0.0
 	p.angle_max = 360.0
-	p.angular_velocity_min = -90.0
-	p.angular_velocity_max = 90.0
+	p.angular_velocity_min = -35.0
+	p.angular_velocity_max = 35.0
 	p.scale_amount_min = 0.7
 	p.scale_amount_max = 1.3
 	var g := Gradient.new()

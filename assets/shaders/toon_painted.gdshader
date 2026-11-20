@@ -9,6 +9,9 @@ uniform vec4 albedo : source_color = vec4(1.0);
 uniform sampler2D paint_tex : source_color, filter_linear_mipmap, repeat_enable;
 uniform float paint_scale = 0.6;       // tiles per metre
 uniform float paint_strength : hint_range(0.0, 2.0) = 1.0;
+// Painted detail fades with distance so fine marks do not shimmer when the camera moves.
+uniform float detail_fade_near = 22.0;
+uniform float detail_fade_far = 70.0;
 uniform float vertex_shade : hint_range(0.0, 1.0) = 1.0;
 uniform vec4 shadow_tint : source_color = vec4(0.52, 0.6, 0.92, 1.0);
 uniform float shadow_floor : hint_range(0.0, 1.0) = 0.5;
@@ -39,7 +42,9 @@ vec3 triplanar(vec3 p, vec3 n) {
 
 void fragment() {
 	vec3 paint = triplanar(wpos, wnrm);
-	vec3 base = albedo.rgb * clamp(vec3(1.0) + (paint - 0.5) * 2.0 * paint_strength, 0.0, 2.0);
+	float dist = length(wpos - CAMERA_POSITION_WORLD);
+	float ps = paint_strength * (1.0 - 0.75 * smoothstep(detail_fade_near, detail_fade_far, dist));
+	vec3 base = albedo.rgb * clamp(vec3(1.0) + (paint - 0.5) * 2.0 * ps, 0.0, 2.0);
 	base *= mix(vec3(1.0), COLOR.rgb, vertex_shade);
 	ALBEDO = base;
 	ROUGHNESS = 1.0;

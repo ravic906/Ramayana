@@ -12,6 +12,12 @@ uniform vec3 cloud_shade : source_color = vec3(0.68, 0.7, 0.9);
 uniform vec3 hill_near : source_color = vec3(0.36, 0.5, 0.52);
 uniform vec3 hill_far : source_color = vec3(0.62, 0.74, 0.86);
 uniform float cloud_cover : hint_range(0.0, 1.0) = 0.22;
+// A painted sun and its glow can sit anywhere, independent of the scene light (an
+// illustrator's cheat: the sun glows behind the subject while the light falls on its face).
+uniform vec3 sun_dir = vec3(0.0, 0.06, -1.0);
+uniform vec3 sun_col : source_color = vec3(1.0, 0.86, 0.55);
+uniform float sun_size = 0.05;
+uniform float glow_amount = 0.6;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -23,7 +29,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
 	float v = 0.0;
 	float a = 0.5;
-	for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.03; a *= 0.5; }
+	for (int i = 0; i < 3; i++) { v += a * noise(p); p *= 2.03; a *= 0.5; }
 	return v;
 }
 
@@ -32,18 +38,20 @@ void sky() {
 	float y = d.y;
 	vec3 col = mix(horizon, mid, smoothstep(0.0, 0.25, y));
 	col = mix(col, zenith, smoothstep(0.2, 0.9, y));
-	if (LIGHT0_ENABLED) {
-		vec2 sh = normalize(LIGHT0_DIRECTION.xz + vec2(1e-4));
-		float s = max(dot(normalize(d.xz + vec2(1e-4)), sh), 0.0);
-		col = mix(col, haze_warm, (1.0 - smoothstep(0.0, 0.22, y)) * s * 0.45);
-		float sd = max(dot(d, LIGHT0_DIRECTION), 0.0);
-		col += LIGHT0_COLOR * (pow(sd, 400.0) * 3.0 + pow(sd, 12.0) * 0.12);
+	{
+		vec3 sd3 = normalize(sun_dir);
+		float s = max(dot(normalize(d.xz + vec2(1e-4)), normalize(sd3.xz + vec2(1e-4))), 0.0);
+		col = mix(col, haze_warm, (1.0 - smoothstep(0.0, 0.3, y)) * pow(s, 3.0) * glow_amount);
+		float sd = dot(d, sd3);
+		float disc = smoothstep(cos(sun_size), cos(sun_size * 0.85), sd);
+		col = mix(col, sun_col, disc);
+		col += sun_col * pow(max(sd, 0.0), 30.0) * 0.35 * glow_amount;
 	}
 	if (y > 0.02) {  // cel-shaded clouds on a plane overhead
 		vec2 p = d.xz / (y + 0.08) * 0.9;
-		float c = fbm(p * 1.1) + 0.35 * fbm(p * 3.0);
+		float c = fbm(p * 0.8) * 1.2;
 		float m = smoothstep(1.0 - cloud_cover, 1.05 - cloud_cover, c * 0.9);
-		float top = fbm(p * 1.1 + vec2(0.0, -0.08)) + 0.35 * fbm(p * 3.0 + vec2(0.0, -0.24));
+		float top = fbm(p * 0.8 + vec2(0.0, -0.06)) * 1.2;
 		float lit = step(c * 0.9 - 0.02, top * 0.9);
 		vec3 cc = mix(cloud_shade, cloud_lit, mix(0.35, 1.0, lit));
 		m *= smoothstep(0.02, 0.12, y);

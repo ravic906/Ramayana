@@ -8,12 +8,12 @@ shader_type spatial;
 render_mode unshaded, depth_test_disabled, depth_draw_never, cull_disabled, fog_disabled;
 
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
-uniform vec4 ink : source_color = vec4(0.18, 0.1, 0.12, 1.0);
+uniform vec4 ink : source_color = vec4(0.2, 0.08, 0.18, 1.0);
 uniform float thickness = 1.2;      // pixels
-uniform float threshold = 0.2;     // edge strength that starts a line
-uniform float softness = 0.12;
-uniform float strength : hint_range(0.0, 1.0) = 0.8;
-uniform float lod = 1.4;            // mip level used for the edge test (softens grain)
+uniform float threshold = 0.3;     // edge strength that starts a line
+uniform float softness = 0.06;
+uniform float strength : hint_range(0.0, 1.0) = 0.9;
+uniform float lod = 1.0;            // mip level used for the edge test (softens grain)
 
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
@@ -40,6 +40,6 @@ void fragment() {
 	float e = smoothstep(threshold, threshold + softness, g) * strength;
 	vec3 col = textureLod(screen_tex, SCREEN_UV, 0.0).rgb;
 	// Ink takes a little of the underlying colour so lines on gold read warm, on marble cool.
-	vec3 inkc = mix(ink.rgb, col * 0.35, 0.3);
+	vec3 inkc = mix(ink.rgb, col * 0.3, 0.2);
 	ALBEDO = mix(col, inkc, e);
 }
