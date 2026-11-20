@@ -56,6 +56,7 @@ func _ready() -> void:
 	_restyle_tree(level)
 	_environment(level)
 	_crisp_render()
+	_add_backdrop(level)
 	get_tree().node_added.connect(_on_node_added)
 
 
@@ -222,3 +223,28 @@ func _crisp_render() -> void:
 func _exit_tree() -> void:
 	if is_inside_tree() or get_tree() != null:
 		Settings.apply_quality()
+
+
+## The Gemini-made palace gate (assets/art/gemini/gate_front.png) as a painted backdrop far behind the
+## courtyard's north wall: a flat cut-out, drawn unlit so its own painted light stays as made.
+func _add_backdrop(level: Node) -> void:
+	var tex := load("res://assets/art/gemini/gate_front.png") as Texture2D
+	if tex == null:
+		return
+	var width := 150.0
+	var q := QuadMesh.new()
+	q.size = Vector2(width, width * tex.get_height() / tex.get_width())
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_texture = tex
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	m.alpha_scissor_threshold = 0.5
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	m.fog_disabled = true
+	q.material = m
+	var mi := MeshInstance3D.new()
+	mi.name = "PalaceBackdrop"
+	mi.mesh = q
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.position = Vector3(0, q.size.y * 0.5 - 2.0, -150.0)
+	level.add_child(mi)
