@@ -118,9 +118,21 @@ func _build() -> void:
 	bg.stretch_mode = TextureRect.STRETCH_SCALE
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
-	var sun := SunEmblem.new()
-	sun.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(sun)
+	var art := load("res://assets/art/gemini/title.jpg") as Texture2D
+	if art:
+		# Gemini key art: Rama at the gate of Ayodhya, darkened so the menu text stays readable.
+		bg.texture = art
+		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		var veil := ColorRect.new()
+		veil.color = Color(0.05, 0.03, 0.06, 0.55)
+		veil.set_anchors_preset(Control.PRESET_FULL_RECT)
+		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(veil)
+	else:
+		var sun := SunEmblem.new()
+		sun.set_anchors_preset(Control.PRESET_FULL_RECT)
+		add_child(sun)
 
 	var root := VBoxContainer.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)

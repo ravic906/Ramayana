@@ -17,6 +17,8 @@ var progress := 0.0:
 		progress = value
 		queue_redraw()
 var progress_color := Color(1.0, 0.82, 0.3, 1.0)
+## Optional picture for the button face (Gemini art); the flat circle is drawn when unset.
+var skin: Texture2D
 var _touch_index := -1
 
 
@@ -59,12 +61,17 @@ func _set_held(value: bool) -> void:
 func _draw() -> void:
 	var r := minf(size.x, size.y) * 0.5
 	var c := size * 0.5
-	draw_circle(c, r, pressed_color if is_held else color)
-	draw_arc(c, r - 2.0, 0.0, TAU, 48, Color(1, 1, 1, 0.6), 3.0, true)
+	if skin:
+		draw_texture_rect(skin, Rect2(c - Vector2(r, r), Vector2(r, r) * 2.0), false, Color(1.2, 1.2, 1.2) if is_held else Color.WHITE)
+	else:
+		draw_circle(c, r, pressed_color if is_held else color)
+		draw_arc(c, r - 2.0, 0.0, TAU, 48, Color(1, 1, 1, 0.6), 3.0, true)
 	if progress > 0.0:
 		draw_arc(c, r + 8.0, -PI / 2.0, -PI / 2.0 + TAU * progress, 64, progress_color, 7.0, true)
 	var font := get_theme_default_font()
 	var font_size := int(r * 0.42)
 	var text_size := font.get_string_size(label, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size)
-	draw_string(font, c - Vector2(text_size.x * 0.5, -font_size * 0.35), label,
-		HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
+	var pos := c - Vector2(text_size.x * 0.5, -font_size * 0.35)
+	if skin:
+		draw_string_outline(font, pos, label, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, 8, Color(0.25, 0.04, 0.08))
+	draw_string(font, pos, label, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)

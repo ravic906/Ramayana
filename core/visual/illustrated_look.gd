@@ -63,6 +63,7 @@ func _ready() -> void:
 	_add_backdrop(level)
 	_add_skyline(level)
 	_add_prop_cutouts(level)
+	UiSkin.apply(level.get_node_or_null("HUD"))
 	_add_medallion(level)
 	get_tree().node_added.connect(_on_node_added)
 
@@ -402,6 +403,9 @@ func _add_prop_cutouts(level: Node) -> void:
 			var o := poles.multimesh.get_instance_transform(i).origin
 			if o.y < 8.0:
 				_cutout(level, "banner", Vector3(o.x, o.y - 2.25, o.z), 4.8)
+	# Two marble elephants flanking the way to the palace, where the courtyard narrows.
+	for x in [-11.0, 11.0]:
+		_cutout(level, "elephant", Vector3(x, 0.0, -40.0), 3.4)
 	# Planters: the three marble beds become Gemini marigold planters.
 	var planters := env.get_node_or_null("Planters") as Node3D
 	if planters:
