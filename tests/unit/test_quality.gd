@@ -32,14 +32,15 @@ func test_frames_are_capped() -> void:
 	assert_eq(Engine.max_fps, 30)
 
 
-func test_render_scale_and_no_msaa() -> void:
+func test_render_scale_and_anti_aliasing() -> void:
 	assert_eq(int(ProjectSettings.get_setting("rendering/anti_aliasing/quality/msaa_3d")), 0)
 	Settings.set_quality(Settings.Quality.BALANCED)
 	var vp := get_tree().root
-	assert_almost(vp.scaling_3d_scale, 0.75, 0.001)
-	assert_eq(vp.msaa_3d, Viewport.MSAA_DISABLED)
+	assert_almost(vp.scaling_3d_scale, 0.85, 0.001)
+	assert_eq(vp.msaa_3d, Viewport.MSAA_2X)
 	Settings.set_quality(Settings.Quality.BATTERY)
-	assert_almost(vp.scaling_3d_scale, 0.6, 0.001)
+	assert_almost(vp.scaling_3d_scale, 0.7, 0.001)
+	assert_eq(vp.msaa_3d, Viewport.MSAA_DISABLED)
 
 
 func test_level_detail_follows_the_preset() -> void:
