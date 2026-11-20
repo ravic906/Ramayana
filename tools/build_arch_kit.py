@@ -307,8 +307,8 @@ def finish():
         bsdf = mat.node_tree.nodes["Principled BSDF"]
         bsdf.inputs["Base Color"].default_value = base
         # Glossy finish: polished lacquer coat on everything, near-mirror metal for gold.
-        bsdf.inputs["Roughness"].default_value = 0.28 if name != "gold" else 0.16
-        bsdf.inputs["Coat Weight"].default_value = 0.0 if name in ("gold", "flame", "glow", "dark") else 0.7
+        bsdf.inputs["Roughness"].default_value = 0.5 if name != "gold" else 0.18
+        bsdf.inputs["Coat Weight"].default_value = 0.0 if name in ("gold", "flame", "glow", "dark") else 0.22
         bsdf.inputs["Coat Roughness"].default_value = 0.08
         if name == "gold":
             bsdf.inputs["Metallic"].default_value = 0.95

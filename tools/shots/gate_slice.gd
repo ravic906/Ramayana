@@ -14,64 +14,90 @@ var rama: Node3D
 
 func _initialize() -> void:
 	root.get_node("Settings").set_visual_style(0)
-	root.get_node("Settings").quality = 2
-	root.get_node("Settings").apply_quality()
+	if OS.get_environment("NOQ") != "1":
+		root.get_node("Settings").quality = 2
+		root.get_node("Settings").apply_quality()
 	var w := Node3D.new()
 	root.add_child(w)
 
 	var sky_mat: ShaderMaterial = load("res://assets/materials/env/sky_illustrated.tres").duplicate()
 	sky_mat.set_shader_parameter("sun_size", 0.06)
-	sky_mat.set_shader_parameter("zenith_color", Color(0.16, 0.12, 0.38))
-	sky_mat.set_shader_parameter("rose_color", Color(0.92, 0.5, 0.38))
-	sky_mat.set_shader_parameter("horizon_color", Color(0.96, 0.7, 0.3))
+	sky_mat.set_shader_parameter("zenith_color", Color(0.07, 0.2, 0.6))
+	sky_mat.set_shader_parameter("rose_color", Color(0.3, 0.56, 0.92))
+	sky_mat.set_shader_parameter("cloud_light", Color(1.0, 1.0, 1.0))
+	sky_mat.set_shader_parameter("cloud_shadow", Color(0.72, 0.8, 0.92))
+	sky_mat.set_shader_parameter("horizon_color", Color(0.78, 0.9, 1.0))
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	var e := Environment.new()
-	e.background_mode = Environment.BG_SKY
-	e.sky = sky
+	e.background_mode = Environment.BG_SKY if OS.get_environment("NOSKY") != "1" else Environment.BG_COLOR
+	if OS.get_environment("NOSKY") != "1":
+		e.sky = sky
+	else:
+		e.background_color = Color(0.3, 0.5, 0.9)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.62, 0.45, 0.5)
-	e.ambient_light_energy = 0.75
+	e.ambient_light_color = Color(0.55, 0.62, 0.8)
+	e.ambient_light_energy = 0.45
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	e.tonemap_exposure = 0.78
-	e.glow_enabled = true
+	e.tonemap_exposure = 0.8
+	e.glow_enabled = OS.get_environment("NOGLOW") != "1"
 	e.glow_intensity = 0.7
 	e.glow_bloom = 0.14
 	e.glow_hdr_threshold = 1.1
 	e.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
-	e.fog_enabled = true
-	e.fog_light_color = Color(0.9, 0.58, 0.42)
-	e.fog_density = 0.0018
+	e.fog_enabled = OS.get_environment("NOFOG") != "1"
+	e.fog_light_color = Color(0.72, 0.84, 0.96)
+	e.fog_density = 0.0012
 	e.fog_aerial_perspective = 0.8
 	e.adjustment_enabled = true
-	e.adjustment_contrast = 1.22
-	e.adjustment_saturation = 1.18
+	e.adjustment_contrast = 1.2
+	e.adjustment_saturation = 1.32
+	if OS.get_environment("AMB") != "":
+		e.ambient_light_energy = float(OS.get_environment("AMB"))
+	if OS.get_environment("MINENV") == "1":
+		e = Environment.new()
+		e.background_mode = Environment.BG_COLOR
+		e.background_color = Color(0.3, 0.5, 0.9)
+		e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+		e.ambient_light_energy = 0.0
 	var we := WorldEnvironment.new()
 	we.environment = e
 	w.add_child(we)
 
 	# Low sun BEHIND the gate (light travels toward the camera): silhouettes and rim light.
 	var sun := DirectionalLight3D.new()
-	sun.light_color = Color(1.0, 0.68, 0.28)
-	sun.light_energy = 3.2
-	sun.shadow_enabled = true
-	sun.directional_shadow_max_distance = 160.0
+	sun.light_color = Color(1.0, 0.92, 0.78)
+	sun.light_energy = 1.05
+	sun.shadow_enabled = (OS.get_environment("SHADOW") == "1")
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+	sun.directional_shadow_max_distance = 140.0
+	sun.shadow_bias = 0.2
+	sun.shadow_normal_bias = 2.0
 	w.add_child(sun)
-	sun.look_at_from_position(Vector3(-40, 9, -50), Vector3(0, 0, 0))
+	_aim(sun, Vector3(-34, 34, 52), Vector3(0, 3, 0))
+	if OS.get_environment("SUNROT") == "1":
+		sun.transform = Transform3D(Basis.from_euler(Vector3(deg_to_rad(-50), deg_to_rad(30), 0)), Vector3.ZERO)
 	# Soft cool-rose fill from the front so shadows keep colour.
 	var fill := DirectionalLight3D.new()
-	fill.light_color = Color(1.0, 0.7, 0.32)
-	fill.light_energy = 2.1
-	fill.shadow_enabled = true
-	fill.directional_shadow_max_distance = 160.0
-	w.add_child(fill)
-	fill.look_at_from_position(Vector3(-30, 14, 50), Vector3(0, 3, 0))
+	fill.light_color = Color(1.0, 0.92, 0.78)
+	fill.light_energy = 0.5
+	fill.shadow_enabled = false
+	fill.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+	fill.directional_shadow_max_distance = 120.0
+	fill.shadow_bias = 0.08
+	fill.shadow_normal_bias = 1.5
+	if OS.get_environment("FILL") == "1":  # a second directional light darkens the scene on this renderer; off
+		w.add_child(fill)
+	_aim(fill, Vector3(30, 20, -50), Vector3(0, 3, 0))
 
 	var gate := (load("res://assets/arch/gate_slice.glb") as PackedScene).instantiate()
 	w.add_child(gate)
-	_nature(w)
+	if OS.get_environment("REBUILD") == "1":
+		_rebuild_materials(gate)
+	if OS.get_environment("NONAT") != "1":
+		_nature(w)
 	# Rama (stylised road look) faces the gate.
-	var m = (load("res://characters/rama/rama_model.tscn") as PackedScene).instantiate()
+	var m = Node3D.new() if OS.get_environment("NORAMA") == "1" else (load("res://characters/rama/rama_model.tscn") as PackedScene).instantiate()
 	var lv := Node3D.new()
 	lv.set_script(load("res://kandas/01_bala/story_level.gd"))
 	w.add_child(lv)
@@ -101,6 +127,9 @@ func _place(t: float) -> void:
 
 func _process(_delta: float) -> bool:
 	frame += 1
+	if frame == 3:
+		for l in root.find_children("*", "DirectionalLight3D", true, false):
+			print("LIGHT ", l.name, " fwd=", -l.global_transform.basis.z, " e=", l.light_energy, " col=", l.light_color, " cull=", l.light_cull_mask, " shadow=", l.shadow_enabled)
 	_place(frame / FPS)
 	var still := OS.get_environment("FRAME")
 	if still != "" and frame == int(still):
@@ -171,9 +200,38 @@ func _light_foliage(n: Node) -> void:
 			var m := src.duplicate() as BaseMaterial3D
 			m.cull_mode = BaseMaterial3D.CULL_DISABLED
 			m.backlight_enabled = true
-			m.albedo_color = Color(0.1, 0.15, 0.2) if not nm.contains("Bark") else Color(0.2, 0.12, 0.16)
-			m.backlight = Color(0.5, 0.3, 0.25)
+			m.albedo_color = Color(0.2, 0.38, 0.14) if not nm.contains("Bark") else Color(0.32, 0.2, 0.14)
+			m.backlight = Color(0.3, 0.4, 0.15)
 			m.emission_enabled = true
-			m.emission = Color(0.35, 0.2, 0.3)
+			m.emission = Color(0.05, 0.1, 0.04)
 			m.emission_energy_multiplier = 0.55 if not nm.contains("Bark") else 0.9
 			mi.set_surface_override_material(s, m)
+
+
+## The imported glTF materials do not take diffuse light correctly here; rebuild plain
+## StandardMaterial3D copies carrying the same colour, gloss and glow.
+func _rebuild_materials(n: Node) -> void:
+	var cache := {}
+	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+		for s in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(s) as BaseMaterial3D
+			if src == null:
+				continue
+			if not cache.has(src):
+				var m := StandardMaterial3D.new()
+				m.albedo_color = src.albedo_color
+				m.metallic = src.metallic
+				m.roughness = src.roughness
+				m.clearcoat_enabled = src.clearcoat_enabled
+				m.clearcoat = src.clearcoat
+				m.clearcoat_roughness = src.clearcoat_roughness
+				m.emission_enabled = src.emission_enabled
+				m.emission = src.emission
+				m.emission_energy_multiplier = src.emission_energy_multiplier
+				cache[src] = m
+			mi.set_surface_override_material(s, cache[src])
+
+
+## look_at_from_position needs the node inside the tree, which it is not yet in _initialize.
+func _aim(n: Node3D, from: Vector3, to: Vector3) -> void:
+	n.transform = Transform3D(Basis.looking_at(to - from, Vector3.UP), from)
