@@ -37,9 +37,9 @@ func _initialize() -> void:
 		e.background_color = Color(0.3, 0.5, 0.9)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.55, 0.62, 0.8)
-	e.ambient_light_energy = 0.45
+	e.ambient_light_energy = 0.4
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	e.tonemap_exposure = 0.8
+	e.tonemap_exposure = 0.78
 	e.glow_enabled = OS.get_environment("NOGLOW") != "1"
 	e.glow_intensity = 0.7
 	e.glow_bloom = 0.14
@@ -67,7 +67,7 @@ func _initialize() -> void:
 	# Low sun BEHIND the gate (light travels toward the camera): silhouettes and rim light.
 	var sun := DirectionalLight3D.new()
 	sun.light_color = Color(1.0, 0.92, 0.78)
-	sun.light_energy = 1.05
+	sun.light_energy = 0.85
 	sun.shadow_enabled = (OS.get_environment("SHADOW") == "1")
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 	sun.directional_shadow_max_distance = 140.0

@@ -21,20 +21,20 @@ random.seed(7)
 OUT = Path(sys.argv[sys.argv.index("--") + 1]) if "--" in sys.argv else Path("gate_slice.glb")
 
 PALETTE = {  # name: (base colour, emission colour or None, emission strength); palette sampled from the reference clip
-    "plaster": ((0.93, 0.68, 0.36, 1), None, 0),
-    "red": ((0.80, 0.50, 0.24, 1), None, 0),
-    "stone": ((0.88, 0.58, 0.28, 1), None, 0),
-    "marble": ((0.96, 0.78, 0.52, 1), None, 0),
-    "dark": ((0.22, 0.11, 0.07, 1), None, 0),
+    "plaster": ((0.96, 0.94, 0.88, 1), None, 0),
+    "red": ((0.88, 0.76, 0.68, 1), None, 0),
+    "stone": ((0.92, 0.89, 0.82, 1), None, 0),
+    "marble": ((0.98, 0.97, 0.93, 1), None, 0),
+    "dark": ((0.24, 0.14, 0.10, 1), None, 0),
     "wood": ((0.22, 0.09, 0.08, 1), None, 0),
     "gold": ((1.0, 0.72, 0.18, 1), (1.0, 0.5, 0.08, 1), 0.35),
     "flame": ((1.0, 0.8, 0.3, 1), (1.0, 0.7, 0.2, 1), 3.5),
     "glow": ((1.0, 0.72, 0.3, 1), (1.0, 0.55, 0.15, 1), 2.0),
     "saffron": ((0.95, 0.4, 0.1, 1), None, 0),
-    "carpet": ((0.9, 0.38, 0.08, 1), None, 0),
-    "paving": ((0.74, 0.52, 0.32, 1), None, 0),
-    "paving2": ((0.66, 0.45, 0.28, 1), None, 0),
-    "mortar": ((0.18, 0.1, 0.12, 1), None, 0),
+    "carpet": ((0.92, 0.42, 0.08, 1), None, 0),
+    "paving": ((0.90, 0.88, 0.82, 1), None, 0),
+    "paving2": ((0.82, 0.80, 0.74, 1), None, 0),
+    "mortar": ((0.55, 0.52, 0.48, 1), None, 0),
 }
 bms = {k: bmesh.new() for k in PALETTE}
 
@@ -308,7 +308,7 @@ def finish():
         bsdf.inputs["Base Color"].default_value = base
         # Glossy finish: polished lacquer coat on everything, near-mirror metal for gold.
         bsdf.inputs["Roughness"].default_value = 0.5 if name != "gold" else 0.18
-        bsdf.inputs["Coat Weight"].default_value = 0.0 if name in ("gold", "flame", "glow", "dark") else 0.22
+        bsdf.inputs["Coat Weight"].default_value = 0.0 if name in ("gold", "flame", "glow", "dark") else 0.3
         bsdf.inputs["Coat Roughness"].default_value = 0.08
         if name == "gold":
             bsdf.inputs["Metallic"].default_value = 0.95
