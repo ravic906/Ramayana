@@ -57,7 +57,8 @@ func _archer(p: Vector3) -> void:
 	_press(&"move_back", retreat, 1.0)
 	_press(&"move_forward", not retreat and targets > 11.0 and nearest > 12.0, 0.7)
 	_press(&"dodge", nearest < 3.5 and fmod(float(frame), 30.0) < 2.0)
-	_press(&"shoot", nearest < 28.0 and frame % 12 < 2)
+	# A full draw each time: nock, draw to the cheek (about 0.8 s), release; never while giving ground.
+	_press(&"shoot", not retreat and nearest < 28.0 and frame % 36 < 24)
 
 
 ## Frames Rama: cut (snap) when the shot changes, otherwise glide.
@@ -111,14 +112,16 @@ func _process(_d: float) -> bool:
 		_frame(1, p + off + up * lerpf(1.65, 1.35, k), p + up * lerpf(1.6, 1.05, k))
 	elif t < 18.0:  # 2-3. the fight, as an archer fights: from a distance
 		_archer(p)
-		if t < 11.0:  # over the shoulder while he advances and shoots
+		if t < 8.0:  # over the shoulder while he advances
 			_frame(2, p + Vector3(0.9, 1.9, 3.4), p + Vector3(0, 1.2, -4.0))
+		elif t < 11.0:  # side-front: the draw to the cheek, the release, the target beyond
+			_frame(6, p + Vector3(2.7, 1.5, 0.4), p + Vector3(-0.2, 1.3, -0.6))
 		else:  # a wide arc that shows the illusions falling before they reach him
 			var ang := lerpf(0.5, 1.6, (t - 11.0) / 7.0)
 			_frame(3, p + Vector3(cos(ang) * 6.0, 2.4, sin(ang) * 6.0), p + up * 0.9 + Vector3(0, 0, -2.5))
 	elif t < 23.0:  # 4. low hero angle from the side: he holds his ground and keeps shooting
 		_archer(p)
-		_frame(4, p + Vector3(2.3, 0.5, -0.6), p + up * 1.3)
+		_frame(4, p + Vector3(3.2, 1.0, -1.4), p + up * 1.15)
 	elif t < 28.0:  # 5. rises behind him toward the Ayodhya gate
 		_press(&"move_forward", false)
 		var k := (t - 23.0) / 5.0

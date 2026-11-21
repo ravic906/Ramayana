@@ -29,6 +29,9 @@ const AIM_STANCE_YAW := deg_to_rad(-70.0)
 const DRAW_LENGTH := 0.66
 const STRING_REST_X := -0.035
 const BOW_HALF := 0.71
+## The bow's grip (riser) is this far along the bow's local +x from its origin (see _bow_mesh):
+## the fist holds the grip, and the string then runs a hand-span behind it, never through the hand.
+const GRIP_X := 0.11
 
 var anim_tree: AnimationTree
 var bow: Node3D
@@ -87,7 +90,9 @@ func _process(delta: float) -> void:
 	var real_delta := delta / maxf(Engine.time_scale, 0.01)
 	aim_weight = move_toward(aim_weight, 1.0 if _aiming else 0.0, real_delta * 6.0)
 	var w := smoothstep(0.0, 1.0, aim_weight)
-	body.transform.basis = Basis(Vector3.UP, PI + AIM_STANCE_YAW * w)
+	# An archer stands side-on to the target, bow arm toward it: when aiming and in a snap shot.
+	var stance := maxf(w, smoothstep(0.0, 1.0, _bow_raise))
+	body.transform.basis = Basis(Vector3.UP, PI + AIM_STANCE_YAW * stance)
 	if pose:
 		pose.influence = w
 		_update_pose_targets()
@@ -418,6 +423,8 @@ func _build_ornaments() -> void:
 	# Quiver on the back, its top over the right shoulder.
 	var q_axis := Vector3(-0.42, 1.0, 0.0).normalized()
 	var q := Transform3D(Basis(Vector3.BACK, Vector3.UP.signed_angle_to(q_axis, Vector3.BACK)), Vector3(0.02, 1.3, -0.21))
+	if _gemini:
+		q.origin = _quiver_on_back()
 	_add("spine_03", _cyl(0.045, 0.038, 0.5, 14), load(MAT + "wood.tres"), q, true)
 	for y in [-0.21, 0.0, 0.22]:
 		_add("spine_03", _torus(0.04, 0.052, 14), gold_plain, q * _at(0, y, 0))
@@ -430,6 +437,25 @@ func _build_ornaments() -> void:
 	if not _gemini:
 		_build_hair_knot()
 	set_crown(_crowned)
+
+
+## For a generated body: the quiver's centre resting against the actual back (measured on the
+## mesh at shoulder-blade height), returned in the reference body's space (PropBatch adds the
+## skeleton's offsets back on).
+func _quiver_on_back() -> Vector3:
+	var spine := skeleton.find_bone("spine_03")
+	var mi := skeleton.get_node_or_null("Body") as MeshInstance3D
+	var off: Vector3 = (skeleton.get_meta(&"ref_offsets", {}) as Dictionary).get("spine_03", Vector3.ZERO)
+	if spine < 0 or mi == null:
+		return Vector3(0.02, 1.3, -0.21)
+	var y := skeleton.get_bone_global_rest(spine).origin.y - 0.05
+	# Measured below the hair (long hair hangs over the upper back), on the skin or cloth itself.
+	var back := 0.0
+	for v: Vector3 in (mi.mesh as ArrayMesh).surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
+		if absf(v.y - (y - 0.16)) < 0.05 and absf(v.x) < 0.1:
+			back = minf(back, v.z)
+	var centre := Vector3(0.03, y, back - 0.03)
+	return centre - off
 
 
 func _build_bow() -> void:
@@ -482,7 +508,8 @@ func _update_bow(delta: float) -> void:
 	var hand := get_grip_world("l")
 	var b := body.global_transform.basis.orthonormalized()
 	var axis := Vector3(0.05, 1.0, 0.2).lerp(Vector3(0.12, 1.0, 0.0), _bow_raise).normalized()
-	var belly := Vector3(1.0, 0.0, 0.2).lerp(Vector3(0.0, 0.0, 1.0), _bow_raise)
+	# Carried: the wrist turned so the bow's back faces forward and the string lies behind the fist.
+	var belly := Vector3(0.2, 0.0, -1.0).lerp(Vector3(0.0, 0.0, 1.0), _bow_raise)
 	var carry := b * _frame(axis, belly)
 	var right := aim_dir.cross(Vector3.UP).normalized()
 	var aimed := _frame((Vector3.UP + right * 0.12).normalized(), aim_dir)
@@ -497,7 +524,7 @@ func _update_bow(delta: float) -> void:
 		var shot_basis := _frame((Vector3.UP + (b * Vector3(0.12, 0.0, 0.0))).normalized(), pull.normalized())
 		carry_q = carry_q.slerp(shot_basis.get_rotation_quaternion(), shot)
 	var basis := Basis(carry_q.slerp(aimed.get_rotation_quaternion(), w))
-	bow.global_transform = Transform3D(basis, hand + (b * Vector3(0.0, -0.02, 0.03)) * (1.0 - w))
+	bow.global_transform = Transform3D(basis, hand + (b * Vector3(0.0, -0.02, 0.03)) * (1.0 - w) - basis.x * GRIP_X)
 
 	var bend := draw * w
 	_bow_mat.set_shader_parameter(&"bend", bend)
