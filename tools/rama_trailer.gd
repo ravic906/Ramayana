@@ -86,6 +86,10 @@ func _process(_d: float) -> bool:
 		rama.set("aim_cone_degrees", 360.0)
 		rama.set("aim_range", 30.0)
 		rama.set("shoot_cooldown", 0.35)
+		# His full draws lock onto the nearest illusion wherever it is (the game aims along its
+		# own camera, which a cinematic shot does not move).
+		rama.set("assist_cone_degrees", 360.0)
+		rama.set("assist_range", 30.0)
 		cam = Camera3D.new()
 		sc.add_child(cam)
 		cam.fov = 35

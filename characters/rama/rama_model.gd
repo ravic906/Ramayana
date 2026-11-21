@@ -185,6 +185,10 @@ func get_locomotion() -> float:
 
 
 func play_shoot() -> void:
+	# After a full draw the release is the bow arm and the drawing hand easing out of the aim (the
+	# archery IK fades); playing a draw clip on top would read as a second pull of the string.
+	if _gemini and aim_weight > 0.3:
+		return
 	_fire(&"shoot")
 
 

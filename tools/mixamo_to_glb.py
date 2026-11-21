@@ -19,8 +19,9 @@ RIG, ANIM_DIR, OUT = argv[:3]
 GRIP_LEFT = "--grip-left" in argv
 IN_PLACE = {"walk", "run", "roll", "walk_formal"}
 # Keep only part of a clip (fractions of its length): the roll without the sprint stride before it
-# and the crouch after it, so a short dodge plays the roll itself.
-TRIM = {"roll": (0.2, 0.86)}
+# and the crouch after it, so a short dodge plays the roll itself. "shoot" (the quick snap shot) is
+# Mixamo's Standing Draw Arrow from the moment the bow comes up: raise and draw, once.
+TRIM = {"roll": (0.2, 0.86), "shoot": (0.55, 1.0)}
 
 SIDES = {"Left": "l", "Right": "r"}
 BODY = {"Hips": "pelvis", "Spine": "spine_01", "Spine1": "spine_02", "Spine2": "spine_03",
