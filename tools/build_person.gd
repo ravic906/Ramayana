@@ -270,6 +270,8 @@ func build(glb: String, person: String) -> Error:
 						a.track_set_key_value(t, k, (a.track_get_key_value(t, k) as Vector3) * ratio)
 				else:
 					a.remove_track(t)
+			if gemini:
+				_relax_fingers(a, sk, 0.45)
 			if a_name == &"idle":
 				_calm(a, 0.3, 1.4)
 			lib.add_animation(a_name, a)
@@ -898,6 +900,25 @@ func _calm(a: Animation, keep: float, slow: float) -> void:
 		for k in range(n - 1, -1, -1):
 			a.track_set_key_time(t, k, a.track_get_key_time(t, k) * slow)
 	a.length *= slow
+
+
+## Generated hands curl into claws with the pack's grip poses: keep only `keep` of each finger
+## joint's rotation away from the (straight) rest, a relaxed half-curl.
+func _relax_fingers(a: Animation, sk: Skeleton3D, keep: float) -> void:
+	for t in a.get_track_count():
+		if a.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var bone := String(a.track_get_path(t).get_concatenated_subnames())
+		if not bone.begins_with("thumb") and not bone.begins_with("index") and not bone.begins_with("middle") \
+				and not bone.begins_with("ring") and not bone.begins_with("pinky"):
+			continue
+		var i := sk.find_bone(bone)
+		if i < 0:
+			continue
+		var rest := sk.get_bone_rest(i).basis.get_rotation_quaternion()
+		for k in a.track_get_key_count(t):
+			var q: Quaternion = a.track_get_key_value(t, k)
+			a.track_set_key_value(t, k, rest.slerp(q, keep))
 
 
 func _part_name(src_name: String) -> String:
