@@ -26,6 +26,8 @@ uniform vec4 region_b : source_color = vec4(1.0);
 uniform vec4 shadow_tint : source_color = vec4(0.52, 0.6, 0.92, 1.0);
 uniform float shadow_floor : hint_range(0.0, 1.0) = 0.5;
 uniform float band_softness : hint_range(0.001, 0.2) = 0.04;
+// 1 = two bands (lit / shade) for the painterly epic look; 0 = the older three bands.
+uniform float two_band : hint_range(0.0, 1.0) = 0.0;
 uniform vec4 rim_color : source_color = vec4(1.0, 0.95, 0.85, 1.0);
 uniform float rim_strength : hint_range(0.0, 2.0) = 0.3;
 uniform float spec_strength : hint_range(0.0, 3.0) = 0.0;
@@ -74,7 +76,8 @@ void fragment() {
 
 void light() {
 	float ndl = dot(NORMAL, LIGHT);
-	float lit = smoothstep(0.0, band_softness, ndl) * 0.6 + smoothstep(0.5, 0.5 + band_softness, ndl) * 0.4;
+	float three = smoothstep(0.0, band_softness, ndl) * 0.6 + smoothstep(0.5, 0.5 + band_softness, ndl) * 0.4;
+	float lit = mix(three, smoothstep(0.0, band_softness, ndl), two_band);
 	lit *= ATTENUATION;
 	vec3 band = mix(shadow_tint.rgb * shadow_floor, vec3(1.0), lit);
 	DIFFUSE_LIGHT += band * LIGHT_COLOR / PI;

@@ -49,7 +49,20 @@ func _ready() -> void:
 func _apply_style() -> void:
 	var path := body_material_realistic if Settings.is_realistic() else body_material
 	_body_mat = (load(path) as ShaderMaterial).duplicate()
+	if Settings.gemini_characters:
+		_epic_palette(_body_mat)
 	FaceController.set_skin(skeleton, _body_mat)
+
+
+## Mission 1's painted epic look: dark maroon skin with bronze accents and a warm rim, so the
+## illusions read clearly against the sandstone floor.
+static func _epic_palette(m: ShaderMaterial) -> void:
+	m.set_shader_parameter(&"region_base", Color(0.24, 0.08, 0.08))
+	m.set_shader_parameter(&"region_r", Color(0.2, 0.06, 0.07))
+	m.set_shader_parameter(&"region_g", Color(0.62, 0.42, 0.2))
+	m.set_shader_parameter(&"region_b", Color(0.16, 0.07, 0.05))
+	m.set_shader_parameter(&"rim_color", Color(1.0, 0.62, 0.32))
+	m.set_shader_parameter(&"rim_strength", 0.7)
 
 
 func _process(delta: float) -> void:
@@ -97,6 +110,10 @@ func _build_props() -> void:
 		Transform3D(Basis(Vector3.RIGHT, deg_to_rad(28)).scaled(Vector3(1, 1, 0.85)), Vector3(0, 1.47, -0.03)))
 	# Short loincloth flaps (front and back) and belt.
 	var cloth: Material = load(MAT + "loincloth.tres")
+	if Settings.gemini_characters:  # bronze cloth over the maroon skin
+		cloth = (cloth as ShaderMaterial).duplicate()
+		cloth.set_shader_parameter(&"tint", Color(0.55, 0.36, 0.17))
+		cloth.set_shader_parameter(&"rim_strength", 0.6)
 	for z in [0.115, -0.15]:
 		batch.add("pelvis", MeshKit.box(Vector3(0.24, 0.42, 0.012)), cloth,
 			Transform3D(Basis(Vector3.RIGHT, deg_to_rad(6.0 if z > 0 else -6.0)), Vector3(0, 0.8, z)), true)
