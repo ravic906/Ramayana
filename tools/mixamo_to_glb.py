@@ -15,7 +15,12 @@ import bpy
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 RIG, ANIM_DIR, OUT = argv[:3]
+# "--grip-left": an archer's bow hand, the left fingers closed round the grip in every clip.
+GRIP_LEFT = "--grip-left" in argv
 IN_PLACE = {"walk", "run", "roll", "walk_formal"}
+# Keep only part of a clip (fractions of its length): the roll without the sprint stride before it
+# and the crouch after it, so a short dodge plays the roll itself.
+TRIM = {"roll": (0.2, 0.86)}
 
 SIDES = {"Left": "l", "Right": "r"}
 BODY = {"Hips": "pelvis", "Spine": "spine_01", "Spine1": "spine_02", "Spine2": "spine_03",
@@ -97,6 +102,26 @@ for f in sorted(Path(ANIM_DIR).glob("*.fbx")):
         pb.rotation_euler = (0, 0, 0)
     print("retargeted", f.stem, f0, f1)
 
+if GRIP_LEFT:
+    import math
+    for act in clips.values():
+        f0, f1 = act.frame_range
+        for f in ("Index", "Middle", "Ring", "Pinky", "Thumb"):
+            for j in (1, 2, 3):
+                if f == "Thumb" and j == 1:
+                    continue
+                bone = f"mixamorig:LeftHand{f}{j}"
+                path = f'pose.bones["{bone}"].rotation_quaternion'
+                for fc in [fc for fc in act.fcurves if fc.data_path == path]:
+                    act.fcurves.remove(fc)
+                ang = math.radians(28 if f == "Thumb" else (62 if j == 1 else 70))
+                q = (math.cos(ang / 2), math.sin(ang / 2), 0.0, 0.0)
+                for i, v in enumerate(q):
+                    fc = act.fcurves.new(path, index=i, action_group=bone)
+                    fc.keyframe_points.insert(f0, v)
+                    fc.keyframe_points.insert(f1, v)
+    print("left hand closed round the bow grip")
+
 # Rename bones, and every animation curve that points at them.
 mapping = {b.name: game_name(b.name) for b in rig.data.bones}
 for old, new in mapping.items():
@@ -112,24 +137,45 @@ for act in clips.values():
         if g.name in mapping:
             g.name = mapping[g.name]
 
-# In place: remove the pelvis's travel (its straight-line drift), keep the bob.
+for name, (s0, s1) in TRIM.items():
+    act = clips.get(name)
+    if act is None:
+        continue
+    f0, f1 = act.frame_range
+    a0, a1 = f0 + (f1 - f0) * s0, f0 + (f1 - f0) * s1
+    for fc in act.fcurves:
+        for k in reversed(list(fc.keyframe_points)):
+            if k.co[0] < a0 - 0.01 or k.co[0] > a1 + 0.01:
+                fc.keyframe_points.remove(k)
+        for k in fc.keyframe_points:
+            k.co[0] -= a0 - f0
+            k.handle_left[0] -= a0 - f0
+            k.handle_right[0] -= a0 - f0
+        fc.update()
+    act.frame_range = (f0, f0 + (a1 - a0))
+    act.use_frame_range = True
+    print("trimmed", name, "to frames", round(a0), "-", round(a1))
+
+# In place: the pelvis keeps its bob and dip but not its travel. Its horizontal offsets (bone axes
+# x and z; y is up along the spine) are brought to zero at both ends of the clip.
 for name, act in clips.items():
     if name not in IN_PLACE:
         continue
     for fc in act.fcurves:
-        if fc.data_path == 'pose.bones["pelvis"].location' and len(fc.keyframe_points) > 1:
-            k = fc.keyframe_points
-            f0, f1 = k[0].co[0], k[-1].co[0]
-            v0, v1 = k[0].co[1], k[-1].co[1]
-            if abs(v1 - v0) < 0.05:
-                continue
-            for p in k:
-                d = (v1 - v0) * (p.co[0] - f0) / max(f1 - f0, 1e-6)
-                p.co[1] -= d
-                p.handle_left[1] -= d
-                p.handle_right[1] -= d
-            fc.update()
-            print("in place:", name, "axis", fc.array_index, "removed %.2f" % (v1 - v0))
+        if fc.data_path != 'pose.bones["pelvis"].location' or fc.array_index == 1:
+            continue
+        k = fc.keyframe_points
+        if len(k) < 2:
+            continue
+        f0, f1 = k[0].co[0], k[-1].co[0]
+        v0, v1 = k[0].co[1], k[-1].co[1]
+        for p in k:
+            d = v0 + (v1 - v0) * (p.co[0] - f0) / max(f1 - f0, 1e-6)
+            p.co[1] -= d
+            p.handle_left[1] -= d
+            p.handle_right[1] -= d
+        fc.update()
+        print("in place:", name, "axis", fc.array_index, "travel %.2f" % (v1 - v0))
 
 # One NLA track per clip, so the exporter writes each as its own animation.
 ad = rig.animation_data or rig.animation_data_create()

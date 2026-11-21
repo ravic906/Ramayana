@@ -43,6 +43,23 @@ func _cinematic(on: bool) -> void:
 		game_cam.make_current()
 
 
+## Archer's tactics: advance only to shooting distance, shoot whatever comes, never let them close:
+## back away from anyone within 7 m and roll away from anyone within 3.5 m.
+func _archer(p: Vector3) -> void:
+	var nearest := INF
+	for e in current_scene.get_tree().get_nodes_in_group(&"enemies"):
+		if e is Node3D and is_instance_valid(e) and not (e.has_method("is_dead") and e.is_dead()):
+			nearest = minf(nearest, (e as Node3D).global_position.distance_to(p))
+	var targets := INF
+	for d in current_scene.find_children("*", "TargetDummy", true, false):
+		targets = minf(targets, (d as Node3D).global_position.distance_to(p))
+	var retreat := nearest < 7.0
+	_press(&"move_back", retreat, 1.0)
+	_press(&"move_forward", not retreat and targets > 11.0 and nearest > 12.0, 0.7)
+	_press(&"dodge", nearest < 3.5 and fmod(float(frame), 30.0) < 2.0)
+	_press(&"shoot", nearest < 28.0 and frame % 12 < 2)
+
+
 ## Frames Rama: cut (snap) when the shot changes, otherwise glide.
 func _frame(id: int, pos: Vector3, look: Vector3) -> void:
 	if id != shot:
@@ -62,6 +79,12 @@ func _process(_d: float) -> bool:
 		rama = sc.find_child("Rama", true, false) as Node3D
 		hud = sc.get_node_or_null("HUD") as CanvasItem
 		game_cam = root.get_viewport().get_camera_3d()
+		# A hero's day: every arrow fells a maya rakshasa, he turns to any foe around him, and
+		# shoots at an archer's pace.
+		rama.set("arrow_damage", 1000.0)
+		rama.set("aim_cone_degrees", 360.0)
+		rama.set("aim_range", 30.0)
+		rama.set("shoot_cooldown", 0.35)
 		cam = Camera3D.new()
 		sc.add_child(cam)
 		cam.fov = 35
@@ -86,26 +109,15 @@ func _process(_d: float) -> bool:
 		var d := lerpf(1.3, 3.6, k)
 		var off: Vector3 = (fwd * cos(a) + side * sin(a)) * d
 		_frame(1, p + off + up * lerpf(1.65, 1.35, k), p + up * lerpf(1.6, 1.05, k))
-	elif t < 12.0:  # 2. over the shoulder as he walks, then runs, toward the trials
-		_press(&"move_forward", true, 0.45 if t < 8.5 else 1.0)
-		if t > 10.5 and t < 10.7:
-			_press(&"dodge", true)
-		else:
-			_press(&"dodge", false)
-		_frame(2, p + Vector3(0.9, 1.9, 3.4), p + Vector3(0, 1.2, -4.0))
-	elif t < 18.0:  # 3. the fight: a low orbit while he dodges and looses arrows
-		_press(&"move_forward", false)
-		_press(&"shoot", fmod(t - 12.0, 1.2) < 0.15)
-		if fmod(t - 12.0, 3.0) < 0.15:
-			_press(&"dodge", true)
-		else:
-			_press(&"dodge", false)
-		var ang := lerpf(0.4, 1.9, (t - 12.0) / 6.0)
-		_frame(3, p + Vector3(cos(ang) * 4.6, 1.7, sin(ang) * 4.6), p + up * 1.0)
-	elif t < 23.0:  # 4. low hero angle from the side as he walks on
-		_press(&"shoot", false)
-		_press(&"dodge", false)
-		_press(&"move_forward", true, 0.4)
+	elif t < 18.0:  # 2-3. the fight, as an archer fights: from a distance
+		_archer(p)
+		if t < 11.0:  # over the shoulder while he advances and shoots
+			_frame(2, p + Vector3(0.9, 1.9, 3.4), p + Vector3(0, 1.2, -4.0))
+		else:  # a wide arc that shows the illusions falling before they reach him
+			var ang := lerpf(0.5, 1.6, (t - 11.0) / 7.0)
+			_frame(3, p + Vector3(cos(ang) * 6.0, 2.4, sin(ang) * 6.0), p + up * 0.9 + Vector3(0, 0, -2.5))
+	elif t < 23.0:  # 4. low hero angle from the side: he holds his ground and keeps shooting
+		_archer(p)
 		_frame(4, p + Vector3(2.3, 0.5, -0.6), p + up * 1.3)
 	elif t < 28.0:  # 5. rises behind him toward the Ayodhya gate
 		_press(&"move_forward", false)

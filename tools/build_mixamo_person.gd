@@ -53,8 +53,16 @@ func build(glb: String, person: String, tex_dir: String) -> Error:
 		if n is Node3D:
 			xf = (n as Node3D).transform * xf
 		n = n.get_parent()
-	armature.transform = xf
+	# Bake that transform into the skeleton (root bones' rests), so the skeleton's space is the
+	# model's space, as on every other body: props authored in model space then land right.
+	armature.transform = Transform3D()
 	var sk := sk_src.duplicate() as Skeleton3D
+	var roots := []
+	for i in sk.get_bone_count():
+		if sk.get_bone_parent(i) < 0:
+			sk.set_bone_rest(i, xf * sk.get_bone_rest(i))
+			roots.append(sk.get_bone_name(i))
+	sk.reset_bone_poses()
 	for c in sk.get_children():
 		sk.remove_child(c)
 		c.free()
@@ -82,6 +90,13 @@ func build(glb: String, person: String, tex_dir: String) -> Error:
 				var bone := String(path.get_concatenated_subnames())
 				if bone != "":
 					a.track_set_path(t, NodePath("Armature/Skeleton3D:" + bone))
+				if bone in roots:  # root bone keys are in the old (rotated) frame
+					for k in a.track_get_key_count(t):
+						var v = a.track_get_key_value(t, k)
+						if a.track_get_type(t) == Animation.TYPE_POSITION_3D:
+							a.track_set_key_value(t, k, xf * (v as Vector3))
+						elif a.track_get_type(t) == Animation.TYPE_ROTATION_3D:
+							a.track_set_key_value(t, k, xf.basis.get_rotation_quaternion() * (v as Quaternion))
 			if String(a_name) in LOOPS:
 				a.loop_mode = Animation.LOOP_LINEAR
 			lib.add_animation(a_name, a)
@@ -123,8 +138,7 @@ func build(glb: String, person: String, tex_dir: String) -> Error:
 		att.add_child(m)
 		if ref_eye:
 			var ref_global := ref_head * ref_eye.transform
-			var global := (armature.transform.affine_inverse() * Transform3D(Basis(), offsets.get("Head", Vector3.ZERO))) \
-				* ref_global
+			var global := Transform3D(Basis(), offsets.get("Head", Vector3.ZERO)) * ref_global
 			m.transform = new_head.affine_inverse() * Transform3D(new_head.basis, global.origin)
 
 	_own(root, root)
@@ -140,7 +154,7 @@ func build(glb: String, person: String, tex_dir: String) -> Error:
 
 ## A bone's rest position in the model's space (what the props are authored in).
 func _model_rest(sk: Skeleton3D, bone: int, armature: Node3D) -> Vector3:
-	return armature.transform * sk.get_bone_global_rest(bone).origin
+	return sk.get_bone_global_rest(bone).origin
 
 
 func _material(mi_src: MeshInstance3D, dir: String, tex_dir: String) -> Material:

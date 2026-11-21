@@ -138,6 +138,17 @@ func get_hand_world(side: String) -> Vector3:
 	return animated.lerp(solved, pose.influence)
 
 
+## Where the bow is held: inside the closed fist (between the wrist and the knuckles), not at the
+## wrist joint itself.
+func get_grip_world(side: String) -> Vector3:
+	var wrist := get_hand_world(side)
+	if skeleton == null or skeleton.find_bone("middle_01_" + side) < 0:
+		return wrist
+	var knuckle := get_bone_world("middle_01_" + side)
+	var anim_wrist := get_bone_world("hand_" + side)
+	return wrist + (knuckle - anim_wrist) * 0.85
+
+
 ## Distance from the drawing hand to where the IK wants it (for tests/debug).
 func string_hand_error() -> float:
 	return get_hand_world("r").distance_to(pose.string_target) if pose else INF
@@ -468,7 +479,7 @@ func _update_bow(delta: float) -> void:
 	if bow == null or skeleton == null:
 		return
 	_bow_raise = move_toward(_bow_raise, 1.0 if is_playing(&"shoot") else 0.0, delta * 8.0)
-	var hand := get_hand_world("l")
+	var hand := get_grip_world("l")
 	var b := body.global_transform.basis.orthonormalized()
 	var axis := Vector3(0.05, 1.0, 0.2).lerp(Vector3(0.12, 1.0, 0.0), _bow_raise).normalized()
 	var belly := Vector3(1.0, 0.0, 0.2).lerp(Vector3(0.0, 0.0, 1.0), _bow_raise)
@@ -476,7 +487,16 @@ func _update_bow(delta: float) -> void:
 	var right := aim_dir.cross(Vector3.UP).normalized()
 	var aimed := _frame((Vector3.UP + right * 0.12).normalized(), aim_dir)
 	var w := smoothstep(0.0, 1.0, aim_weight)
-	var basis := Basis(carry.get_rotation_quaternion().slerp(aimed.get_rotation_quaternion(), w))
+	# Snap shot: the body animation holds the bow out and draws with the right hand, so the bow
+	# turns to face away from the drawing hand and the string comes back to that hand.
+	var rhand := get_hand_world("r")
+	var shot := _bow_raise * (1.0 - w)
+	var carry_q := carry.get_rotation_quaternion()
+	var pull := hand - rhand
+	if shot > 0.0 and pull.length() > 0.05:
+		var shot_basis := _frame((Vector3.UP + (b * Vector3(0.12, 0.0, 0.0))).normalized(), pull.normalized())
+		carry_q = carry_q.slerp(shot_basis.get_rotation_quaternion(), shot)
+	var basis := Basis(carry_q.slerp(aimed.get_rotation_quaternion(), w))
 	bow.global_transform = Transform3D(basis, hand + (b * Vector3(0.0, -0.02, 0.03)) * (1.0 - w))
 
 	var bend := draw * w
@@ -486,7 +506,12 @@ func _update_bow(delta: float) -> void:
 	var top := bow.global_transform * Vector3(tip_x, tip_y, 0.0)
 	var bottom := bow.global_transform * Vector3(tip_x, -tip_y, 0.0)
 	var rest_nock := bow.global_transform * Vector3(STRING_REST_X, 0.0, 0.0)
-	_nock_point = rest_nock.lerp(get_hand_world("r"), clampf(w * 1.5 - 0.5, 0.0, 1.0)) if _aiming or w > 0.0 else rest_nock
+	if _aiming or w > 0.0:
+		_nock_point = rest_nock.lerp(rhand, clampf(w * 1.5 - 0.5, 0.0, 1.0))
+	else:
+		# The string follows the drawing hand while it is near (a released hand flies back past it).
+		var reach := clampf(1.0 - (rhand.distance_to(rest_nock) - DRAW_LENGTH) / 0.2, 0.0, 1.0)
+		_nock_point = rest_nock.lerp(rhand, shot * reach)
 	_place_segment(_string_top, top, _nock_point)
 	_place_segment(_string_bottom, bottom, _nock_point)
 
