@@ -10,7 +10,7 @@ named "<person>.body" so tools/build_person.gd treats it like an MPFB body.
 import sys
 from pathlib import Path
 
-import bpy
+import bpy, math
 from mathutils import Vector
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -95,7 +95,12 @@ names = [vg.name for vg in donor.vertex_groups if vg.name in arm.data.bones and 
 segs = []
 for n in names:
     b = arm.data.bones[n]
-    segs.append((n, arm.matrix_world @ b.head_local, arm.matrix_world @ b.tail_local))
+    tail = b.tail_local
+    if n in ("hand_l", "hand_r"):  # the hand bone owns the whole hand, fingertips included
+        tip = arm.data.bones.get("middle_03" + n[-2:])
+        if tip:
+            tail = tip.tail_local
+    segs.append((n, arm.matrix_world @ b.head_local, arm.matrix_world @ tail))
 for n in names:
     body.vertex_groups.new(name=n)
 
@@ -106,18 +111,47 @@ def seg_dist(p, a, b):
     return (p - (a + ab * t)).length
 
 
+import numpy as np
+
+nv = len(body.data.vertices)
+W = np.zeros((nv, len(names)))
+col = {n: i for i, n in enumerate(names)}
 for v in body.data.vertices:
     p = body.matrix_world @ v.co
     ds = sorted(((seg_dist(p, a, b), n) for n, a, b in segs))[:4]
-    ws = [1.0 / (d + 0.05) ** 1.5 for d, _ in ds]
-    s = sum(ws)
-    for (d, n), w in zip(ds, ws):
-        body.vertex_groups[n].add([v.index], w / s, "REPLACE")
+    d0 = ds[0][0]  # only bones about as near as the nearest one count (no pull from far limbs)
+    for d, n in ds:
+        if d - d0 < 0.12:
+            W[v.index, col[n]] = 1.0 / (d + 0.05) ** 1.5
+W /= W.sum(axis=1, keepdims=True)
+
+# Smooth the weights over the surface so they change gradually (no strips along limbs). Vertices that
+# sit at the same place (split at UV seams) are welded for this, so they keep identical weights.
+co = np.array([tuple(body.matrix_world @ v.co) for v in body.data.vertices])
+key = {}
+weld = np.zeros(nv, dtype=int)
+for i, c in enumerate(co):
+    weld[i] = key.setdefault(tuple(np.round(c, 5)), len(key))
+nw = len(key)
+nbr = [set() for _ in range(nw)]
+for poly in body.data.polygons:
+    ids = [weld[i] for i in poly.vertices]
+    for x in ids:
+        nbr[x].update(y for y in ids if y != x)
+Wk = np.zeros((nw, len(names)))
+Wk[weld] = W
+for _ in range(12):
+    nxt = Wk.copy()
+    for i in range(nw):
+        if nbr[i]:
+            nxt[i] = 0.5 * Wk[i] + 0.5 * np.mean([Wk[j] for j in nbr[i]], axis=0)
+    Wk = nxt
+W = Wk[weld]
+for vi in range(nv):
+    for n, i in col.items():
+        if W[vi, i] > 0.01:
+            body.vertex_groups[n].add([vi], float(W[vi, i]), "REPLACE")
 bpy.data.objects.remove(donor, do_unlink=True)
-body.parent = arm
-body.matrix_parent_inverse = arm.matrix_world.inverted()
-mod = body.modifiers.new("Armature", "ARMATURE")
-mod.object = arm
 body.parent = arm
 body.matrix_parent_inverse = arm.matrix_world.inverted()
 mod = body.modifiers.new("Armature", "ARMATURE")

@@ -263,6 +263,8 @@ func say(text: String, seconds := 3.5) -> void:
 
 
 func _apply_style() -> void:
+	if model.get(&"_gemini"):  # the generated body keeps its own painted skin and clothes
+		return
 	var path := "res://assets/materials/env_real/rama_body_pbr.tres" if Settings.is_realistic() else "res://assets/materials/rama_body.tres"
 	var mat := (load(path) as ShaderMaterial).duplicate() as ShaderMaterial
 	mat.set_shader_parameter(&"region_base", SKIN)

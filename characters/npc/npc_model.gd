@@ -23,6 +23,9 @@ extends Node3D
 @export var default_emotion: StringName = &"calm"
 ## The realistic body used when the Realistic look is on (characters/people).
 @export_file("*.scn") var realistic_body := ""
+## A body from an image-to-3D model (Mission 1's illustrated look); it brings its own clothes and hair.
+@export_file("*.scn") var gemini_body := ""
+var _gemini := false
 
 @onready var body: Node3D = $Body
 @onready var skeleton: Skeleton3D = $Body/Armature/Skeleton3D
@@ -33,13 +36,16 @@ var face_rig: FaceController
 
 
 func _enter_tree() -> void:
-	RealisticBody.apply(self, realistic_body)
+	_gemini = RealisticBody.apply_gemini(self, gemini_body)
+	if not _gemini:
+		RealisticBody.apply(self, realistic_body)
 
 
 func _ready() -> void:
 	body.scale = Vector3.ONE * model_scale
 	if RealisticBody.is_realistic(skeleton):
-		_build_props()
+		if not _gemini:
+			_build_props()
 		face_rig = FaceController.attach(self, skeleton, speaker if speaker != "" else String(name), default_emotion)
 		anim.play(&"idle")
 		anim.seek(randf() * 2.0)
