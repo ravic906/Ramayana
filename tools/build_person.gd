@@ -951,9 +951,37 @@ func _save_textures(mi: MeshInstance3D, dir: String, part: String) -> void:
 	var mat: Material
 	if part == "Body" and spec.get("gemini", false):
 		var gm := StandardMaterial3D.new()
-		gm.roughness = 0.8
 		if ResourceLoader.exists(path):
 			gm.albedo_texture = load(path)
+		# The model's normal and metallic-roughness maps, saved beside the colour map.
+		var extra := {"normal": m.normal_texture, "rm": m.roughness_texture}
+		for key: String in extra:
+			var tx: Texture2D = extra[key]
+			if tx == null or tx.get_image() == null:
+				continue
+			var im := tx.get_image()
+			if im.is_compressed():
+				im.decompress()
+			if im.get_width() > max_size:
+				im.resize(max_size, max_size * im.get_height() / im.get_width(), Image.INTERPOLATE_LANCZOS)
+			var p2 := dir + "body_%s.png" % key
+			im.save_png(p2)
+			if not ResourceLoader.exists(p2):
+				continue
+			if key == "normal":
+				gm.normal_enabled = true
+				gm.normal_texture = load(p2)
+				gm.normal_scale = 1.0
+			else:
+				gm.roughness_texture = load(p2)
+				gm.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+				# Metallic from these maps makes skin look wet and plastic: gold reads well enough
+				# from colour and roughness alone.
+		gm.roughness = 1.0
+		gm.metallic_specular = 0.3
+		gm.rim_enabled = true
+		gm.rim = 0.12
+		gm.rim_tint = 0.6
 		mat = gm
 	elif part == "Body":
 		var sm := ShaderMaterial.new()

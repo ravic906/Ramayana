@@ -68,3 +68,9 @@ Status:
 ## 22. Generated Rama body (Mission 1 only)
 - Rama's Mission 1 body is the Tripo model (`characters/people/rama_g/`), skinned to the game skeleton by `tools/fit_gemini_body.py`; bare-headed with his own topknot (crown stays for court scenes later). Hands are rigid (no finger curl) because the model's fingers are fused.
 - With you: confirm the commercial-use terms of your Tripo plan and Google's terms for the Gemini pictures it was made from. Send further character models (Bala Kanda list in the report).
+
+## 23. Rig the cast in Mixamo (owner chose Mixamo)
+- Upload files and steps: `mixamo_upload/HOW_TO.md` (16 FBX files, textures embedded). Rig each, download `*_rig.fbx`
+  (Standard Skeleton 65, With Skin, T-pose); download the animation list once on Rama (Without Skin, In Place).
+- Tataka: regenerate with a dark cloth across the chest before rigging.
+- Then I integrate: full texture detail (colour, normal, gloss), weapons fitted to Mixamo hands, close-ups and trailer v2 for review.

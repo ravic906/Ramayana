@@ -58,23 +58,9 @@ bpy.ops.object.transform_apply(location=True)
 body.name = f"{NAME}.body"
 body.data.name = f"{NAME}.body"
 
-# Keep only the base-colour picture (downscaled) so the character stays a few MB: generated models
-# often carry 4096 px normal and metallic-roughness maps that a phone game does not need.
+# Keep the model's own surface detail: base colour, normal map (muscle, cloth folds, face) and the
+# metallic-roughness map (gold shines, skin does not), all downscaled to TEX so the game stays small.
 TEX = int(argv[4]) if len(argv) > 4 else 1024
-for mat in body.data.materials:
-    if mat and mat.use_nodes:
-        nt = mat.node_tree
-        bsdf = next((n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"), None)
-        if bsdf:
-            for name in ("Metallic", "Roughness", "Normal"):
-                for l in list(bsdf.inputs[name].links):
-                    nt.links.remove(l)
-            bsdf.inputs["Roughness"].default_value = 0.85
-            bsdf.inputs["Metallic"].default_value = 0.0
-        for n in list(nt.nodes):
-            nm = (n.image.name.lower() if n.type == "TEX_IMAGE" and n.image else "")
-            if n.type == "NORMAL_MAP" or n.type in ("SEPARATE_COLOR", "SEPARATE_RGB") or nm.endswith("_normal.png") or "_rm" in nm or "normal" in nm:
-                nt.nodes.remove(n)
 for img in list(bpy.data.images):
     if img.users and img.size[0] > TEX:
         img.scale(TEX, TEX)
