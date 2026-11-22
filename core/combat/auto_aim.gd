@@ -30,6 +30,17 @@ static func score(origin: Vector3, facing: Vector3, target_pos: Vector3, max_ran
 ## get_aim_point() -> Vector3; otherwise their global_position is used.
 ## Candidates with a dead Health child are skipped.
 static func find_best_target(origin: Vector3, facing: Vector3, candidates: Array, max_range: float, cone_degrees: float) -> Node3D:
+	# A real threat always comes before a practice target: an archer shoots the charging enemy,
+	# not the straw target beside it.
+	var threats := candidates.filter(func(c: Variant) -> bool: return not (c is TargetDummy))
+	if threats.size() < candidates.size():
+		var t := _best(origin, facing, threats, max_range, cone_degrees)
+		if t != null:
+			return t
+	return _best(origin, facing, candidates, max_range, cone_degrees)
+
+
+static func _best(origin: Vector3, facing: Vector3, candidates: Array, max_range: float, cone_degrees: float) -> Node3D:
 	var best: Node3D = null
 	var best_score := -1.0
 	for candidate in candidates:

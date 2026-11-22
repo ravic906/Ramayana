@@ -550,9 +550,8 @@ func _update_bow(delta: float) -> void:
 		_astra_fx.global_position = (_nocked_arrow.global_transform * Vector3(0, 0, -0.85)) if _nocked_arrow.visible else hand
 	_nocked_arrow.visible = _aiming and w > 0.6
 	if _nocked_arrow.visible:
-		var forward := (bow.global_position - _nock_point)
-		if forward.length_squared() < 0.01:
-			forward = aim_dir
+		# The nocked arrow lies along the line of aim (toward the target), not toward the bow's centre.
+		var forward := aim_dir
 		_nocked_arrow.global_transform = Transform3D(Basis.looking_at(forward.normalized(), Vector3.UP), _nock_point)
 
 
