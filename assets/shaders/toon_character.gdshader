@@ -9,15 +9,20 @@ uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap;
 uniform float normal_strength = 0.8;
 uniform bool use_normal = false;
 uniform vec4 shadow_tint : source_color = vec4(0.62, 0.5, 0.58, 1.0);
-uniform float shadow_floor : hint_range(0.0, 1.0) = 0.62;
+uniform float shadow_floor : hint_range(0.0, 1.0) = 0.45;
 uniform float band_softness : hint_range(0.001, 0.3) = 0.08;
 uniform vec4 rim_color : source_color = vec4(1.0, 0.86, 0.62, 1.0);
-uniform float rim_strength : hint_range(0.0, 2.0) = 0.35;
+uniform float rim_strength : hint_range(0.0, 2.0) = 0.25;
+// Colour richness: the generated textures are painted light; deepen and saturate them a little.
+uniform float saturation = 1.5;
+uniform float value = 0.72;
 uniform float flash = 0.0;
 uniform vec4 flash_color : source_color = vec4(1.0, 0.9, 0.7, 1.0);
 
 void fragment() {
 	vec3 base = texture(albedo_tex, UV).rgb;
+	float l = dot(base, vec3(0.3, 0.59, 0.11));
+	base = clamp(mix(vec3(l), base, saturation) * value, 0.0, 1.0);
 	ALBEDO = mix(base, flash_color.rgb, flash);
 	if (use_normal) {
 		NORMAL_MAP = texture(normal_tex, UV).rgb;

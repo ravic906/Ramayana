@@ -46,7 +46,7 @@ const LOOK := {
 ## Paving keeps its own tile-and-medallion shader, recoloured with clear grout lines.
 const PAVING := {
 	# Desaturated sandstone: close tones, thin low-contrast grout, soft variation and a faint polish.
-	"stone_a": Color(0.64, 0.55, 0.44), "stone_b": Color(0.58, 0.5, 0.4), "grout": Color(0.47, 0.4, 0.32),
+	"stone_a": Color(0.56, 0.48, 0.4), "stone_b": Color(0.5, 0.43, 0.36), "grout": Color(0.38, 0.32, 0.27),
 	"grout_width": 0.007, "grout_soft": 0.014, "tile_variation": 0.1, "mottle": 0.06, "sheen": 0.12,
 	"inlay_saffron": Color(0.86, 0.52, 0.2), "inlay_red": Color(0.48, 0.13, 0.14),
 	"inlay_white": Color(0.93, 0.89, 0.8), "inlay_blue": Color(0.1, 0.36, 0.4),
@@ -227,9 +227,9 @@ static func apply_environment(e: Environment) -> void:
 	e.sky = sky
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	e.ambient_light_color = Color(0.78, 0.7, 0.62)
-	e.ambient_light_energy = 0.42
+	e.ambient_light_energy = 0.3
 	e.tonemap_mode = Environment.TONE_MAPPER_ACES
-	e.tonemap_exposure = 1.0
+	e.tonemap_exposure = 0.88
 	e.tonemap_white = 6.0
 	e.glow_enabled = true
 	e.glow_intensity = 0.6
@@ -240,12 +240,12 @@ static func apply_environment(e: Environment) -> void:
 	e.fog_enabled = true
 	e.fog_light_color = Color(0.95, 0.84, 0.67)  # the sky's horizon colour: no hard edge
 	e.fog_light_energy = 1.0
-	e.fog_density = 0.002
+	e.fog_density = 0.0012
 	e.fog_aerial_perspective = 0.25
-	e.fog_sky_affect = 0.25
+	e.fog_sky_affect = 0.12
 	e.adjustment_enabled = true
-	e.adjustment_contrast = 1.05
-	e.adjustment_saturation = 1.08
+	e.adjustment_contrast = 1.2
+	e.adjustment_saturation = 1.15
 
 
 func _environment(level: Node) -> void:
